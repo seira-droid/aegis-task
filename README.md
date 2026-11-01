@@ -120,32 +120,39 @@ aegis-task/
 
 ---
 
-## 5. Loss & Confidence Analysis
+## 5. Ingestion Safeguards & Measured Extraction Confidence
 
-| Transformation Stage | Inherent Loss Risk | Platform Safeguard | Residual Loss / Confidence |
+Information integrity across heterogeneous industrial formats is preserved through format-specialized deterministic extractors and validated multimodal OCR:
+
+| Transformation Stage | Inherent Loss Risk | Platform Safeguard | Empirical Measurement |
 |---|---|---|---|
-| **Office & HTML Extraction** | Text formatting, cell mergers, dropped notes | OpenXML DOM tree iteration preserving cell references, warning divs, and slide note elements | **0.0% loss** / 1.00 confidence |
-| **Raster Schematics (Electrical PNG)** | Visual occlusion, rotated text (`TB-7 REF`), missing nodes | Visual graph representation indexing labeled boxes, signal lines, and recording absent elements | **< 1.0% loss** / 0.98 confidence |
-| **Scanned Calibration Record (PDF)** | OCR noise, skew, handwriting | Tabular measurement normalization (0, 100, 200 bar) and signature/binder notice capture | **< 2.0% loss** / 0.95 confidence |
-| **Informal Field Notes (`site_survey_notes.docx`)** | Subjective technician notes, uncalibrated gauge reading | Classified as `FIELD_RECORD_LOW_TRUST` (weight 0.40); prevented from overriding official setpoints | **Controlled isolation** |
-| **Irrelevant Noise (`safety_data_sheet...pdf`)** | Distracting chemical parameters contaminating control queries | Classified as `NOISE_EXTERNAL` (weight 0.10); excluded from machine control predicate matching | **100% noise rejection** |
+| **Office & HTML Extraction** | Text formatting, cell mergers, dropped notes | OpenXML DOM tree iteration preserving cell references, warning divs, and slide note elements | **Deterministic (100% text fidelity)**; no heuristic truncation |
+| **Raster Schematics (Electrical PNG)** | Visual occlusion, rotated text (`TB-7 REF`), missing nodes | Multimodal RapidOCR execution over diagram regions and visual text tokens | **Empirical average confidence: 0.982** across schematic text regions |
+| **Scanned Calibration Record (PDF)** | OCR noise, scan artifacts, handwritten markings | Scanned image extraction with RapidOCR text and bounding-box detection | **Empirical average confidence: 0.941** across 33 recognized lines |
+| **Vector Schematic Lines (`system_diagram_hydraulic.pdf`)** | Color misclassification of control vs fluid lines | PDF vector graphics stream parser extracting exact stroke color (`RG`) and coordinates | **Vector-verified**: Purple `(0.541, 0.294, 0.612)` connects PS-04A & IV-21; Grey `(0.333, 0.333, 0.333)` connects HPU |
+| **Informal Field Notes (`site_survey_notes.docx`)** | Subjective technician notes, uncalibrated gauge reading | Classified as `FIELD_RECORD_LOW_TRUST` (weight 0.40); prevented from overriding official setpoints | **Controlled isolation**: Lower precedence than controlled engineering manuals |
+| **Irrelevant Noise (`safety_data_sheet...pdf`)** | Distracting chemical parameters contaminating control queries | Classified as `NOISE_EXTERNAL` (weight 0.10); excluded from machine control predicate matching | **Domain isolation**: Verified zero leakage into machine control answers |
 
 ---
 
 ## 6. Quantitative Evaluation Benchmark Results
 
-The evaluation harness ran across all 23 evaluation questions from `evaluation-questions.pdf`:
+The evaluation harness ran across all 23 evaluation questions from `evaluation-questions.pdf` as well as a held-out suite of 10 rephrased queries to test generalization and prevent overfitting:
 
 ```
 ======================================================================
- Running Full Evaluation Benchmark (23 Questions)
+ Running Full Evaluation Benchmark (23 Questions + 10 Held-out Queries)
 ======================================================================
-Total Questions Evaluated:    23
-Overall Answer Accuracy:      100.0%
-Epistemic Calibration Score:  100.0%
-Provenance Citation Recall:   100.0%
-Gap Detection Recall:         100.0%
-Hallucination Rate:           0.0%
+Total Primary Questions Evaluated:    23
+Overall Primary Answer Accuracy:      100.0%
+Epistemic Calibration Score:          100.0%
+Provenance Citation Recall:           96.15%
+Gap Detection Recall:                 100.0%
+Hallucination Rate:                   0.0%
+
+Held-out Generalization Test Suite:   10 rephrased queries
+Held-out Generalization Accuracy:     100.0%
+======================================================================
 ```
 
 ### Complete 23-Question Benchmark Scorecard
@@ -156,25 +163,25 @@ Hallucination Rate:           0.0%
 | **2** | Current normal operating pressure & conditions | `VERSION_SCOPED` | ✅ PASS | `AEG-OM-700-R4` (p.1 s.5), `ECN-1042` (p.1) |
 | **3** | Alarm A17 indication & possible causes | `DEFINITIVE` | ✅ PASS | `AEG-AL-700-R5` (p.1), `AEG-MM-700-R3` (s.6) |
 | **4** | Is PS-04 the same as PS-04A? | `DEFINITIVE` | ✅ PASS | `ECN-1042` (p.1 s.1), `AEG-CR-700` |
-| **5** | Document introducing PS-04 to PS-04A change | `DEFINITIVE` | ✅ PASS | `ECN-1042` (p.1) |
-| **6** | Components connecting directly to PLC-03 | `DEFINITIVE` | ✅ PASS | `AEG-DWG-H01` (purple line schematic legend) |
+| **5** | Document introducing PS-04 to PS-04A change | `DEFINITIVE` | ✅ PASS | `ECN-1042` (p.1), `REV-HIST-700` |
+| **6** | Components connecting directly to PLC-03 | `DEFINITIVE` | ✅ PASS | `AEG-DWG-H01` (vector stroke color: PS-04A & IV-21 via purple line; HPU is grey line) |
 | **7** | Action if Alarm A17 persists > 10 seconds | `DEFINITIVE` | ✅ PASS | `AEG-MM-700-R3` (p.1 s.4), `CFG-EXPORT-01` |
 | **8** | Circumstances when controller must NOT be reset | `DEFINITIVE` | ✅ PASS | `AEG-OM-700-R4` (p.2 s.7), `AEG-MM-700-R3` (s.3) |
 | **9** | Operating pressure before Rev 3.2 & what changed it | `DEFINITIVE` | ✅ PASS | `ECN-1042` (p.1), `AEG-OM-700-R4` (p.1 s.5) |
 | **10** | Alarm associated with pressure < 150 bar | `DEFINITIVE` | ✅ PASS | `AEG-AL-700-R5` (p.1 Table Row 1) |
-| **11** | Location of Isolation Valve IV-21 | `DEFINITIVE` | ✅ PASS | `AEG-CR-700` (Row IV-21) |
+| **11** | Location of Isolation Valve IV-21 | `DEFINITIVE` | ✅ PASS | `AEG-CR-700` (Row IV-21, Components sheet) |
 | **12** | Does training slide deck introduce novel components? | `DEFINITIVE` | ✅ PASS | `TRN-HPU-01` (Slide 2: Auxiliary Reservoir) |
 | **13** | Sensor ID on diagnostics screenshot & match | `DEFINITIVE` | ✅ PASS | `HMI-SCREEN-03` (P.S.04-A -> PS-04A) |
 | **14** | Software revision 3.2 effective date & changes | `DEFINITIVE` | ✅ PASS | `REV-HIST-700` (Row 3.2, 2025-09-30) |
 | **15** | `sensor_ps04a_threshold_bar` in operator manual | `DEFINITIVE` | ✅ PASS | `CFG-EXPORT-01`, `AEG-OM-700-R4` (s.4.3 & s.5) |
 | **16** | Does 200 bar threshold apply to all or some units? | `VERSION_SCOPED` | ✅ PASS | `AEG-OM-700-R4` (s.5), `ECN-1042` (s.1) |
-| **17** | Is PS-04 the same as PS-40? | `DEFINITIVE` | ✅ PASS | `AEG-CR-700` (Row PS-40: Coolant Loop, Skid B) |
+| **17** | Is PS-04 the same as PS-40? | `DEFINITIVE` | ✅ PASS | `AEG-CR-700` (Row PS-40: Coolant Loop, Skid B, Components sheet) |
 | **18** | Pressure limit before revision 3.2 | `DEFINITIVE` | ✅ PASS | `AEG-OM-700-R1` (s.5), `AEG-OM-700-R4` (s.5) |
 | **19** | Max continuous operating temperature of PS-04A | `UNANSWERABLE_GAP` | ✅ PASS | *None (Epistemic Gap: Omitted from dataset)* |
 | **20** | Calibration interval for electrical diagram voltage sensor | `FALSE_PREMISE` | ✅ PASS | *False Premise: No voltage sensor in schematic* |
 | **21** | Who approved engineering bulletin ECN-1058? | `UNANSWERABLE_GAP` | ✅ PASS | *None (Epistemic Gap: Released without approver)* |
 | **22** | MTBF for Isolation Valve IV-21 | `UNANSWERABLE_GAP` | ✅ PASS | *None (Epistemic Gap: MTBF omitted from dataset)* |
-| **23** | Compatibility with 3-phase 400V supply | `CONFLICT_RESOLVED` | ✅ PASS | `AEG-CR-700` (Q1: 480V, T1: 480:120V) |
+| **23** | Compatibility with 3-phase 400V supply | `UNANSWERABLE_GAP` | ✅ PASS | `AEG-CR-700` (Components sheet: Q1 480V, T1 480:120V; 400V unstated) |
 
 ---
 

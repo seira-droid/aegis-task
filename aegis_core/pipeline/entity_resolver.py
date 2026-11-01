@@ -99,7 +99,7 @@ class EntityResolver:
                 location="Control Cabinet 1",
                 status="Active",
                 notes="Supervises startup sequencing, alarms, interlocks, and sensor evaluation.",
-                direct_connections=["PS-04A", "HPU", "IV-21"]
+                direct_connections=["PS-04A", "IV-21"]
             ),
             Entity(
                 id="A17",

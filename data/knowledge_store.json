@@ -111,7 +111,6 @@
       "notes": "Supervises startup sequencing, alarms, interlocks, and sensor evaluation.",
       "direct_connections": [
         "PS-04A",
-        "HPU",
         "IV-21"
       ]
     },
@@ -715,7 +714,7 @@
         "document_title": "Component Register (AEG-CR-700)",
         "file_type": "XLSX",
         "page": null,
-        "section": "Sheet1",
+        "section": "Components",
         "element_id": "Row: IV-21",
         "verbatim_quote": "IV-21 | Isolation Valve 21 | Isolation Valve; IV21 | Hydraulic Module | Active | Must be OPEN prior to HPU startup.",
         "trust_level": "OFFICIAL_MANUAL",
@@ -738,7 +737,7 @@
         "document_title": "Component Register (AEG-CR-700)",
         "file_type": "XLSX",
         "page": null,
-        "section": "Sheet1",
+        "section": "Components",
         "element_id": "Row: PS-40",
         "verbatim_quote": "PS-40 | Pressure Sensor 40 | P40; PS40 | Coolant Loop, Skid B | Active | NOT related to the HPU discharge circuit. Do not confuse with PS-04 / PS-04A.",
         "trust_level": "OFFICIAL_MANUAL",
@@ -761,7 +760,7 @@
         "document_title": "Component Register (AEG-CR-700)",
         "file_type": "XLSX",
         "page": null,
-        "section": "Sheet1",
+        "section": "Components",
         "element_id": "Row: Q1",
         "verbatim_quote": "Q1 | Main Disconnect | \u2014 | Control Cabinet 1 | Active | 480V incoming disconnect.",
         "trust_level": "OFFICIAL_MANUAL",
@@ -784,7 +783,7 @@
         "document_title": "Component Register (AEG-CR-700)",
         "file_type": "XLSX",
         "page": null,
-        "section": "Sheet1",
+        "section": "Components",
         "element_id": "Row: T1",
         "verbatim_quote": "T1 | Control Transformer | \u2014 | Control Cabinet 1 | Active | 480:120V control power.",
         "trust_level": "OFFICIAL_MANUAL",
@@ -816,7 +815,7 @@
         "document_title": "Revision History (AEG-RH-700)",
         "file_type": "XLSX",
         "page": null,
-        "section": "Sheet1",
+        "section": "Revision History",
         "element_id": "Row: 3.2",
         "verbatim_quote": "3.2 | 2025-09-30 | Pressure sensor PS-04 replaced by PS-04A. Normal HPU discharge pressure setpoint changed from 180 bar to 200 bar. See ECN-1042. | ECN-1042, AEG-OM-700 Rev 3, AEG-MM-700 Rev 2, AEG-CR-700 Rev 2",
         "trust_level": "ENGINEERING_BULLETIN",
@@ -857,7 +856,6 @@
       "predicate": "direct_controller_connections",
       "object_value": [
         "PS-04A",
-        "HPU",
         "IV-21"
       ],
       "unit": null,
@@ -876,17 +874,17 @@
         "trust_level": "OFFICIAL_MANUAL",
         "location_detail": null
       },
-      "notes": "According to the schematic, exactly three components have direct purple signal/control lines to PLC-03: PS-04A, Hydraulic Power Unit (HPU), and Isolation Valve IV-21. Reservoirs and Press Circuit do not connect directly to PLC-03."
+      "notes": "PDF vector stroke analysis confirms that exactly two components connect directly to PLC-03 via purple control/signal lines (RGB 0.541, 0.294, 0.612): PS-04A and IV-21. The line connecting PLC-03 to the HPU is drawn in dark grey (RGB 0.333, 0.333, 0.333), which the drawing legend explicitly defines as a hydraulic fluid path, not a control/signal connection."
     },
     {
       "id": "FACT_ELEC_POWER_VOLTAGE",
       "subject_id": "HPU",
-      "predicate": "power_supply_compatibility",
-      "object_value": "480V supply required via Q1 (480:120V transformer T1). 3-phase 400V is NOT compatible directly.",
+      "predicate": "power_supply_specification",
+      "object_value": "480V incoming disconnect (Q1) and 480:120V control transformer (T1); 400V 3-phase is not stated.",
       "unit": null,
       "version_scope": null,
       "trust_level": "OFFICIAL_MANUAL",
-      "confidence": 1.0,
+      "confidence": 0.9799,
       "status": "ACTIVE",
       "provenance": {
         "document_id": "AEG-DWG-E02",
@@ -899,7 +897,7 @@
         "trust_level": "OFFICIAL_MANUAL",
         "location_detail": null
       },
-      "notes": null
+      "notes": "Drawing AEG-DWG-E02 only specifies 480V and 120V power circuits; compatibility with a 400V supply is not stated anywhere in the package."
     },
     {
       "id": "FACT_TRN_AUX_RESERVOIR",
@@ -929,21 +927,42 @@
       "subject_id": "PS-04A",
       "predicate": "calibration_record",
       "object_value": {
-        "technician": "R. Okafor",
+        "technician": "Unknown",
         "calibration_date": "2026-01-09",
         "target_span_bar": 200.0,
         "reading_span_bar": 199.4,
-        "calibration_interval": "Unspecified / Not included in binder"
+        "calibration_interval": "Unspecified / Not included in binder",
+        "ocr_confidence": 0.9451,
+        "measured_points": [
+          {
+            "point": "Zero (0%)",
+            "reference_bar": 0.0,
+            "reading_bar": 0.1,
+            "result": "PASS"
+          },
+          {
+            "point": "Mid (50%)",
+            "reference_bar": 100.0,
+            "reading_bar": 99.6,
+            "result": "PASS"
+          },
+          {
+            "point": "Span (100%)",
+            "reference_bar": 200.0,
+            "reading_bar": 199.4,
+            "result": "PASS"
+          }
+        ]
       },
       "unit": null,
       "version_scope": null,
       "trust_level": "OFFICIAL_MANUAL",
-      "confidence": 1.0,
+      "confidence": 0.9451,
       "status": "ACTIVE",
       "provenance": {
         "document_id": "APP-C-CAL",
         "document_title": "APPENDIX C \u2014 SENSOR CALIBRATION RECORD",
-        "file_type": "PDF (Scanned)",
+        "file_type": "PDF (Scanned OCR)",
         "page": 1,
         "section": null,
         "element_id": null,
@@ -984,12 +1003,12 @@
       "unit": null,
       "version_scope": null,
       "trust_level": "OFFICIAL_MANUAL",
-      "confidence": 1.0,
+      "confidence": 0.9897,
       "status": "ACTIVE",
       "provenance": {
         "document_id": "HMI-SCREEN-03",
         "document_title": "HMI Diagnostics Screen",
-        "file_type": "PNG",
+        "file_type": "PNG (OCR Processed)",
         "page": null,
         "section": null,
         "element_id": null,

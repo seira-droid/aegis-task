@@ -48,6 +48,9 @@ class IngestionCoordinator:
         if rel_path.endswith('.pdf'):
             if 'scans' in rel_path:
                 parsed_data = ScanOCRParserModule.parse_calibration_record(full_path)
+            elif 'system_diagram_hydraulic' in rel_path:
+                parsed_data = PDFParser.parse_pdf(full_path)
+                parsed_data["vector_analysis"] = VisionParserModule.parse_hydraulic_schematic_vectors(full_path)
             else:
                 parsed_data = PDFParser.parse_pdf(full_path)
         elif rel_path.endswith('.xlsx'):

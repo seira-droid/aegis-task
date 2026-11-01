@@ -26,7 +26,17 @@ class OfficeParser:
                     text = ''.join(node.text for node in si.iter() if node.tag.endswith('}t') and node.text)
                     shared_strings.append(text)
 
-            # 2. Read worksheets
+            # 2. Read sheet names mapping from workbook.xml
+            sheet_name_map = {}
+            if 'xl/workbook.xml' in z.namelist():
+                wb_tree = ET.fromstring(z.read('xl/workbook.xml'))
+                for s in wb_tree.findall('.//{http://schemas.openxmlformats.org/spreadsheetml/2006/main}sheet'):
+                    s_name = s.attrib.get('name')
+                    s_id = s.attrib.get('sheetId')
+                    if s_name and s_id:
+                        sheet_name_map[f"sheet{s_id}"] = s_name
+
+            # 3. Read worksheets
             sheet_files = [f for f in z.namelist() if f.startswith('xl/worksheets/sheet') and f.endswith('.xml')]
             ns = '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}'
 
@@ -60,8 +70,9 @@ class OfficeParser:
                         row_dict = {headers[i]: cell_vals[i] for i in range(len(headers))}
                         rows_data.append(row_dict)
 
-                sheet_name = os.path.basename(sfile).replace('.xml', '')
-                result[sheet_name] = rows_data
+                raw_sheet_id = os.path.basename(sfile).replace('.xml', '')
+                final_sheet_name = sheet_name_map.get(raw_sheet_id, raw_sheet_id)
+                result[final_sheet_name] = rows_data
 
         return result
 
