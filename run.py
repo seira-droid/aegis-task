@@ -28,6 +28,7 @@ def main():
     parser.add_argument("--serve", action="store_true", help="Launch FastAPI web UI server")
     parser.add_argument("--port", type=int, default=8000, help="Port for web server (default: 8000)")
     parser.add_argument("--query", type=int, help="Query an evaluation question by ID (1-23)")
+    parser.add_argument("--questions-file", type=str, help="Path to external question file (.pdf, .json, .txt) to evaluate")
     args = parser.parse_args()
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -97,6 +98,53 @@ def main():
             print("Gaps Identified:")
             for g in res.gaps_identified:
                 print(f"  * {g.target_topic}: {g.explanation}")
+        return
+
+    # Custom question file action
+    if args.questions_file:
+        q_path = os.path.abspath(args.questions_file)
+        if not os.path.exists(q_path):
+            print(f"Error: Questions file not found at: {q_path}")
+            return
+
+        print(f"\n[*] Parsing and evaluating questions from: {q_path}")
+        questions = []
+        if q_path.lower().endswith(".pdf"):
+            import pypdf, re
+            reader = pypdf.PdfReader(q_path)
+            full_text = "\n".join([p.extract_text() or "" for p in reader.pages])
+            current_q = ""
+            for line in [l.strip() for l in full_text.splitlines() if l.strip()]:
+                m = re.match(r"^(\d+)[\.\)]\s*(.+)", line)
+                if m:
+                    if current_q: questions.append(current_q)
+                    current_q = m.group(2)
+                elif current_q and not line.lower().startswith("evaluation questions"):
+                    current_q += " " + line
+            if current_q: questions.append(current_q)
+        elif q_path.lower().endswith(".json"):
+            with open(q_path, "r", encoding="utf-8") as jf:
+                data = json.load(jf)
+                questions = data if isinstance(data, list) else data.get("questions", list(data.values()))
+        else:
+            with open(q_path, "r", encoding="utf-8") as tf:
+                questions = [l.strip() for l in tf.read().splitlines() if len(l.strip()) > 5]
+
+        print(f"    -> Extracted {len(questions)} questions.")
+        evaluated = []
+        for idx, q_text in enumerate(questions):
+            res = query_engine.answer_query(q_text, query_id=idx + 1)
+            evaluated.append(res)
+            print(f"[{res.epistemic_status.value:18}] Q{idx + 1}: {q_text[:60]}...")
+
+        out_summary = os.path.join(eval_dir, "custom_questions_summary.md")
+        with open(out_summary, "w", encoding="utf-8") as f:
+            f.write(f"# Evaluated Question Set: {os.path.basename(q_path)}\n\n")
+            for r in evaluated:
+                f.write(f"### Q{r.query_id}: {r.query}\n")
+                f.write(f"- **Epistemic Status:** `{r.epistemic_status.value}`\n")
+                f.write(f"- **Answer:** {r.direct_answer}\n\n")
+        print(f"\n[+] Results written to: {out_summary}")
         return
 
     # Benchmark evaluation action

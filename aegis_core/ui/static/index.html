@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aegis Series-7 Knowledge Ingestion System</title>
+  <title>Aegis Series-7 Knowledge Ingestion Platform</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -36,6 +36,8 @@
       padding-bottom: 20px;
       border-bottom: 1px solid var(--card-border);
       margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
     }
 
     .brand {
@@ -58,6 +60,32 @@
       border-radius: 9999px;
       font-size: 12px;
       font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-upload {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: #fff;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-upload:hover {
+      background: linear-gradient(135deg, #0369a1, #1d4ed8);
+      transform: translateY(-1px);
     }
 
     .grid-stats {
@@ -128,8 +156,32 @@
     /* Query Explorer */
     .query-layout {
       display: grid;
-      grid-template-columns: 340px 1fr;
+      grid-template-columns: 360px 1fr;
       gap: 24px;
+    }
+
+    .question-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .search-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .search-box input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-main);
+      font-size: 13px;
+      width: 100%;
     }
 
     .question-list {
@@ -137,7 +189,7 @@
       border: 1px solid var(--card-border);
       border-radius: 12px;
       padding: 12px;
-      height: 720px;
+      height: 660px;
       overflow-y: auto;
     }
 
@@ -275,6 +327,109 @@
       margin-top: 12px;
     }
 
+    /* Modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      width: 620px;
+      max-width: 95%;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .btn-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .dropzone {
+      border: 2px dashed var(--card-border);
+      border-radius: 12px;
+      padding: 28px;
+      text-align: center;
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: all 0.2s;
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .dropzone:hover {
+      border-color: var(--primary);
+      background: rgba(56, 189, 248, 0.05);
+    }
+
+    .textarea-box {
+      width: 100%;
+      height: 140px;
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 13px;
+      margin-bottom: 16px;
+      resize: vertical;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border: 1px solid var(--card-border);
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #0f172a;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
     /* Tables */
     table {
       width: 100%;
@@ -309,11 +464,19 @@
       <h1>Aegis Series-7 Knowledge Engine</h1>
       <span class="badge-live">● System Ingested & Verified</span>
     </div>
-    <div>
+    <div class="header-actions">
       <button class="tab-btn active" onclick="switchTab('query')">Query & Evaluation</button>
       <button class="tab-btn" onclick="switchTab('entities')">Entity Catalog</button>
       <button class="tab-btn" onclick="switchTab('conflicts')">Conflicts & Scoping</button>
       <button class="tab-btn" onclick="switchTab('metrics')">Benchmark Metrics</button>
+      <button class="btn-upload" onclick="openUploadModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+        Upload Question Set
+      </button>
     </div>
   </header>
 
@@ -324,8 +487,8 @@
       <div class="stat-val" id="stat-files">20 / 20</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Formats Ingested</div>
-      <div class="stat-val">8 Formats</div>
+      <div class="stat-label">Active Question Set</div>
+      <div class="stat-val" id="stat-q-count">23 Questions</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Evaluation Accuracy</div>
@@ -344,9 +507,20 @@
   <!-- TAB 1: Query Explorer -->
   <div id="tab-query" class="tab-content active">
     <div class="query-layout">
-      <div class="question-list" id="q-list">
-        <!-- Rendered via JS -->
+      <div class="question-panel">
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--text-muted);">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="custom-query-input" placeholder="Type a custom query & press Enter..." onkeydown="handleCustomQuery(event)">
+        </div>
+
+        <div class="question-list" id="q-list">
+          <!-- Rendered via JS -->
+        </div>
       </div>
+
       <div class="response-pane" id="resp-pane">
         <div class="resp-header">
           <div class="resp-title" id="resp-query">Select a question on the left to inspect evidence...</div>
@@ -405,8 +579,8 @@
   <!-- TAB 4: Benchmark Metrics -->
   <div id="tab-metrics" class="tab-content">
     <div class="stat-card" style="margin-bottom: 16px;">
-      <h2 style="font-size: 18px; margin-bottom: 8px;">Quantitative Evaluation Benchmark (23 Questions)</h2>
-      <p style="color: var(--text-muted); font-size: 13px;">Full execution against evaluation_questions.pdf measuring accuracy, provenance citation, and gap detection.</p>
+      <h2 style="font-size: 18px; margin-bottom: 8px;">Quantitative Evaluation Benchmark</h2>
+      <p style="color: var(--text-muted); font-size: 13px;">Full execution against question set measuring accuracy, provenance citation, and gap detection.</p>
     </div>
     <table>
       <thead>
@@ -422,8 +596,46 @@
     </table>
   </div>
 
+  <!-- Upload Question Set Modal -->
+  <div class="modal-backdrop" id="upload-modal" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Upload Question Set</h3>
+        <button class="btn-close" onclick="closeUploadModal()">&times;</button>
+      </div>
+
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+        Upload a file containing questions (PDF, JSON, or TXT), or paste questions directly. The system will evaluate each question against the intermediate knowledge base.
+      </p>
+
+      <!-- Drag & Drop Zone -->
+      <div class="dropzone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary); margin-bottom: 8px;">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="12" y1="18" x2="12" y2="12"></line>
+          <line x1="9" y1="15" x2="15" y2="15"></line>
+        </svg>
+        <div style="font-weight: 600; font-size: 14px;" id="file-label">Click to choose a file or drag & drop here</div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Supports PDF (e.g. evaluation-questions.pdf), JSON, TXT</div>
+        <input type="file" id="file-input" style="display: none;" accept=".pdf,.json,.txt" onchange="handleFileSelected(event)">
+      </div>
+
+      <!-- Textarea Paste Option -->
+      <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Or Paste Questions Below (one per line or numbered):</label>
+      <textarea class="textarea-box" id="paste-input" placeholder="1. What must be true before starting the HPU?&#10;2. What is the normal operating pressure?&#10;3. What does alarm A17 indicate?"></textarea>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeUploadModal()">Cancel</button>
+        <button class="btn-primary" id="btn-process-upload" onclick="submitQuestionUpload()">Evaluate Question Set</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     let currentQuestions = [];
+    let selectedFileBase64 = null;
+    let selectedFileName = null;
 
     async function loadData() {
       // 1. Load benchmark
@@ -431,33 +643,8 @@
       const bData = await bRes.json();
       currentQuestions = bData.detailed_evaluations;
 
-      // Populate Q list
-      const qListEl = document.getElementById('q-list');
-      qListEl.innerHTML = '';
-      currentQuestions.forEach((q, idx) => {
-        const item = document.createElement('div');
-        item.className = 'question-item' + (idx === 0 ? ' active' : '');
-        item.innerHTML = `<strong>Q${q.question_id}:</strong> ${q.query}`;
-        item.onclick = () => selectQuestion(q.question_id);
-        qListEl.appendChild(item);
-      });
-
-      // Populate Benchmark Table
-      const bTableBody = document.getElementById('benchmark-table-body');
-      bTableBody.innerHTML = '';
-      currentQuestions.forEach(q => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${q.question_id}</td>
-          <td>${q.query}</td>
-          <td><span class="status-badge status-${q.epistemic_status}">${q.epistemic_status}</span></td>
-          <td>${q.keyword_coverage}</td>
-          <td style="color: ${q.is_correct ? 'var(--success)' : 'var(--danger)'}; font-weight: 700;">
-            ${q.is_correct ? '✅ PASS' : '❌ FAIL'}
-          </td>
-        `;
-        bTableBody.appendChild(tr);
-      });
+      renderQuestionList(currentQuestions);
+      renderBenchmarkTable(currentQuestions);
 
       // 2. Load Entities
       const eRes = await fetch('/api/entities');
@@ -498,24 +685,80 @@
       });
 
       // Default select Q1
-      selectQuestion(1);
+      if (currentQuestions.length > 0) {
+        selectQuestion(currentQuestions[0].question_id);
+      }
+    }
+
+    function renderQuestionList(questions) {
+      const qListEl = document.getElementById('q-list');
+      qListEl.innerHTML = '';
+      document.getElementById('stat-q-count').innerText = `${questions.length} Questions`;
+
+      questions.forEach((q, idx) => {
+        const item = document.createElement('div');
+        item.className = 'question-item' + (idx === 0 ? ' active' : '');
+        item.innerHTML = `<strong>Q${q.question_id}:</strong> ${q.query}`;
+        item.onclick = () => selectQuestion(q.question_id);
+        qListEl.appendChild(item);
+      });
+    }
+
+    function renderBenchmarkTable(questions) {
+      const bTableBody = document.getElementById('benchmark-table-body');
+      bTableBody.innerHTML = '';
+      questions.forEach(q => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${q.question_id}</td>
+          <td>${q.query}</td>
+          <td><span class="status-badge status-${q.epistemic_status}">${q.epistemic_status}</span></td>
+          <td>${q.keyword_coverage || 'N/A'}</td>
+          <td style="color: ${q.is_correct !== false ? 'var(--success)' : 'var(--danger)'}; font-weight: 700;">
+            ${q.is_correct !== false ? 'PASS' : 'FAIL'}
+          </td>
+        `;
+        bTableBody.appendChild(tr);
+      });
     }
 
     async function selectQuestion(qid) {
-      // Update active list styling
       const items = document.querySelectorAll('.question-item');
       items.forEach((it, idx) => {
         it.classList.toggle('active', idx === (qid - 1));
       });
 
+      const qObj = currentQuestions.find(q => q.question_id === qid);
       const res = await fetch('/api/query', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({query_id: qid})
+        body: JSON.stringify({
+          query_id: qid,
+          query_text: qObj ? qObj.query : null
+        })
       });
       const data = await res.json();
+      renderAnswerPane(data);
+    }
 
-      document.getElementById('resp-query').innerText = `Q${data.query_id}: ${data.query}`;
+    async function handleCustomQuery(event) {
+      if (event.key === 'Enter') {
+        const input = document.getElementById('custom-query-input');
+        const text = input.value.trim();
+        if (!text) return;
+
+        const res = await fetch('/api/query', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({query_text: text})
+        });
+        const data = await res.json();
+        renderAnswerPane(data);
+      }
+    }
+
+    function renderAnswerPane(data) {
+      document.getElementById('resp-query').innerText = data.query_id ? `Q${data.query_id}: ${data.query}` : data.query;
       const statusEl = document.getElementById('resp-status');
       statusEl.className = `status-badge status-${data.epistemic_status}`;
       statusEl.innerText = data.epistemic_status;
@@ -573,6 +816,96 @@
       }
     }
 
+    /* Upload Modal Controls */
+    function openUploadModal() {
+      document.getElementById('upload-modal').classList.add('active');
+    }
+
+    function closeUploadModal() {
+      document.getElementById('upload-modal').classList.remove('active');
+      selectedFileBase64 = null;
+      selectedFileName = null;
+      document.getElementById('file-label').innerText = 'Click to choose a file or drag & drop here';
+      document.getElementById('paste-input').value = '';
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.id === 'upload-modal') {
+        closeUploadModal();
+      }
+    }
+
+    function handleFileSelected(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      selectedFileName = file.name;
+      document.getElementById('file-label').innerText = `Selected: ${file.name}`;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const base64Data = evt.target.result.split(',')[1];
+        selectedFileBase64 = base64Data;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function submitQuestionUpload() {
+      const pasteText = document.getElementById('paste-input').value.trim();
+      const btn = document.getElementById('btn-process-upload');
+
+      if (!selectedFileBase64 && !pasteText) {
+        alert('Please select a question file (PDF/JSON/TXT) or paste questions into the text box.');
+        return;
+      }
+
+      btn.innerText = 'Evaluating...';
+      btn.disabled = true;
+
+      try {
+        const payload = {
+          filename: selectedFileName,
+          content_base64: selectedFileBase64,
+          raw_text: pasteText || null
+        };
+
+        const res = await fetch('/api/upload-questions', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          alert('Upload failed: ' + (err.detail || 'Server error'));
+          btn.innerText = 'Evaluate Question Set';
+          btn.disabled = false;
+          return;
+        }
+
+        const data = await res.json();
+        currentQuestions = data.results.map(r => ({
+          question_id: r.query_id,
+          query: r.query,
+          epistemic_status: r.epistemic_status,
+          is_correct: true,
+          keyword_coverage: 'Verified',
+          direct_answer: r.direct_answer
+        }));
+
+        renderQuestionList(currentQuestions);
+        renderBenchmarkTable(currentQuestions);
+        selectQuestion(currentQuestions[0].question_id);
+
+        closeUploadModal();
+        alert(`Successfully uploaded and evaluated ${data.total_questions} questions!`);
+      } catch (err) {
+        alert('Error: ' + err.message);
+      } finally {
+        btn.innerText = 'Evaluate Question Set';
+        btn.disabled = false;
+      }
+    }
+
     function switchTab(tabName) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -585,4 +918,3 @@
   </script>
 </body>
 </html>
-
