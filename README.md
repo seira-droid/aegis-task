@@ -78,9 +78,16 @@ Before installing, ensure your system meets these prerequisites:
 
 ### Step 1: Clone the Repository
 
-Open your terminal or PowerShell and clone the project:
+> [!IMPORTANT]
+> **Do not clone into `C:\Windows\System32`!** If your PowerShell opens in `C:\Windows\System32`, navigate to your user home folder or Desktop first by typing `cd ~` or `cd $HOME\Desktop`. Windows will block Git with a `Permission denied` error if you try to clone into `System32`.
+
+Open your terminal or PowerShell and navigate to your desired workspace folder, then clone the project:
 
 ```bash
+# Navigate to your home folder or project directory first
+cd ~
+
+# Clone the repository
 git clone https://github.com/seira-droid/aegis-task.git
 cd aegis-task
 ```
