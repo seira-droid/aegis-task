@@ -158,8 +158,12 @@ def main():
         print(f"Total Questions Evaluated:    {metrics['total_questions']}")
         print(f"Overall Answer Accuracy:      {metrics['overall_accuracy_pct']}%")
         print(f"Epistemic Calibration Score:  {metrics['epistemic_calibration_pct']}%")
-        print(f"Provenance Citation Recall:   {metrics['provenance_recall_pct']}%")
         print(f"Gap Detection Recall:         {metrics['gap_detection_recall_pct']}%")
+        print(f"False Premise Accuracy:       {metrics['false_premise_accuracy_pct']}%")
+        print(f"Provenance Citation Recall:   {metrics['provenance_recall_pct']}%")
+        print(f"Provenance Location Validity: {metrics['provenance_location_validity_pct']}%")
+        print(f"Evidence Quotation Fidelity:  {metrics['evidence_quotation_fidelity_pct']}%")
+        print(f"Claim Verification Rate:      {metrics['claim_verification_pct']}%")
         print(f"Hallucination Rate:           {metrics['hallucination_rate_pct']}%")
         print(f"\nDetailed evaluation report saved to: {os.path.join(eval_dir, 'evaluation_summary.md')}")
 

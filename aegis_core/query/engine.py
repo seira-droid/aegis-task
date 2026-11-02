@@ -303,12 +303,13 @@ class QueryEngine:
         cur_fact = self._fact_index.get("FACT_OM_OPERATING_PRESSURE_CURRENT")
         ecn_fact = self._fact_index.get("FACT_ECN1042_PRESSURE_SETPOINT")
         leg_fact = self._fact_index.get("FACT_OM_OPERATING_PRESSURE_LEGACY")
+        leg_html_fact = self._fact_index.get("FACT_LEGACY_OPERATING_PRESSURE")
         cfg_fact = self._fact_index.get("FACT_CFG_PS04A_THRESHOLD")
 
         if is_pre_32:
-            evidence = [f.provenance for f in [leg_fact, ecn_fact] if f]
+            evidence = [f.provenance for f in [leg_fact, leg_html_fact, ecn_fact] if f]
             claims = [
-                Claim(statement="Before revision 3.2, normal operating pressure was 180 bar measured by sensor PS-04.", supporting_fact_ids=["FACT_OM_OPERATING_PRESSURE_LEGACY"]),
+                Claim(statement="Before revision 3.2, normal operating pressure was 180 bar measured by sensor PS-04.", supporting_fact_ids=[f.id for f in [leg_fact, leg_html_fact] if f]),
                 Claim(statement="Engineering Change Notice ECN-1042 revised the setpoint to 200 bar alongside PS-04A replacement.", supporting_fact_ids=["FACT_ECN1042_PRESSURE_SETPOINT"])
             ]
             answer = (

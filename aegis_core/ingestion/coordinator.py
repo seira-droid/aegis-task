@@ -1,6 +1,7 @@
 """
 Ingestion Coordinator
-Dispatches all 20 files across 8 formats to dedicated parsers and stamps initial trust levels.
+Dispatches all 20 files across 8 formats to dedicated parsers,
+stamps initial trust levels, initializes perceptual caching, and maintains document registry.
 """
 
 import os
@@ -12,6 +13,152 @@ from aegis_core.ingestion.html_parser import HTMLParserModule
 from aegis_core.ingestion.json_parser import JSONParserModule
 from aegis_core.ingestion.vision_parser import VisionParserModule
 from aegis_core.ingestion.scan_ocr import ScanOCRParserModule
+from aegis_core.ingestion.ocr_utils import OCRManager
+
+
+# Canonical registry mapping filename pattern to authoritative document ID and metadata
+DOCUMENT_METADATA_REGISTRY = {
+    "configuration_export.json": {
+        "id": "CFG-EXPORT-01",
+        "title": "AegisConfigExport v1.4",
+        "file_type": "JSON",
+        "trust_level": TrustLevel.ENGINEERING_BULLETIN,
+        "summary": "Machine configuration export dump (firmware 3.2.1)"
+    },
+    "operator_manual.pdf": {
+        "id": "AEG-OM-700-R4",
+        "title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
+        "file_type": "PDF",
+        "trust_level": TrustLevel.OFFICIAL_MANUAL,
+        "summary": "Official Operator Manual Rev 4 (12 pages)"
+    },
+    "maintenance_manual.pdf": {
+        "id": "AEG-MM-700-R3",
+        "title": "Aegis Series-7 HCS Maintenance Manual (AEG-MM-700 Rev 3)",
+        "file_type": "PDF",
+        "trust_level": TrustLevel.OFFICIAL_MANUAL,
+        "summary": "Official Maintenance Manual Rev 3 (18 pages)"
+    },
+    "legacy_manual_v1.html": {
+        "id": "AEG-OM-700-R1",
+        "title": "Operator Manual (v1, legacy export)",
+        "file_type": "HTML",
+        "trust_level": TrustLevel.OFFICIAL_MANUAL,
+        "summary": "Legacy CMS export of Operator Manual v1 (partially superseded)"
+    },
+    "ECN-1042.pdf": {
+        "id": "ECN-1042",
+        "title": "Engineering Change Notice ECN-1042",
+        "file_type": "PDF",
+        "trust_level": TrustLevel.ENGINEERING_BULLETIN,
+        "summary": "Sensor replacement (PS-04 -> PS-04A) and setpoint revision (180 -> 200 bar)"
+    },
+    "ECN-1058.pdf": {
+        "id": "ECN-1058",
+        "title": "Engineering Change Notice ECN-1058",
+        "file_type": "PDF",
+        "trust_level": TrustLevel.ENGINEERING_BULLETIN,
+        "summary": "Documentation correction for Alarm A17 sensor reference logic"
+    },
+    "alarm_reference.pdf": {
+        "id": "AEG-AL-700-R5",
+        "title": "Aegis Alarm Reference (AEG-AL-700 Rev 5)",
+        "file_type": "PDF",
+        "trust_level": TrustLevel.OFFICIAL_MANUAL,
+        "summary": "Official Alarm Reference with multi-row tables and thresholds"
+    },
+    "component_register.xlsx": {
+        "id": "AEG-CR-700",
+        "title": "Component Register (AEG-CR-700)",
+        "file_type": "XLSX",
+        "trust_level": TrustLevel.OFFICIAL_MANUAL,
+        "summary": "Master component list, aliases, skid locations, and power disconnects"
+    },
+    "revision_history.xlsx": {
+        "id": "REV-HIST-700",
+        "title": "Revision History (AEG-RH-700)",
+        "file_type": "XLSX",
+        "trust_level": TrustLevel.ENGINEERING_BULLETIN,
+        "summary": "Software and hardware revision release timeline and change descriptions"
+    },
+    "terminology_glossary.docx": {
+        "id": "GLOSS-700",
+        "title": "Terminology Glossary",
+        "file_type": "DOCX",
+        "trust_level": TrustLevel.OFFICIAL_MANUAL,
+        "summary": "Official terminology definitions and cross-references"
+    },
+    "system_diagram_hydraulic.pdf": {
+        "id": "AEG-DWG-H01",
+        "title": "Hydraulic Schematic (AEG-DWG-H01)",
+        "file_type": "PDF",
+        "trust_level": TrustLevel.OFFICIAL_MANUAL,
+        "summary": "Vector schematic showing hydraulic and control/signal line topology"
+    },
+    "system_diagram_electrical.png": {
+        "id": "AEG-DWG-E02",
+        "title": "Electrical Schematic (AEG-DWG-E02)",
+        "file_type": "PNG",
+        "trust_level": TrustLevel.OFFICIAL_MANUAL,
+        "summary": "Power distribution, transformer, PLC-03 power, and valve driver wiring"
+    },
+    "wiring_diagram.pdf": {
+        "id": "AEG-DWG-W03",
+        "title": "Wiring Diagram (AEG-DWG-W03)",
+        "file_type": "PDF",
+        "trust_level": TrustLevel.OFFICIAL_MANUAL,
+        "summary": "Terminal block wiring diagram for pressure transducer loop"
+    },
+    "training_slide_excerpt.pptx": {
+        "id": "TRN-HPU-01",
+        "title": "HPU Basics Training Excerpt",
+        "file_type": "PPTX",
+        "trust_level": TrustLevel.OFFICIAL_MANUAL,
+        "summary": "Training slide deck introducing Line 4/5 Auxiliary Reservoir"
+    },
+    "site_survey_notes.docx": {
+        "id": "SITE-NOTES-L4",
+        "title": "Site Visit Notes — Line 4 HPU (J. Torres)",
+        "file_type": "DOCX",
+        "trust_level": TrustLevel.FIELD_RECORD_LOW_TRUST,
+        "summary": "Informal field notes recording unverified 175 bar gauge reading"
+    },
+    "scanned_appendix_calibration.pdf": {
+        "id": "APP-C-CAL",
+        "title": "APPENDIX C — SENSOR CALIBRATION RECORD",
+        "file_type": "PDF (Scanned OCR)",
+        "trust_level": TrustLevel.FIELD_RECORD_LOW_TRUST,
+        "summary": "Scanned sensor calibration form with OCR noise and unstated interval"
+    },
+    "safety_data_sheet_hydraulic_fluid.pdf": {
+        "id": "SDS-HYD-01",
+        "title": "Safety Data Sheet — Hydraulic Fluid ISO VG 46",
+        "file_type": "PDF",
+        "trust_level": TrustLevel.NOISE_EXTERNAL,
+        "summary": "Material Safety Data Sheet (external reference noise)"
+    },
+    "screen_01_home.png": {
+        "id": "HMI-SCREEN-01",
+        "title": "HMI Home Screen",
+        "file_type": "PNG (OCR Processed)",
+        "trust_level": TrustLevel.OFFICIAL_MANUAL,
+        "summary": "HMI Home Screen showing discharge pressure and startup interlocks"
+    },
+    "screen_02_alarms.png": {
+        "id": "HMI-SCREEN-02",
+        "title": "HMI Alarm List Screen",
+        "file_type": "PNG (OCR Processed)",
+        "trust_level": TrustLevel.OFFICIAL_MANUAL,
+        "summary": "HMI Alarm list showing active Alarm A17 and shutdown threshold"
+    },
+    "screen_03_diagnostics.png": {
+        "id": "HMI-SCREEN-03",
+        "title": "HMI Diagnostics Screen",
+        "file_type": "PNG (OCR Processed)",
+        "trust_level": TrustLevel.OFFICIAL_MANUAL,
+        "summary": "HMI Diagnostics showing physical sensor tag P.S.04-A"
+    }
+}
 
 
 class IngestionCoordinator:
@@ -19,6 +166,11 @@ class IngestionCoordinator:
         self.dataset_root = dataset_root
         self.parsed_files: Dict[str, Any] = {}
         self.source_documents: Dict[str, SourceDocument] = {}
+
+        # Initialize OCR cache in data directory
+        data_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
+        cache_path = os.path.join(data_dir, ".ocr_cache.json")
+        OCRManager.set_cache_path(cache_path)
 
     def ingest_all(self) -> Dict[str, Any]:
         """Scans dataset directory and ingests all 20 files."""
@@ -34,17 +186,19 @@ class IngestionCoordinator:
         return self.parsed_files
 
     def _ingest_file(self, rel_path: str, full_path: str):
-        # 1. Determine Trust Level and file type
-        trust_level = TrustLevel.OFFICIAL_MANUAL
-        if 'engineering_bulletins' in rel_path or 'revision_history' in rel_path or 'configuration' in rel_path:
-            trust_level = TrustLevel.ENGINEERING_BULLETIN
-        elif 'low_trust' in rel_path or 'scans' in rel_path:
-            trust_level = TrustLevel.FIELD_RECORD_LOW_TRUST
-        elif 'noise' in rel_path:
-            trust_level = TrustLevel.NOISE_EXTERNAL
+        filename = os.path.basename(full_path)
+        meta = DOCUMENT_METADATA_REGISTRY.get(filename, {
+            "id": f"DOC-{filename}",
+            "title": filename,
+            "file_type": os.path.splitext(filename)[1].upper().replace('.', ''),
+            "trust_level": TrustLevel.OFFICIAL_MANUAL,
+            "summary": "Document"
+        })
 
+        trust_level = meta["trust_level"]
+
+        # Parse file content
         parsed_data = None
-
         if rel_path.endswith('.pdf'):
             if 'scans' in rel_path:
                 parsed_data = ScanOCRParserModule.parse_calibration_record(full_path)
@@ -73,10 +227,21 @@ class IngestionCoordinator:
             elif 'screen_03_diagnostics' in rel_path:
                 parsed_data = VisionParserModule.parse_hmi_diagnostics(full_path)
 
+        # Store in parsed files
         self.parsed_files[rel_path] = {
             "rel_path": rel_path,
             "full_path": full_path,
+            "document_id": meta["id"],
+            "title": meta["title"],
             "trust_level": trust_level,
             "content": parsed_data
         }
 
+        # Register in source documents catalog
+        self.source_documents[meta["id"]] = SourceDocument(
+            id=meta["id"],
+            filename=filename,
+            file_type=meta["file_type"],
+            trust_level=trust_level,
+            summary=meta.get("summary")
+        )

@@ -1,8 +1,9 @@
 """
 Evaluation Benchmark Runner
 Executes comprehensive evaluation against both the canonical 23 questions from
-evaluation_questions.pdf and an independent suite of 10 held-out rephrased questions
-to measure true generalization and avoid circular evaluation.
+evaluation_questions.pdf and an independent suite of 10 held-out rephrased questions.
+Validates epistemic status, semantic assertions, claim verification, location citations,
+and evidence quote fidelity.
 """
 
 import os
@@ -13,148 +14,273 @@ from aegis_core.query.engine import QueryEngine
 from aegis_core.eval.metrics import EvaluationMetrics
 
 
-# Ground Truth independently derived from source documents
+# Ground Truth independently derived from authoritative source documents
 GROUND_TRUTH_DATA: Dict[int, Dict[str, Any]] = {
     1: {
         "expected_epistemic_status": EpistemicStatus.DEFINITIVE,
         "required_keywords": ["fluid", "iv-21", "emergency stop", "access panel"],
         "expected_sources": ["AEG-OM-700-R4", "CFG-EXPORT-01"],
+        "required_factual_assertions": [
+            {"patterns": ["fluid level is within", "fluid", "sight glass"]},
+            {"patterns": ["isolation valve iv-21 is open", "iv-21 is open", "valve_iv21"]},
+            {"patterns": ["emergency stop circuit is reset", "estop", "e-stop"]},
+            {"patterns": ["maintenance access panel is installed", "panel is closed", "maintenance access panel"]}
+        ],
+        "prohibited_assertions": ["panel removed is permitted", "iv-21 is closed"],
         "is_gap": False
     },
     2: {
         "expected_epistemic_status": EpistemicStatus.VERSION_SCOPED,
         "required_keywords": ["200 bar", "3.2", "180 bar"],
         "expected_sources": ["AEG-OM-700-R4", "ECN-1042"],
+        "required_factual_assertions": [
+            {"patterns": ["200 bar"]},
+            {"patterns": ["software revision 3.2", "firmware 3.2", "rev 3.2"]},
+            {"patterns": ["180 bar", "prior to 3.2", "legacy"]}
+        ],
+        "prohibited_assertions": ["200 bar applies to all units unconditionally", "180 bar on current firmware"],
         "is_gap": False
     },
     3: {
         "expected_epistemic_status": EpistemicStatus.DEFINITIVE,
         "required_keywords": ["hydraulic pressure low", "150 bar", "iv-21", "fluid"],
-        "expected_sources": ["AEG-AL-700-R5"],
+        "expected_sources": ["AEG-AL-700-R5", "AEG-MM-700-R3"],
+        "required_factual_assertions": [
+            {"patterns": ["hydraulic pressure low", "pressure below 150 bar"]},
+            {"patterns": ["iv-21 closed", "partially closed"]},
+            {"patterns": ["fluid level is low", "low hydraulic fluid"]},
+            {"patterns": ["sensor", "drift", "out of calibration", "signal invalid"]}
+        ],
+        "prohibited_assertions": ["alarm a17 is normal", "pressure high"],
         "is_gap": False
     },
     4: {
         "expected_epistemic_status": EpistemicStatus.DEFINITIVE,
         "required_keywords": ["not the same", "ecn-1042", "signal drift"],
         "expected_sources": ["ECN-1042"],
+        "required_factual_assertions": [
+            {"patterns": ["not the same component", "not the same", "not a form-fit-function"]},
+            {"patterns": ["ecn-1042"]},
+            {"patterns": ["signal drift", "drift", "18-month"]}
+        ],
+        "prohibited_assertions": ["ps-04 is identical to ps-04a", "direct drop-in replacement"],
         "is_gap": False
     },
     5: {
         "expected_epistemic_status": EpistemicStatus.DEFINITIVE,
         "required_keywords": ["ecn-1042", "engineering change notice"],
         "expected_sources": ["ECN-1042"],
+        "required_factual_assertions": [
+            {"patterns": ["ecn-1042", "engineering change notice 1042"]}
+        ],
+        "prohibited_assertions": ["ecn-1058 introduced the sensor change"],
         "is_gap": False
     },
     6: {
-        # Verified from PDF vector stream: only PS-04A and IV-21 have purple lines; HPU line is grey
+        # Verified from vector stream: only PS-04A and IV-21 connect via purple control lines; HPU line is grey fluid line
         "expected_epistemic_status": EpistemicStatus.DEFINITIVE,
         "required_keywords": ["ps-04a", "iv-21", "purple", "grey"],
         "expected_sources": ["AEG-DWG-H01"],
+        "required_factual_assertions": [
+            {"patterns": ["ps-04a"]},
+            {"patterns": ["iv-21"]},
+            {"patterns": ["purple", "control/signal"]},
+            {"patterns": ["grey", "fluid path", "hydraulic fluid"]}
+        ],
+        "prohibited_assertions": ["hpu connects via purple control line", "plc-03 does not connect to iv-21"],
         "is_gap": False
     },
     7: {
         "expected_epistemic_status": EpistemicStatus.DEFINITIVE,
         "required_keywords": ["shutdown procedure 4.7", "10 seconds", "iv-21"],
-        "expected_sources": ["AEG-MM-700-R3"],
+        "expected_sources": ["AEG-MM-700-R3", "CFG-EXPORT-01"],
+        "required_factual_assertions": [
+            {"patterns": ["shutdown procedure 4.7"]},
+            {"patterns": ["10 seconds"]},
+            {"patterns": ["close iv-21", "iv-21"]}
+        ],
+        "prohibited_assertions": ["silence the alarm and continue", "ignore if running"],
         "is_gap": False
     },
     8: {
         "expected_epistemic_status": EpistemicStatus.DEFINITIVE,
         "required_keywords": ["50 bar", "uncommanded", "iv-21"],
         "expected_sources": ["AEG-OM-700-R4", "AEG-MM-700-R3"],
+        "required_factual_assertions": [
+            {"patterns": ["50 bar", "above 50 bar"]},
+            {"patterns": ["uncommanded", "valve transition", "actuation"]},
+            {"patterns": ["iv-21", "isolation valve"]}
+        ],
+        "prohibited_assertions": ["safe to reset at 200 bar", "reset at any pressure"],
         "is_gap": False
     },
     9: {
         "expected_epistemic_status": EpistemicStatus.DEFINITIVE,
         "required_keywords": ["180 bar", "ecn-1042"],
         "expected_sources": ["ECN-1042", "AEG-OM-700-R4"],
+        "required_factual_assertions": [
+            {"patterns": ["180 bar"]},
+            {"patterns": ["ecn-1042", "engineering change notice 1042"]},
+            {"patterns": ["200 bar", "3.2"]}
+        ],
+        "prohibited_assertions": ["220 bar before 3.2", "150 bar was normal"],
         "is_gap": False
     },
     10: {
         "expected_epistemic_status": EpistemicStatus.DEFINITIVE,
         "required_keywords": ["a17", "hydraulic pressure low"],
         "expected_sources": ["AEG-AL-700-R5"],
+        "required_factual_assertions": [
+            {"patterns": ["a17", "alarm a17"]},
+            {"patterns": ["hydraulic pressure low"]}
+        ],
+        "prohibited_assertions": ["alarm a18", "alarm a19"],
         "is_gap": False
     },
     11: {
         "expected_epistemic_status": EpistemicStatus.DEFINITIVE,
         "required_keywords": ["hydraulic module", "components"],
         "expected_sources": ["AEG-CR-700"],
+        "required_factual_assertions": [
+            {"patterns": ["hydraulic module"]}
+        ],
+        "prohibited_assertions": ["skid b", "control cabinet 1"],
         "is_gap": False
     },
     12: {
         "expected_epistemic_status": EpistemicStatus.DEFINITIVE,
         "required_keywords": ["auxiliary reservoir", "not covered in the standard operator manual"],
         "expected_sources": ["TRN-HPU-01"],
+        "required_factual_assertions": [
+            {"patterns": ["auxiliary reservoir"]},
+            {"patterns": ["not covered in the standard operator manual", "line 4/5"]},
+            {"patterns": ["no new alarms", "no novel alarms", "does not introduce any new alarm"]}
+        ],
+        "prohibited_assertions": ["introduces alarm a20", "no novel components"],
         "is_gap": False
     },
     13: {
         "expected_epistemic_status": EpistemicStatus.DEFINITIVE,
         "required_keywords": ["p.s.04-a", "ps-04a"],
         "expected_sources": ["HMI-SCREEN-03"],
+        "required_factual_assertions": [
+            {"patterns": ["p.s.04-a"]},
+            {"patterns": ["ps-04a", "matches"]}
+        ],
+        "prohibited_assertions": ["does not match any component", "matches ps-40"],
         "is_gap": False
     },
     14: {
         "expected_epistemic_status": EpistemicStatus.DEFINITIVE,
         "required_keywords": ["2025-09-30", "ps-04a", "200 bar"],
         "expected_sources": ["REV-HIST-700"],
+        "required_factual_assertions": [
+            {"patterns": ["2025-09-30", "september 30, 2025"]},
+            {"patterns": ["ps-04", "ps-04a", "replaced"]},
+            {"patterns": ["180 bar", "200 bar"]}
+        ],
+        "prohibited_assertions": ["effective 2024", "no pressure change"],
         "is_gap": False
     },
     15: {
         "expected_epistemic_status": EpistemicStatus.DEFINITIVE,
         "required_keywords": ["normal operating pressure"],
         "expected_sources": ["CFG-EXPORT-01", "AEG-OM-700-R4"],
+        "required_factual_assertions": [
+            {"patterns": ["normal operating pressure", "normal discharge pressure"]},
+            {"patterns": ["200 bar"]}
+        ],
+        "prohibited_assertions": ["alarm threshold", "maximum burst pressure"],
         "is_gap": False
     },
     16: {
         "expected_epistemic_status": EpistemicStatus.VERSION_SCOPED,
         "required_keywords": ["only", "3.2", "180 bar"],
         "expected_sources": ["AEG-OM-700-R4", "ECN-1042"],
+        "required_factual_assertions": [
+            {"patterns": ["only some", "only to some units", "units running software revision 3.2"]},
+            {"patterns": ["180 bar", "prior to 3.2", "legacy"]}
+        ],
+        "prohibited_assertions": ["applies to all units unconditionally"],
         "is_gap": False
     },
     17: {
         "expected_epistemic_status": EpistemicStatus.DEFINITIVE,
         "required_keywords": ["not the same", "coolant loop", "skid b"],
         "expected_sources": ["AEG-CR-700"],
+        "required_factual_assertions": [
+            {"patterns": ["not the same", "not the same as ps-40"]},
+            {"patterns": ["coolant loop", "skid b"]},
+            {"patterns": ["hpu discharge", "hydraulic circuit"]}
+        ],
+        "prohibited_assertions": ["ps-04 is the same as ps-40"],
         "is_gap": False
     },
     18: {
         "expected_epistemic_status": EpistemicStatus.DEFINITIVE,
         "required_keywords": ["180 bar"],
         "expected_sources": ["AEG-OM-700-R1", "AEG-OM-700-R4"],
+        "required_factual_assertions": [
+            {"patterns": ["180 bar"]}
+        ],
+        "prohibited_assertions": ["200 bar before revision 3.2"],
         "is_gap": False
     },
     19: {
         "expected_epistemic_status": EpistemicStatus.UNANSWERABLE_GAP,
         "required_keywords": ["cannot be determined", "epistemic gap"],
         "expected_sources": [],
-        "is_gap": True
+        "required_factual_assertions": [
+            {"patterns": ["cannot be determined", "omitted", "epistemic gap", "not specified"]}
+        ],
+        "prohibited_assertions": ["85°c", "100°c", "operating temperature is 70"],
+        "is_gap": True,
+        "is_false_premise": False
     },
     20: {
         "expected_epistemic_status": EpistemicStatus.FALSE_PREMISE,
         "required_keywords": ["false premise", "no voltage sensor", "cannot be determined"],
         "expected_sources": [],
-        "is_gap": True,
+        "required_factual_assertions": [
+            {"patterns": ["false premise", "no voltage sensor", "contains no voltage sensor"]}
+        ],
+        "prohibited_assertions": ["calibrate every 12 months", "calibration interval is 1 year"],
+        "is_gap": False,
         "is_false_premise": True
     },
     21: {
         "expected_epistemic_status": EpistemicStatus.UNANSWERABLE_GAP,
         "required_keywords": ["cannot be determined", "released", "author"],
         "expected_sources": [],
-        "is_gap": True
+        "required_factual_assertions": [
+            {"patterns": ["cannot be determined", "omits", "does not list an author", "not stated"]}
+        ],
+        "prohibited_assertions": ["approved by john doe", "approved by j. torres"],
+        "is_gap": True,
+        "is_false_premise": False
     },
     22: {
         "expected_epistemic_status": EpistemicStatus.UNANSWERABLE_GAP,
         "required_keywords": ["cannot be determined", "mtbf", "not specified"],
         "expected_sources": [],
-        "is_gap": True
+        "required_factual_assertions": [
+            {"patterns": ["cannot be determined", "not specified", "omitted", "no mtbf"]}
+        ],
+        "prohibited_assertions": ["50,000 hours", "10,000 hours", "mtbf is 2 years"],
+        "is_gap": True,
+        "is_false_premise": False
     },
     23: {
-        # Honest answer: 400V compatibility is NOT STATED in docs; only 480V is documented
         "expected_epistemic_status": EpistemicStatus.UNANSWERABLE_GAP,
         "required_keywords": ["not stated", "480v", "cannot be confirmed"],
         "expected_sources": ["AEG-CR-700"],
-        "is_gap": True
+        "required_factual_assertions": [
+            {"patterns": ["cannot be determined", "not stated", "cannot be confirmed"]},
+            {"patterns": ["480v"]}
+        ],
+        "prohibited_assertions": ["fully compatible with 400v", "yes, it is compatible"],
+        "is_gap": True,
+        "is_false_premise": False
     }
 }
 
@@ -237,7 +363,11 @@ class BenchmarkHarness:
             res = self.engine.answer_question_by_id(q_id)
             primary_results.append(res)
 
-        primary_metrics = EvaluationMetrics.calculate_metrics(primary_results, GROUND_TRUTH_DATA)
+        primary_metrics = EvaluationMetrics.calculate_metrics(
+            primary_results,
+            GROUND_TRUTH_DATA,
+            facts_db=self.engine._fact_index
+        )
 
         # 2. Held-out Generalization Evaluation
         held_out_results = []
@@ -297,9 +427,13 @@ class BenchmarkHarness:
             "# Aegis Knowledge Ingestion Challenge — Evaluation Results\n",
             f"**Primary Questions Evaluated:** {metrics['total_questions']}",
             f"**Primary Answer Accuracy:** {metrics['overall_accuracy_pct']}%",
-            f"**Provenance Recall:** {metrics['provenance_recall_pct']}%",
             f"**Epistemic Calibration Score:** {metrics['epistemic_calibration_pct']}%",
             f"**Gap Detection Recall:** {metrics['gap_detection_recall_pct']}%",
+            f"**False Premise Accuracy:** {metrics['false_premise_accuracy_pct']}%",
+            f"**Provenance Citation Recall:** {metrics['provenance_recall_pct']}%",
+            f"**Location Validity:** {metrics['provenance_location_validity_pct']}%",
+            f"**Evidence Quotation Fidelity:** {metrics['evidence_quotation_fidelity_pct']}%",
+            f"**Claim Verification Rate:** {metrics['claim_verification_pct']}%",
             f"**Hallucination Rate:** {metrics['hallucination_rate_pct']}%\n",
             f"**Held-out Generalization Suite:** {held_out_count} rephrased queries",
             f"**Held-out Generalization Accuracy:** {held_out_acc}%\n",

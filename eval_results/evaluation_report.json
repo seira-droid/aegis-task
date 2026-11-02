@@ -3,8 +3,12 @@
     "total_questions": 23,
     "overall_accuracy_pct": 100.0,
     "epistemic_calibration_pct": 100.0,
-    "provenance_recall_pct": 96.15,
     "gap_detection_recall_pct": 100.0,
+    "false_premise_accuracy_pct": 100.0,
+    "provenance_recall_pct": 100.0,
+    "provenance_location_validity_pct": 100.0,
+    "evidence_quotation_fidelity_pct": 100.0,
+    "claim_verification_pct": 100.0,
     "hallucination_rate_pct": 0.0,
     "detailed_evaluations": [
       {
@@ -14,15 +18,23 @@
         "expected_status": "DEFINITIVE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "4/4",
+        "assertions_met": "4/4",
         "cited_sources": [
-          "CFG-EXPORT-01",
-          "AEG-OM-700-R4"
+          "AEG-OM-700-R4",
+          "CFG-EXPORT-01"
         ],
         "expected_sources": [
-          "CFG-EXPORT-01",
-          "AEG-OM-700-R4"
+          "AEG-OM-700-R4",
+          "CFG-EXPORT-01"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 2,
+        "valid_locations_count": 2,
+        "verified_quotes_count": 2,
+        "claims_count": 4,
+        "verified_claims_count": 4,
         "confidence_score": 1.0
       },
       {
@@ -32,7 +44,9 @@
         "expected_status": "VERSION_SCOPED",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "3/3",
+        "assertions_met": "3/3",
         "cited_sources": [
           "ECN-1042",
           "AEG-OM-700-R4",
@@ -42,6 +56,12 @@
           "ECN-1042",
           "AEG-OM-700-R4"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 4,
+        "valid_locations_count": 4,
+        "verified_quotes_count": 4,
+        "claims_count": 3,
+        "verified_claims_count": 3,
         "confidence_score": 0.98
       },
       {
@@ -51,14 +71,23 @@
         "expected_status": "DEFINITIVE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "4/4",
+        "assertions_met": "4/4",
         "cited_sources": [
           "AEG-MM-700-R3",
           "AEG-AL-700-R5"
         ],
         "expected_sources": [
+          "AEG-MM-700-R3",
           "AEG-AL-700-R5"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 2,
+        "valid_locations_count": 2,
+        "verified_quotes_count": 2,
+        "claims_count": 2,
+        "verified_claims_count": 2,
         "confidence_score": 1.0
       },
       {
@@ -68,13 +97,21 @@
         "expected_status": "DEFINITIVE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "3/3",
+        "assertions_met": "3/3",
         "cited_sources": [
           "ECN-1042"
         ],
         "expected_sources": [
           "ECN-1042"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 1,
+        "valid_locations_count": 1,
+        "verified_quotes_count": 1,
+        "claims_count": 1,
+        "verified_claims_count": 1,
         "confidence_score": 1.0
       },
       {
@@ -84,7 +121,9 @@
         "expected_status": "DEFINITIVE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "2/2",
+        "assertions_met": "1/1",
         "cited_sources": [
           "ECN-1042",
           "REV-HIST-700"
@@ -92,6 +131,12 @@
         "expected_sources": [
           "ECN-1042"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 2,
+        "valid_locations_count": 2,
+        "verified_quotes_count": 2,
+        "claims_count": 1,
+        "verified_claims_count": 1,
         "confidence_score": 1.0
       },
       {
@@ -101,13 +146,21 @@
         "expected_status": "DEFINITIVE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "4/4",
+        "assertions_met": "4/4",
         "cited_sources": [
           "AEG-DWG-H01"
         ],
         "expected_sources": [
           "AEG-DWG-H01"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 1,
+        "valid_locations_count": 1,
+        "verified_quotes_count": 1,
+        "claims_count": 2,
+        "verified_claims_count": 2,
         "confidence_score": 1.0
       },
       {
@@ -117,14 +170,23 @@
         "expected_status": "DEFINITIVE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "3/3",
+        "assertions_met": "3/3",
         "cited_sources": [
           "AEG-MM-700-R3",
           "CFG-EXPORT-01"
         ],
         "expected_sources": [
-          "AEG-MM-700-R3"
+          "AEG-MM-700-R3",
+          "CFG-EXPORT-01"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 2,
+        "valid_locations_count": 2,
+        "verified_quotes_count": 2,
+        "claims_count": 1,
+        "verified_claims_count": 1,
         "confidence_score": 1.0
       },
       {
@@ -134,16 +196,24 @@
         "expected_status": "DEFINITIVE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "3/3",
+        "assertions_met": "3/3",
         "cited_sources": [
           "AEG-MM-700-R3",
-          "CFG-EXPORT-01",
-          "AEG-OM-700-R4"
+          "AEG-OM-700-R4",
+          "CFG-EXPORT-01"
         ],
         "expected_sources": [
           "AEG-MM-700-R3",
           "AEG-OM-700-R4"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 3,
+        "valid_locations_count": 3,
+        "verified_quotes_count": 3,
+        "claims_count": 2,
+        "verified_claims_count": 2,
         "confidence_score": 1.0
       },
       {
@@ -153,15 +223,24 @@
         "expected_status": "DEFINITIVE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "2/2",
+        "assertions_met": "3/3",
         "cited_sources": [
+          "ECN-1042",
+          "AEG-OM-700-R4",
+          "AEG-OM-700-R1"
+        ],
+        "expected_sources": [
           "ECN-1042",
           "AEG-OM-700-R4"
         ],
-        "expected_sources": [
-          "AEG-OM-700-R4",
-          "ECN-1042"
-        ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 3,
+        "valid_locations_count": 3,
+        "verified_quotes_count": 3,
+        "claims_count": 2,
+        "verified_claims_count": 2,
         "confidence_score": 1.0
       },
       {
@@ -171,13 +250,21 @@
         "expected_status": "DEFINITIVE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "2/2",
+        "assertions_met": "2/2",
         "cited_sources": [
           "AEG-AL-700-R5"
         ],
         "expected_sources": [
           "AEG-AL-700-R5"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 1,
+        "valid_locations_count": 1,
+        "verified_quotes_count": 1,
+        "claims_count": 1,
+        "verified_claims_count": 1,
         "confidence_score": 1.0
       },
       {
@@ -187,13 +274,21 @@
         "expected_status": "DEFINITIVE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "2/2",
+        "assertions_met": "1/1",
         "cited_sources": [
           "AEG-CR-700"
         ],
         "expected_sources": [
           "AEG-CR-700"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 1,
+        "valid_locations_count": 1,
+        "verified_quotes_count": 1,
+        "claims_count": 1,
+        "verified_claims_count": 1,
         "confidence_score": 1.0
       },
       {
@@ -203,13 +298,21 @@
         "expected_status": "DEFINITIVE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "2/2",
+        "assertions_met": "3/3",
         "cited_sources": [
           "TRN-HPU-01"
         ],
         "expected_sources": [
           "TRN-HPU-01"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 1,
+        "valid_locations_count": 1,
+        "verified_quotes_count": 1,
+        "claims_count": 2,
+        "verified_claims_count": 2,
         "confidence_score": 1.0
       },
       {
@@ -219,13 +322,21 @@
         "expected_status": "DEFINITIVE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "2/2",
+        "assertions_met": "2/2",
         "cited_sources": [
           "HMI-SCREEN-03"
         ],
         "expected_sources": [
           "HMI-SCREEN-03"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 1,
+        "valid_locations_count": 1,
+        "verified_quotes_count": 1,
+        "claims_count": 2,
+        "verified_claims_count": 2,
         "confidence_score": 1.0
       },
       {
@@ -235,13 +346,21 @@
         "expected_status": "DEFINITIVE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "3/3",
+        "assertions_met": "3/3",
         "cited_sources": [
           "REV-HIST-700"
         ],
         "expected_sources": [
           "REV-HIST-700"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 1,
+        "valid_locations_count": 1,
+        "verified_quotes_count": 1,
+        "claims_count": 2,
+        "verified_claims_count": 2,
         "confidence_score": 1.0
       },
       {
@@ -251,15 +370,23 @@
         "expected_status": "DEFINITIVE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "1/1",
+        "assertions_met": "2/2",
         "cited_sources": [
-          "CFG-EXPORT-01",
-          "AEG-OM-700-R4"
+          "AEG-OM-700-R4",
+          "CFG-EXPORT-01"
         ],
         "expected_sources": [
-          "CFG-EXPORT-01",
-          "AEG-OM-700-R4"
+          "AEG-OM-700-R4",
+          "CFG-EXPORT-01"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 2,
+        "valid_locations_count": 2,
+        "verified_quotes_count": 2,
+        "claims_count": 1,
+        "verified_claims_count": 1,
         "confidence_score": 1.0
       },
       {
@@ -269,7 +396,9 @@
         "expected_status": "VERSION_SCOPED",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "3/3",
+        "assertions_met": "2/2",
         "cited_sources": [
           "ECN-1042",
           "AEG-OM-700-R4"
@@ -278,6 +407,12 @@
           "ECN-1042",
           "AEG-OM-700-R4"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 3,
+        "valid_locations_count": 3,
+        "verified_quotes_count": 3,
+        "claims_count": 2,
+        "verified_claims_count": 2,
         "confidence_score": 1.0
       },
       {
@@ -287,14 +422,22 @@
         "expected_status": "DEFINITIVE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "3/3",
+        "assertions_met": "3/3",
         "cited_sources": [
-          "CFG-EXPORT-01",
-          "AEG-CR-700"
+          "AEG-CR-700",
+          "CFG-EXPORT-01"
         ],
         "expected_sources": [
           "AEG-CR-700"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 2,
+        "valid_locations_count": 2,
+        "verified_quotes_count": 2,
+        "claims_count": 1,
+        "verified_claims_count": 1,
         "confidence_score": 1.0
       },
       {
@@ -304,15 +447,24 @@
         "expected_status": "DEFINITIVE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "1/1",
+        "assertions_met": "1/1",
         "cited_sources": [
           "ECN-1042",
-          "AEG-OM-700-R4"
+          "AEG-OM-700-R4",
+          "AEG-OM-700-R1"
         ],
         "expected_sources": [
           "AEG-OM-700-R4",
           "AEG-OM-700-R1"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 3,
+        "valid_locations_count": 3,
+        "verified_quotes_count": 3,
+        "claims_count": 2,
+        "verified_claims_count": 2,
         "confidence_score": 1.0
       },
       {
@@ -322,9 +474,17 @@
         "expected_status": "UNANSWERABLE_GAP",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "2/2",
+        "assertions_met": "1/1",
         "cited_sources": [],
         "expected_sources": [],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 0,
+        "valid_locations_count": 0,
+        "verified_quotes_count": 0,
+        "claims_count": 0,
+        "verified_claims_count": 0,
         "confidence_score": 1.0
       },
       {
@@ -334,9 +494,17 @@
         "expected_status": "FALSE_PREMISE",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "3/3",
+        "assertions_met": "1/1",
         "cited_sources": [],
         "expected_sources": [],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 0,
+        "valid_locations_count": 0,
+        "verified_quotes_count": 0,
+        "claims_count": 0,
+        "verified_claims_count": 0,
         "confidence_score": 1.0
       },
       {
@@ -346,9 +514,17 @@
         "expected_status": "UNANSWERABLE_GAP",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "3/3",
+        "assertions_met": "1/1",
         "cited_sources": [],
         "expected_sources": [],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 0,
+        "valid_locations_count": 0,
+        "verified_quotes_count": 0,
+        "claims_count": 0,
+        "verified_claims_count": 0,
         "confidence_score": 1.0
       },
       {
@@ -358,9 +534,17 @@
         "expected_status": "UNANSWERABLE_GAP",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "3/3",
+        "assertions_met": "1/1",
         "cited_sources": [],
         "expected_sources": [],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 0,
+        "valid_locations_count": 0,
+        "verified_quotes_count": 0,
+        "claims_count": 0,
+        "verified_claims_count": 0,
         "confidence_score": 1.0
       },
       {
@@ -370,14 +554,22 @@
         "expected_status": "UNANSWERABLE_GAP",
         "status_match": true,
         "is_correct": true,
+        "factual_correctness": true,
         "keyword_coverage": "3/3",
+        "assertions_met": "2/2",
         "cited_sources": [
-          "AEG-DWG-E02",
-          "AEG-CR-700"
+          "AEG-CR-700",
+          "AEG-DWG-E02"
         ],
         "expected_sources": [
           "AEG-CR-700"
         ],
+        "provenance_recall_pct": 100.0,
+        "citations_count": 3,
+        "valid_locations_count": 3,
+        "verified_quotes_count": 3,
+        "claims_count": 2,
+        "verified_claims_count": 2,
         "confidence_score": 0.95
       }
     ]
@@ -926,7 +1118,8 @@
         {
           "statement": "Before revision 3.2, normal operating pressure was 180 bar measured by sensor PS-04.",
           "supporting_fact_ids": [
-            "FACT_OM_OPERATING_PRESSURE_LEGACY"
+            "FACT_OM_OPERATING_PRESSURE_LEGACY",
+            "FACT_LEGACY_OPERATING_PRESSURE"
           ],
           "confidence": 1.0,
           "verification_status": "VERIFIED"
@@ -949,6 +1142,17 @@
           "section": "Section 5 Normal Operating Ranges",
           "element_id": null,
           "verbatim_quote": "On revisions prior to 3.2, normal discharge pressure was 180 bar, measured by the original PS-04 sensor.",
+          "trust_level": "OFFICIAL_MANUAL",
+          "location_detail": null
+        },
+        {
+          "document_id": "AEG-OM-700-R1",
+          "document_title": "Operator Manual (v1, legacy export)",
+          "file_type": "HTML",
+          "page": null,
+          "section": "Section 5 Normal Operating Ranges",
+          "element_id": null,
+          "verbatim_quote": "Normal HPU discharge pressure is 180 bar, as measured by pressure sensor PS-04.",
           "trust_level": "OFFICIAL_MANUAL",
           "location_detail": null
         },
@@ -1100,8 +1304,8 @@
           "document_id": "HMI-SCREEN-03",
           "document_title": "HMI Diagnostics Screen",
           "file_type": "PNG (OCR Processed)",
-          "page": null,
-          "section": null,
+          "page": 1,
+          "section": "Sensor Diagnostics Header Panel",
           "element_id": null,
           "verbatim_quote": "Tag: P.S.04-A | Signal Type: 4-20 mA | Scaled Value: 200.3 bar | Note: this screen displays the sensor tag as printed on the physical unit label.",
           "trust_level": "OFFICIAL_MANUAL",
@@ -1312,7 +1516,8 @@
         {
           "statement": "Before revision 3.2, normal operating pressure was 180 bar measured by sensor PS-04.",
           "supporting_fact_ids": [
-            "FACT_OM_OPERATING_PRESSURE_LEGACY"
+            "FACT_OM_OPERATING_PRESSURE_LEGACY",
+            "FACT_LEGACY_OPERATING_PRESSURE"
           ],
           "confidence": 1.0,
           "verification_status": "VERIFIED"
@@ -1335,6 +1540,17 @@
           "section": "Section 5 Normal Operating Ranges",
           "element_id": null,
           "verbatim_quote": "On revisions prior to 3.2, normal discharge pressure was 180 bar, measured by the original PS-04 sensor.",
+          "trust_level": "OFFICIAL_MANUAL",
+          "location_detail": null
+        },
+        {
+          "document_id": "AEG-OM-700-R1",
+          "document_title": "Operator Manual (v1, legacy export)",
+          "file_type": "HTML",
+          "page": null,
+          "section": "Section 5 Normal Operating Ranges",
+          "element_id": null,
+          "verbatim_quote": "Normal HPU discharge pressure is 180 bar, as measured by pressure sensor PS-04.",
           "trust_level": "OFFICIAL_MANUAL",
           "location_detail": null
         },

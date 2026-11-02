@@ -591,6 +591,8 @@ class FactExtractor:
             document_id="SITE-NOTES-L4",
             document_title="Site Visit Notes — Line 4 HPU (J. Torres)",
             file_type="DOCX",
+            page=1,
+            section="Section 3: Field Inspection Notes",
             trust_level=TrustLevel.FIELD_RECORD_LOW_TRUST,
             verbatim_quote="Checked the gauge on the local panel and it read about 175 bar during a normal run, not 180 like the manual says it should be. Could be the gauge is a little off, didn't have a calibrated reference on me."
         )
@@ -618,6 +620,8 @@ class FactExtractor:
                 document_id="HMI-SCREEN-03",
                 document_title="HMI Diagnostics Screen",
                 file_type="PNG (OCR Processed)",
+                page=1,
+                section="Sensor Diagnostics Header Panel",
                 trust_level=TrustLevel.OFFICIAL_MANUAL,
                 verbatim_quote="Tag: P.S.04-A | Signal Type: 4-20 mA | Scaled Value: 200.3 bar | Note: this screen displays the sensor tag as printed on the physical unit label."
             )

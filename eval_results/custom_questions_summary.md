@@ -6,7 +6,7 @@
 1. Hydraulic fluid level is within the normal band on the sight glass.
 2. Isolation valve IV-21 is OPEN.
 3. Emergency stop circuit is RESET.
-4. Maintenance access panel is INSTALLED and secured (closed) — operating with the panel removed is prohibited due to rotating components.
+4. Maintenance access panel is INSTALLED and secured (closed) — operating with the panel removed is prohibited due to exposed rotating components.
 
 ### Q2: What is the current normal operating pressure for the HPU, and under what conditions does that apply?
 - **Epistemic Status:** `VERSION_SCOPED`
@@ -29,11 +29,10 @@
 
 ### Q6: Which components connect directly to the HCS controller, according to the hydraulic schematic?
 - **Epistemic Status:** `DEFINITIVE`
-- **Answer:** According to the hydraulic schematic (AEG-DWG-H01), three components connect directly to the HCS controller (PLC-03) via purple control/signal lines:
+- **Answer:** According to the hydraulic schematic (AEG-DWG-H01), only two components connect directly to the HCS controller (PLC-03) via purple control/signal lines:
 1. Pressure Sensor PS-04A
-2. Hydraulic Power Unit (HPU)
-3. Isolation Valve IV-21
-(The Main Reservoir, Auxiliary Reservoir, and Press Circuit connect via grey hydraulic fluid paths and do not connect directly to PLC-03).
+2. Isolation Valve IV-21
+(Note on HPU: The line connecting PLC-03 to the Hydraulic Power Unit is drawn in dark grey, which the drawing legend explicitly designates as a hydraulic fluid path rather than a purple control/signal connection. The Main Reservoir, Auxiliary Reservoir, and Press Circuit also connect only via fluid paths and do not connect directly to PLC-03).
 
 ### Q7: What action is required if alarm A17 persists for more than 10 seconds?
 - **Epistemic Status:** `DEFINITIVE`
@@ -41,11 +40,11 @@
 
 ### Q8: Under what circumstances must the controller not be reset?
 - **Epistemic Status:** `DEFINITIVE`
-- **Answer:** The PLC-03 controller must NOT be reset while hydraulic pressure is above 50 bar. Resetting under pressure re-initializes valve driver outputs, which can produce a momentary uncommanded actuation/transition of Isolation Valve IV-21. Hydraulic pressure must be bled below 50 bar first before a reset is permitted.
+- **Answer:** The PLC-03 controller must NOT be reset while hydraulic pressure is above 50 bar. The controller reset routine re-initializes valve driver outputs; if the circuit remains pressurized, this can produce a momentary uncommanded actuation/transition of Isolation Valve IV-21. Hydraulic pressure must be bled below 50 bar using the manual bleed procedure before a reset is permitted.
 
 ### Q9: What was the operating pressure threshold before software revision 3.2, and what changed it?
 - **Epistemic Status:** `DEFINITIVE`
-- **Answer:** Before software revision 3.2, the normal operating pressure threshold was 180 bar (measured by sensor PS-04). It was changed to 200 bar by Engineering Change Notice ECN-1042 (effective with Software Revision 3.2) alongside the sensor upgrade to PS-04A, in order to improve press cycle times on Series-7 units manufactured after 2024.
+- **Answer:** Before software revision 3.2, the normal operating discharge pressure setpoint was 180 bar, measured by sensor PS-04. It was changed to 200 bar by Engineering Change Notice ECN-1042 (effective with Software Revision 3.2) alongside the replacement of PS-04 with PS-04A to improve press cycle times on Series-7 units manufactured after 2024.
 
 ### Q10: Which alarm is associated with a pressure sensor reading below 150 bar?
 - **Epistemic Status:** `DEFINITIVE`
@@ -53,7 +52,7 @@
 
 ### Q11: According to the component register, what is the location of the isolation valve IV-21?
 - **Epistemic Status:** `DEFINITIVE`
-- **Answer:** According to the Component Register (AEG-CR-700), the location of Isolation Valve IV-21 is 'Hydraulic Module'.
+- **Answer:** According to the Component Register (AEG-CR-700, Components sheet), the location of Isolation Valve IV-21 is 'Hydraulic Module'.
 
 ### Q12: Does the training slide deck introduce any component or alarm not found in the manuals?
 - **Epistemic Status:** `DEFINITIVE`
@@ -65,7 +64,7 @@
 
 ### Q14: Per the revision history, when did software revision 3.2 take effect, and what changed alongside it?
 - **Epistemic Status:** `DEFINITIVE`
-- **Answer:** Per the revision history (AEG-RH-700), software revision 3.2 took effect on September 30, 2025 (2025-09-30). Alongside it, pressure sensor PS-04 was replaced by PS-04A, and the normal HPU discharge pressure setpoint was increased from 180 bar to 200 bar (referencing ECN-1042), with corresponding updates to AEG-OM-700, AEG-MM-700, and AEG-CR-700.
+- **Answer:** Per the revision history (AEG-RH-700, Revision History sheet), software revision 3.2 took effect on September 30, 2025 (2025-09-30). Alongside it, pressure sensor PS-04 was replaced by PS-04A, and the normal HPU discharge pressure setpoint was increased from 180 bar to 200 bar (referencing ECN-1042), with corresponding updates to AEG-OM-700, AEG-MM-700, and AEG-CR-700.
 
 ### Q15: What does sensor_ps04a_threshold_bar in the configuration export correspond to in the operator manual's terminology?
 - **Epistemic Status:** `DEFINITIVE`
@@ -77,31 +76,31 @@
 
 ### Q17: Is PS-04 the same as PS-40?
 - **Epistemic Status:** `DEFINITIVE`
-- **Answer:** No, PS-04 is NOT the same as PS-40. PS-04 is a legacy pressure sensor on the HPU discharge line (hydraulic circuit), whereas PS-40 is an active pressure sensor on the Coolant Loop (Skid B). Both the Component Register (AEG-CR-700) and configuration export explicitly caution: 'NOT related to the HPU discharge circuit. Do not confuse with PS-04 / PS-04A.'
+- **Answer:** No, PS-04 is NOT the same as PS-40. PS-04 is a legacy pressure sensor on the HPU discharge line (hydraulic circuit), whereas PS-40 is an active pressure sensor on the Coolant Loop (Skid B). Both the Component Register (AEG-CR-700, Components sheet) and configuration export explicitly state: 'NOT related to the HPU discharge circuit. Do not confuse with PS-04 / PS-04A.'
 
 ### Q18: What was the pressure limit before revision 3.2?
 - **Epistemic Status:** `DEFINITIVE`
-- **Answer:** Before software revision 3.2, the normal operating discharge pressure setpoint was 180 bar, measured by sensor PS-04. (The low-pressure alarm A17 threshold remained 150 bar, the high-pressure alarm A18 was 220 bar, and the controller reset ceiling was 50 bar).
+- **Answer:** Before software revision 3.2, the normal operating discharge pressure setpoint was 180 bar, measured by sensor PS-04. It was changed to 200 bar by Engineering Change Notice ECN-1042 (effective with Software Revision 3.2) alongside the replacement of PS-04 with PS-04A to improve press cycle times on Series-7 units manufactured after 2024.
 
 ### Q19: What is the maximum continuous operating temperature of PS-04A?
 - **Epistemic Status:** `UNANSWERABLE_GAP`
-- **Answer:** Cannot be determined from the dataset (Epistemic Gap). A comprehensive search across all 20 dataset documents (including Operator Manual AEG-OM-700, Maintenance Manual AEG-MM-700, ECN-1042, Component Register AEG-CR-700, and Calibration Record Appendix C) confirms that no maximum continuous operating temperature is specified for sensor PS-04A.
+- **Answer:** Cannot be determined from the dataset (Epistemic Gap). The provided documentation package (including Operator Manual AEG-OM-700, Maintenance Manual AEG-MM-700, ECN-1042, Component Register AEG-CR-700, and Calibration Record Appendix C) contains no specification for the maximum continuous operating temperature of sensor PS-04A.
 
 ### Q20: What is the calibration interval for the electrical system diagram's voltage sensor?
 - **Epistemic Status:** `FALSE_PREMISE`
-- **Answer:** Cannot be determined due to a false premise and missing documentation:
-1. False Premise: The electrical schematic (AEG-DWG-E02) contains NO voltage sensor (it only depicts Main Disconnect Q1, Control Transformer T1, PLC-03 power supplies/rack, safety relay KA1, and IV-21 driver).
-2. Unstated Calibration Interval: Furthermore, even the sensor calibration sheet (Appendix C, for PS-04A) explicitly states: 'No calibration interval is specified for PS-04A on this form; recalibration frequency should be confirmed against the applicable maintenance schedule, which is not included in this binder.'
+- **Answer:** Cannot be determined due to a false premise and unstated documentation:
+1. False Premise: The electrical schematic (AEG-DWG-E02) contains NO voltage sensor (it only depicts Main Disconnect Q1, Control Transformer T1, PLC-03 power supplies/rack, safety relay KA1, and valve driver).
+2. Unstated Calibration Interval: Additionally, even on the pressure sensor calibration sheet (Appendix C), it is explicitly noted: 'No calibration interval is specified for PS-04A on this form; recalibration frequency should be confirmed against the applicable maintenance schedule, which is not included in this binder.'
 
 ### Q21: Who approved engineering bulletin ECN-1058?
 - **Epistemic Status:** `UNANSWERABLE_GAP`
-- **Answer:** Cannot be determined from the dataset (Epistemic Gap). Engineering Change Notice ECN-1058 shows a status of 'Released' and references ECN-1042, but does not provide an author name, approval signatory, or reviewer identifier.
+- **Answer:** Cannot be determined from the dataset (Epistemic Gap). Engineering Change Notice ECN-1058 indicates a status of 'Released' and references ECN-1042, but does not list an author name, approver identity, or approval signature.
 
 ### Q22: What is the mean time between failures for the isolation valve IV-21?
 - **Epistemic Status:** `UNANSWERABLE_GAP`
-- **Answer:** Cannot be determined from the dataset (Epistemic Gap). The mean time between failures (MTBF) for Isolation Valve IV-21 is not specified in the Component Register (AEG-CR-700), the Maintenance Manual (AEG-MM-700), or any other document in the package.
+- **Answer:** Cannot be determined from the dataset (Epistemic Gap). The mean time between failures (MTBF) for Isolation Valve IV-21 is not specified in the Component Register (AEG-CR-700), Maintenance Manual (AEG-MM-700), or any other document in the package.
 
 ### Q23: Is the Aegis Series-7 HCS compatible with a 3-phase 400V supply?
-- **Epistemic Status:** `CONFLICT_RESOLVED`
-- **Answer:** Based on the provided documentation, the Aegis Series-7 HCS is NOT directly compatible with a 3-phase 400V supply without an external transformer. The Component Register (AEG-CR-700) and Electrical Schematic (AEG-DWG-E02) specify that Main Disconnect Q1 is a 480V incoming disconnect and Control Transformer T1 is rated 480:120V. There is no provision or compatibility rating for a 400V supply in the dataset.
+- **Epistemic Status:** `UNANSWERABLE_GAP`
+- **Answer:** Cannot be determined / Not stated in the documentation. The Component Register (AEG-CR-700, Components sheet) and Electrical Schematic (AEG-DWG-E02) only document a 480V incoming disconnect (Q1) and a 480:120V control transformer (T1). A 3-phase 400V supply is not mentioned anywhere in the dataset, so compatibility cannot be confirmed from the provided sources.
 

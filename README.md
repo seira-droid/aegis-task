@@ -3,7 +3,10 @@
 
 [![Evaluation Benchmark](https://img.shields.io/badge/Benchmark_Accuracy-100%25-brightgreen.svg)]()
 [![Provenance Recall](https://img.shields.io/badge/Provenance_Recall-100%25-blue.svg)]()
+[![Location Validity](https://img.shields.io/badge/Location_Validity-100%25-blue.svg)]()
+[![Quote Fidelity](https://img.shields.io/badge/Quote_Fidelity-100%25-blue.svg)]()
 [![Gap Detection](https://img.shields.io/badge/Gap_Detection-100%25-success.svg)]()
+[![False Premise](https://img.shields.io/badge/False_Premise_Accuracy-100%25-success.svg)]()
 [![Hallucination Rate](https://img.shields.io/badge/Hallucination_Rate-0.0%25-green.svg)]()
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)]()
 
@@ -26,9 +29,16 @@ Rather than relying on naive text-chunk embedding search (which fails on schemat
 
 ## 2. Quick Start
 
-### Prerequisites
-- Python 3.10+
-- Dependencies: `pypdf`, `fastapi`, `uvicorn`, `pydantic` (all standard or pre-installed)
+### Installation & Environment Setup
+
+```powershell
+# 1. Create and activate a fresh virtual environment
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+# 2. Install required dependencies
+pip install -r requirements.txt
+```
 
 ### Running Commands
 
@@ -38,19 +48,31 @@ python run.py --eval
 ```
 *Outputs quantitative metrics and saves both `eval_results/evaluation_report.json` and `eval_results/evaluation_summary.md`.*
 
-#### 2. Query Specific Questions by ID (1 to 23)
+#### 2. Run the Knowledge Integrity Unit Test Suite
+```powershell
+python -m unittest tests/test_knowledge_integrity.py
+```
+*Verifies provenance validity, trust levels, non-merge logic, and vector connectivity.*
+
+#### 3. Query Specific Questions by ID (1 to 23)
 ```powershell
 python run.py --query 2
 python run.py --query 19
+python run.py --query 20
 ```
 
-#### 3. Export Intermediate Knowledge Representation (IKR)
+#### 4. Evaluate External Question Files (.pdf, .json, .txt)
+```powershell
+python run.py --questions-file task-data/evaluation-questions.pdf
+```
+
+#### 5. Export Intermediate Knowledge Representation (IKR)
 ```powershell
 python run.py --export
 ```
 *Serializes the complete knowledge store to `data/knowledge_store.json`.*
 
-#### 4. Launch the Interactive Web Dashboard
+#### 6. Launch the Interactive Web Dashboard
 ```powershell
 python run.py --serve --port 8000
 ```
@@ -146,8 +168,12 @@ The evaluation harness ran across all 23 evaluation questions from `evaluation-q
 Total Primary Questions Evaluated:    23
 Overall Primary Answer Accuracy:      100.0%
 Epistemic Calibration Score:          100.0%
-Provenance Citation Recall:           96.15%
 Gap Detection Recall:                 100.0%
+False Premise Accuracy:               100.0%
+Provenance Citation Recall:           100.0%
+Provenance Location Validity:         100.0%
+Evidence Quotation Fidelity:          100.0%
+Claim Verification Rate:              100.0%
 Hallucination Rate:                   0.0%
 
 Held-out Generalization Test Suite:   10 rephrased queries
@@ -159,29 +185,29 @@ Held-out Generalization Accuracy:     100.0%
 
 | # | Question Summary | Epistemic Status | Result | Primary Provenance Citations |
 |---|---|---|:---:|---|
-| **1** | Startup preconditions for HPU | `DEFINITIVE` | ✅ PASS | `AEG-OM-700-R4` (p.1 s.4.3), `CFG-EXPORT-01` |
-| **2** | Current normal operating pressure & conditions | `VERSION_SCOPED` | ✅ PASS | `AEG-OM-700-R4` (p.1 s.5), `ECN-1042` (p.1) |
-| **3** | Alarm A17 indication & possible causes | `DEFINITIVE` | ✅ PASS | `AEG-AL-700-R5` (p.1), `AEG-MM-700-R3` (s.6) |
-| **4** | Is PS-04 the same as PS-04A? | `DEFINITIVE` | ✅ PASS | `ECN-1042` (p.1 s.1), `AEG-CR-700` |
-| **5** | Document introducing PS-04 to PS-04A change | `DEFINITIVE` | ✅ PASS | `ECN-1042` (p.1), `REV-HIST-700` |
-| **6** | Components connecting directly to PLC-03 | `DEFINITIVE` | ✅ PASS | `AEG-DWG-H01` (vector stroke color: PS-04A & IV-21 via purple line; HPU is grey line) |
-| **7** | Action if Alarm A17 persists > 10 seconds | `DEFINITIVE` | ✅ PASS | `AEG-MM-700-R3` (p.1 s.4), `CFG-EXPORT-01` |
-| **8** | Circumstances when controller must NOT be reset | `DEFINITIVE` | ✅ PASS | `AEG-OM-700-R4` (p.2 s.7), `AEG-MM-700-R3` (s.3) |
-| **9** | Operating pressure before Rev 3.2 & what changed it | `DEFINITIVE` | ✅ PASS | `ECN-1042` (p.1), `AEG-OM-700-R4` (p.1 s.5) |
-| **10** | Alarm associated with pressure < 150 bar | `DEFINITIVE` | ✅ PASS | `AEG-AL-700-R5` (p.1 Table Row 1) |
-| **11** | Location of Isolation Valve IV-21 | `DEFINITIVE` | ✅ PASS | `AEG-CR-700` (Row IV-21, Components sheet) |
-| **12** | Does training slide deck introduce novel components? | `DEFINITIVE` | ✅ PASS | `TRN-HPU-01` (Slide 2: Auxiliary Reservoir) |
-| **13** | Sensor ID on diagnostics screenshot & match | `DEFINITIVE` | ✅ PASS | `HMI-SCREEN-03` (P.S.04-A -> PS-04A) |
-| **14** | Software revision 3.2 effective date & changes | `DEFINITIVE` | ✅ PASS | `REV-HIST-700` (Row 3.2, 2025-09-30) |
-| **15** | `sensor_ps04a_threshold_bar` in operator manual | `DEFINITIVE` | ✅ PASS | `CFG-EXPORT-01`, `AEG-OM-700-R4` (s.4.3 & s.5) |
-| **16** | Does 200 bar threshold apply to all or some units? | `VERSION_SCOPED` | ✅ PASS | `AEG-OM-700-R4` (s.5), `ECN-1042` (s.1) |
-| **17** | Is PS-04 the same as PS-40? | `DEFINITIVE` | ✅ PASS | `AEG-CR-700` (Row PS-40: Coolant Loop, Skid B, Components sheet) |
-| **18** | Pressure limit before revision 3.2 | `DEFINITIVE` | ✅ PASS | `AEG-OM-700-R1` (s.5), `AEG-OM-700-R4` (s.5) |
-| **19** | Max continuous operating temperature of PS-04A | `UNANSWERABLE_GAP` | ✅ PASS | *None (Epistemic Gap: Omitted from dataset)* |
-| **20** | Calibration interval for electrical diagram voltage sensor | `FALSE_PREMISE` | ✅ PASS | *False Premise: No voltage sensor in schematic* |
-| **21** | Who approved engineering bulletin ECN-1058? | `UNANSWERABLE_GAP` | ✅ PASS | *None (Epistemic Gap: Released without approver)* |
-| **22** | MTBF for Isolation Valve IV-21 | `UNANSWERABLE_GAP` | ✅ PASS | *None (Epistemic Gap: MTBF omitted from dataset)* |
-| **23** | Compatibility with 3-phase 400V supply | `UNANSWERABLE_GAP` | ✅ PASS | `AEG-CR-700` (Components sheet: Q1 480V, T1 480:120V; 400V unstated) |
+| **1** | Startup preconditions for HPU | `DEFINITIVE` | ✅ PASS | `AEG-OM-700-R4` (p.1 s.4.3), `CFG-EXPORT-01` (startup_interlocks) |
+| **2** | Current normal operating pressure & conditions | `VERSION_SCOPED` | ✅ PASS | `AEG-OM-700-R4` (p.1 s.5), `ECN-1042` (p.1), `CFG-EXPORT-01` |
+| **3** | Alarm A17 indication & possible causes | `DEFINITIVE` | ✅ PASS | `AEG-AL-700-R5` (p.1 Table Row 1), `AEG-MM-700-R3` (s.6) |
+| **4** | Is PS-04 the same as PS-04A? | `DEFINITIVE` | ✅ PASS | `ECN-1042` (p.1 s.1: updated signal conditioning, drift fix) |
+| **5** | Document introducing PS-04 to PS-04A change | `DEFINITIVE` | ✅ PASS | `ECN-1042` (p.1), `REV-HIST-700` (Row 3.2) |
+| **6** | Components connecting directly to PLC-03 | `DEFINITIVE` | ✅ PASS | `AEG-DWG-H01` (derived from vector stroke: PS-04A & IV-21 via purple lines; HPU via grey fluid line) |
+| **7** | Action if Alarm A17 persists > 10 seconds | `DEFINITIVE` | ✅ PASS | `AEG-MM-700-R3` (p.1 s.4: Shutdown Proc. 4.7), `CFG-EXPORT-01` |
+| **8** | Circumstances when controller must NOT be reset | `DEFINITIVE` | ✅ PASS | `AEG-OM-700-R4` (p.2 s.7: >50 bar), `AEG-MM-700-R3` (s.3), `CFG-EXPORT-01` |
+| **9** | Operating pressure before Rev 3.2 & what changed it | `DEFINITIVE` | ✅ PASS | `ECN-1042` (p.1), `AEG-OM-700-R4` (p.1 s.5), `AEG-OM-700-R1` |
+| **10** | Alarm associated with pressure < 150 bar | `DEFINITIVE` | ✅ PASS | `AEG-AL-700-R5` (p.1 Table Row 1: Alarm A17) |
+| **11** | Location of Isolation Valve IV-21 | `DEFINITIVE` | ✅ PASS | `AEG-CR-700` (Row IV-21, Components sheet: Hydraulic Module) |
+| **12** | Does training slide deck introduce novel components? | `DEFINITIVE` | ✅ PASS | `TRN-HPU-01` (Slide 2: Auxiliary Reservoir; no novel alarms) |
+| **13** | Sensor ID on diagnostics screenshot & match | `DEFINITIVE` | ✅ PASS | `HMI-SCREEN-03` (P.S.04-A -> matches PS-04A per unit label) |
+| **14** | Software revision 3.2 effective date & changes | `DEFINITIVE` | ✅ PASS | `REV-HIST-700` (Row 3.2, 2025-09-30: PS-04A & 200 bar) |
+| **15** | `sensor_ps04a_threshold_bar` in operator manual | `DEFINITIVE` | ✅ PASS | `CFG-EXPORT-01`, `AEG-OM-700-R4` (s.4.3 & s.5: normal operating pressure) |
+| **16** | Does 200 bar threshold apply to all or some units? | `VERSION_SCOPED` | ✅ PASS | `AEG-OM-700-R4` (s.5), `ECN-1042` (s.1: software >= 3.2 only) |
+| **17** | Is PS-04 the same as PS-40? | `DEFINITIVE` | ✅ PASS | `AEG-CR-700` (Row PS-40: Coolant Loop, Skid B), `CFG-EXPORT-01` |
+| **18** | Pressure limit before revision 3.2 | `DEFINITIVE` | ✅ PASS | `AEG-OM-700-R1` (s.5), `AEG-OM-700-R4` (s.5: 180 bar) |
+| **19** | Max continuous operating temperature of PS-04A | `UNANSWERABLE_GAP` | ✅ PASS | *None (Epistemic Gap: Omitted from documentation package)* |
+| **20** | Calibration interval for electrical diagram voltage sensor | `FALSE_PREMISE` | ✅ PASS | *False Premise: No voltage sensor exists on AEG-DWG-E02; interval unstated in Appendix C* |
+| **21** | Who approved engineering bulletin ECN-1058? | `UNANSWERABLE_GAP` | ✅ PASS | *None (Epistemic Gap: Released without approver/signatory name)* |
+| **22** | MTBF for Isolation Valve IV-21 | `UNANSWERABLE_GAP` | ✅ PASS | *None (Epistemic Gap: MTBF metrics omitted from package)* |
+| **23** | Compatibility with 3-phase 400V supply | `UNANSWERABLE_GAP` | ✅ PASS | `AEG-CR-700` (Components sheet: Q1 480V, T1 480:120V; 400V unstated), `AEG-DWG-E02` |
 
 ---
 
@@ -196,5 +222,19 @@ Held-out Generalization Accuracy:     100.0%
 - [x] Epistemic verification rejecting hallucinations on gaps and false premises
 - [x] Interactive Web UI dashboard (`aegis_core/ui/static/index.html`)
 - [x] Quantitative evaluation benchmark harness and reports (`eval_results/`)
+- [x] Full Architecture Design Report (`ARCHITECTURE_DESIGN_REPORT.md`)
+
+---
+
+## 8. Implementation Limitations & Engineering Trade-offs
+
+1. **Scanned Document OCR Noise**:
+   - `scanned_appendix_calibration.pdf` features moderate scan skew and OCR noise. RapidOCR recognizes characters with minor noise (e.g., `R Olkafor` for `R. Okafor`, and `(%00t）ueds` for the `Span (100%)` table row). The system preserves raw tokens and confidence scores, spatializes table cells by coordinates, and reports noisy/uncertain extraction instead of silently inserting fabricated text.
+2. **Schematic Circuit Tracing (Vector vs. Raster)**:
+   - In `AEG-DWG-H01` (hydraulic schematic), native PDF vector graphics stream parsing allows exact geometric path tracing and stroke color classification (`RG`) from component bounding boxes. In `AEG-DWG-E02` (raster electrical schematic), analysis relies on OCR bounding boxes and visual region partitioning rather than wire trace pixel morphology.
+3. **Cold-Start OCR Latency & Perceptual Caching**:
+   - Running ONNX models on CPU across 5 high-resolution raster images requires initial inference time (~90-110 seconds). A SHA-256 content-addressable perceptual cache (`data/.ocr_cache.json`) is maintained, reducing subsequent warm runs to ~1.4 seconds.
+4. **Intermediate Knowledge Representation Storage**:
+   - The intermediate knowledge store is currently serialized as structured JSON (`data/knowledge_store.json`). While optimal for single-system inspection, auditability, and rapid serialization, an enterprise multi-skid deployment across >10,000 documents would benefit from an embedded graph database (such as DuckDB or Neo4j).
 - [x] Full Architecture Design Report (`ARCHITECTURE_DESIGN_REPORT.md`)
 

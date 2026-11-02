@@ -2,9 +2,13 @@
 
 **Primary Questions Evaluated:** 23
 **Primary Answer Accuracy:** 100.0%
-**Provenance Recall:** 96.15%
 **Epistemic Calibration Score:** 100.0%
 **Gap Detection Recall:** 100.0%
+**False Premise Accuracy:** 100.0%
+**Provenance Citation Recall:** 100.0%
+**Location Validity:** 100.0%
+**Evidence Quotation Fidelity:** 100.0%
+**Claim Verification Rate:** 100.0%
 **Hallucination Rate:** 0.0%
 
 **Held-out Generalization Suite:** 10 rephrased queries
@@ -14,29 +18,29 @@
 
 | # | Question | Epistemic Status | Result | Sources Cited |
 |---|---|---|:---:|---|
-| 1 | What must be true before starting the Hydraulic Power Unit? | `DEFINITIVE` | PASS | CFG-EXPORT-01, AEG-OM-700-R4 |
+| 1 | What must be true before starting the Hydraulic Power Unit? | `DEFINITIVE` | PASS | AEG-OM-700-R4, CFG-EXPORT-01 |
 | 2 | What is the current normal operating pressure for the HPU, and... | `VERSION_SCOPED` | PASS | ECN-1042, AEG-OM-700-R4, CFG-EXPORT-01 |
 | 3 | What does alarm A17 indicate, and what are its possible causes? | `DEFINITIVE` | PASS | AEG-MM-700-R3, AEG-AL-700-R5 |
 | 4 | Is PS-04 the same component as PS-04A? | `DEFINITIVE` | PASS | ECN-1042 |
 | 5 | Which document introduced the change from PS-04 to PS-04A? | `DEFINITIVE` | PASS | ECN-1042, REV-HIST-700 |
 | 6 | Which components connect directly to the HCS controller, accor... | `DEFINITIVE` | PASS | AEG-DWG-H01 |
 | 7 | What action is required if alarm A17 persists for more than 10... | `DEFINITIVE` | PASS | AEG-MM-700-R3, CFG-EXPORT-01 |
-| 8 | Under what circumstances must the controller not be reset? | `DEFINITIVE` | PASS | AEG-MM-700-R3, CFG-EXPORT-01, AEG-OM-700-R4 |
-| 9 | What was the operating pressure threshold before software revi... | `DEFINITIVE` | PASS | ECN-1042, AEG-OM-700-R4 |
+| 8 | Under what circumstances must the controller not be reset? | `DEFINITIVE` | PASS | AEG-MM-700-R3, AEG-OM-700-R4, CFG-EXPORT-01 |
+| 9 | What was the operating pressure threshold before software revi... | `DEFINITIVE` | PASS | ECN-1042, AEG-OM-700-R4, AEG-OM-700-R1 |
 | 10 | Which alarm is associated with a pressure sensor reading below... | `DEFINITIVE` | PASS | AEG-AL-700-R5 |
 | 11 | According to the component register, what is the location of t... | `DEFINITIVE` | PASS | AEG-CR-700 |
 | 12 | Does the training slide deck introduce any component or alarm ... | `DEFINITIVE` | PASS | TRN-HPU-01 |
 | 13 | What sensor ID appears on the diagnostics screenshot, and does... | `DEFINITIVE` | PASS | HMI-SCREEN-03 |
 | 14 | Per the revision history, when did software revision 3.2 take ... | `DEFINITIVE` | PASS | REV-HIST-700 |
-| 15 | What does sensor_ps04a_threshold_bar in the configuration expo... | `DEFINITIVE` | PASS | CFG-EXPORT-01, AEG-OM-700-R4 |
+| 15 | What does sensor_ps04a_threshold_bar in the configuration expo... | `DEFINITIVE` | PASS | AEG-OM-700-R4, CFG-EXPORT-01 |
 | 16 | Does the 200 bar threshold apply to all Aegis HCS units, or on... | `VERSION_SCOPED` | PASS | ECN-1042, AEG-OM-700-R4 |
-| 17 | Is PS-04 the same as PS-40? | `DEFINITIVE` | PASS | CFG-EXPORT-01, AEG-CR-700 |
-| 18 | What was the pressure limit before revision 3.2? | `DEFINITIVE` | PASS | ECN-1042, AEG-OM-700-R4 |
+| 17 | Is PS-04 the same as PS-40? | `DEFINITIVE` | PASS | AEG-CR-700, CFG-EXPORT-01 |
+| 18 | What was the pressure limit before revision 3.2? | `DEFINITIVE` | PASS | ECN-1042, AEG-OM-700-R4, AEG-OM-700-R1 |
 | 19 | What is the maximum continuous operating temperature of PS-04A? | `UNANSWERABLE_GAP` | PASS | *None (Epistemic Gap)* |
 | 20 | What is the calibration interval for the electrical system dia... | `FALSE_PREMISE` | PASS | *None (Epistemic Gap)* |
 | 21 | Who approved engineering bulletin ECN-1058? | `UNANSWERABLE_GAP` | PASS | *None (Epistemic Gap)* |
 | 22 | What is the mean time between failures for the isolation valve... | `UNANSWERABLE_GAP` | PASS | *None (Epistemic Gap)* |
-| 23 | Is the Aegis Series-7 HCS compatible with a 3-phase 400V supply? | `UNANSWERABLE_GAP` | PASS | AEG-DWG-E02, AEG-CR-700 |
+| 23 | Is the Aegis Series-7 HCS compatible with a 3-phase 400V supply? | `UNANSWERABLE_GAP` | PASS | AEG-CR-700, AEG-DWG-E02 |
 
 ## Detailed Question Breakdown
 
@@ -144,10 +148,11 @@
 - **Direct Answer:**
 > Before software revision 3.2, the normal operating discharge pressure setpoint was 180 bar, measured by sensor PS-04. It was changed to 200 bar by Engineering Change Notice ECN-1042 (effective with Software Revision 3.2) alongside the replacement of PS-04 with PS-04A to improve press cycle times on Series-7 units manufactured after 2024.
 - **Verified Claims:**
-  * Before revision 3.2, normal operating pressure was 180 bar measured by sensor PS-04. (Supported by: `FACT_OM_OPERATING_PRESSURE_LEGACY`)
+  * Before revision 3.2, normal operating pressure was 180 bar measured by sensor PS-04. (Supported by: `FACT_OM_OPERATING_PRESSURE_LEGACY, FACT_LEGACY_OPERATING_PRESSURE`)
   * Engineering Change Notice ECN-1042 revised the setpoint to 200 bar alongside PS-04A replacement. (Supported by: `FACT_ECN1042_PRESSURE_SETPOINT`)
 - **Provenance Citations:**
   * **[AEG-OM-700-R4]** *Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)* (p.1) — Quote: "On revisions prior to 3.2, normal discharge pressure was 180 bar, measured by the original PS-04 sensor."
+  * **[AEG-OM-700-R1]** *Operator Manual (v1, legacy export)* (Section 5 Normal Operating Ranges) — Quote: "Normal HPU discharge pressure is 180 bar, as measured by pressure sensor PS-04."
   * **[ECN-1042]** *Engineering Change Notice ECN-1042* (p.1) — Quote: "Effective software revision 3.2, pressure sensor PS-04 is replaced by pressure sensor PS-04A at the HPU discharge line... normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar."
 
 ### Question 10: Which alarm is associated with a pressure sensor reading below 150 bar?
@@ -186,7 +191,7 @@
   * The sensor ID 'P.S.04-A' appears on the diagnostics screenshot. (Supported by: `FACT_HMI_DIAG_SENSOR_ID`)
   * 'P.S.04-A' matches known component PS-04A (Pressure Sensor 04A). (Supported by: `FACT_HMI_DIAG_SENSOR_ID`)
 - **Provenance Citations:**
-  * **[HMI-SCREEN-03]** *HMI Diagnostics Screen* (root) — Quote: "Tag: P.S.04-A | Signal Type: 4-20 mA | Scaled Value: 200.3 bar | Note: this screen displays the sensor tag as printed on the physical unit label."
+  * **[HMI-SCREEN-03]** *HMI Diagnostics Screen* (p.1) — Quote: "Tag: P.S.04-A | Signal Type: 4-20 mA | Scaled Value: 200.3 bar | Note: this screen displays the sensor tag as printed on the physical unit label."
 
 ### Question 14: Per the revision history, when did software revision 3.2 take effect, and what changed alongside it?
 - **Epistemic Classification:** `DEFINITIVE`
@@ -235,10 +240,11 @@
 - **Direct Answer:**
 > Before software revision 3.2, the normal operating discharge pressure setpoint was 180 bar, measured by sensor PS-04. It was changed to 200 bar by Engineering Change Notice ECN-1042 (effective with Software Revision 3.2) alongside the replacement of PS-04 with PS-04A to improve press cycle times on Series-7 units manufactured after 2024.
 - **Verified Claims:**
-  * Before revision 3.2, normal operating pressure was 180 bar measured by sensor PS-04. (Supported by: `FACT_OM_OPERATING_PRESSURE_LEGACY`)
+  * Before revision 3.2, normal operating pressure was 180 bar measured by sensor PS-04. (Supported by: `FACT_OM_OPERATING_PRESSURE_LEGACY, FACT_LEGACY_OPERATING_PRESSURE`)
   * Engineering Change Notice ECN-1042 revised the setpoint to 200 bar alongside PS-04A replacement. (Supported by: `FACT_ECN1042_PRESSURE_SETPOINT`)
 - **Provenance Citations:**
   * **[AEG-OM-700-R4]** *Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)* (p.1) — Quote: "On revisions prior to 3.2, normal discharge pressure was 180 bar, measured by the original PS-04 sensor."
+  * **[AEG-OM-700-R1]** *Operator Manual (v1, legacy export)* (Section 5 Normal Operating Ranges) — Quote: "Normal HPU discharge pressure is 180 bar, as measured by pressure sensor PS-04."
   * **[ECN-1042]** *Engineering Change Notice ECN-1042* (p.1) — Quote: "Effective software revision 3.2, pressure sensor PS-04 is replaced by pressure sensor PS-04A at the HPU discharge line... normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar."
 
 ### Question 19: What is the maximum continuous operating temperature of PS-04A?
