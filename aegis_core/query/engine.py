@@ -2,7 +2,7 @@
 Query Retrieval and Dynamic Epistemic Synthesis Engine
 Aegis Knowledge Ingestion Challenge
 
-Implements semantic slot extraction, multi-stage entity resolution,
+Implements query intent routing, multi-stage entity resolution,
 predicate-based fact retrieval, temporal version scoping, epistemic verification,
 and claim-level evidence verification via EvidenceVerifier.
 """
@@ -44,7 +44,7 @@ class QueryEngine:
         clean_text = query_text.strip()
         lower = clean_text.lower()
 
-        # Step 1: Detect Epistemic Gaps and False Premises via semantic knowledge verification
+        # Step 1: Detect Epistemic Gaps and False Premises via knowledge verification
         res = self._detect_epistemic_gaps_and_false_premises(clean_text, lower, query_id)
 
         # Step 2: Route to intent-specific synthesis if not a gap/false premise

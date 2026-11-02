@@ -122,16 +122,6 @@ class EvidenceVerifier:
                 if subphrase in norm_doc:
                     return True, 1.0, f"Verified key phrase '{subphrase}' match in document {document_id}"
 
-        # 3. Fallback search across all cached documents if document_id was aliased
-        for did, dtext in self._doc_text_cache.items():
-            norm_other = self.normalize_text(dtext)
-            if norm_quote in norm_other:
-                return True, 1.0, f"Verified exact normalized match in related document {did}"
-            if len(quote_words) >= 4:
-                subphrase = " ".join(quote_words[:4])
-                if subphrase in norm_other:
-                    return True, 1.0, f"Verified key phrase match in related document {did}"
-
         return False, 0.0, f"Quote was not found in source text for document {document_id}"
 
     def verify_claim(self, claim: Any, facts_db: Dict[str, Fact]) -> Tuple[bool, str]:

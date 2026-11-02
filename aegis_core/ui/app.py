@@ -35,15 +35,25 @@ EVAL_OUT_DIR = os.path.join(os.path.dirname(BASE_DIR), "eval_results")
 coordinator = IngestionCoordinator(DATASET_ROOT)
 parsed_files = coordinator.ingest_all()
 
-entity_resolver = EntityResolver(parsed_files)
+entity_resolver = EntityResolver(parsed_files=parsed_files)
 fact_extractor = FactExtractor(entity_resolver)
 facts = fact_extractor.extract_all(parsed_files)
 
 conflict_resolver = ConflictResolver()
 conflicts = conflict_resolver.resolve_conflicts(facts)
 
-query_engine = QueryEngine(entity_resolver, fact_extractor, conflict_resolver, parsed_files=parsed_files)
-benchmark_harness = BenchmarkHarness(query_engine, facts_db={f.id: f for f in facts}, parsed_files=parsed_files, output_dir=EVAL_OUT_DIR)
+query_engine = QueryEngine(
+    resolver=entity_resolver,
+    fact_extractor=fact_extractor,
+    conflict_resolver=conflict_resolver,
+    parsed_files=parsed_files
+)
+benchmark_harness = BenchmarkHarness(
+    query_engine=query_engine,
+    facts_db={f.id: f for f in facts},
+    parsed_files=parsed_files,
+    output_dir=EVAL_OUT_DIR
+)
 
 
 class QueryRequest(BaseModel):

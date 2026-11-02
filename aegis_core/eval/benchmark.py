@@ -365,12 +365,19 @@ class BenchmarkHarness:
         parsed_files: Optional[Dict[str, Any]] = None,
         output_dir: str = "eval_results"
     ):
+        if isinstance(facts_db, str):
+            output_dir = facts_db
+            facts_db = None
         self.engine = query_engine
         self.facts_db = facts_db or {f.id: f for f in query_engine.facts}
-        self.parsed_files = parsed_files or query_engine.parsed_files
+        self.parsed_files = parsed_files or getattr(query_engine, "parsed_files", {})
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
         self.verifier = EvidenceVerifier(self.parsed_files)
+
+    def run_benchmark(self) -> Dict[str, Any]:
+        """Alias for run_full_benchmark for interface consistency."""
+        return self.run_full_benchmark()
 
     def run_full_benchmark(self) -> Dict[str, Any]:
         """Runs the primary 23-question evaluation suite followed by the 10 held-out queries."""

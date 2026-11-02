@@ -497,6 +497,34 @@
       "notes": "Deliberate process change to improve press cycle time."
     },
     {
+      "id": "FACT_ECN1058_A17_REFERENCE",
+      "subject_id": "A17",
+      "predicate": "active_sensor_evaluation_logic",
+      "object_value": "Active sensor per installed software revision (PS-04 on <3.2, PS-04A on >=3.2)",
+      "unit": null,
+      "version_scope": null,
+      "trust_level": "ENGINEERING_BULLETIN",
+      "confidence": 1.0,
+      "status": "ACTIVE",
+      "provenance": {
+        "document_id": "ECN-1058",
+        "document_title": "Engineering Change Notice ECN-1058",
+        "file_type": "PDF",
+        "page": 1,
+        "section": "Section 1: Description of Change",
+        "worksheet": null,
+        "cell": null,
+        "slide": null,
+        "element_id": null,
+        "verbatim_quote": "Alarm A17's low-pressure\ncondition is evaluated against whichever pressure sensor is active for the installed software revision (PS-04\nprior to revision 3.",
+        "trust_level": "ENGINEERING_BULLETIN",
+        "relevant_revision": null,
+        "extraction_confidence": 1.0,
+        "location_detail": null
+      },
+      "notes": "Documentation correction only. Approver name is NOT stated on ECN-1058 (status: Released)."
+    },
+    {
       "id": "FACT_OM_STARTUP_PRECONDITIONS",
       "subject_id": "HPU",
       "predicate": "startup_preconditions",
@@ -678,13 +706,50 @@
       "notes": null
     },
     {
+      "id": "FACT_MM_RESET_ALLOWED_THRESHOLD",
+      "subject_id": "PLC-03",
+      "predicate": "max_pressure_allowed_for_reset",
+      "object_value": 50,
+      "unit": "bar",
+      "version_scope": null,
+      "trust_level": "OFFICIAL_MANUAL",
+      "confidence": 1.0,
+      "status": "ACTIVE",
+      "provenance": {
+        "document_id": "AEG-MM-700-R3",
+        "document_title": "Aegis Series-7 HCS Maintenance Manual (AEG-MM-700 Rev 3)",
+        "file_type": "PDF",
+        "page": 1,
+        "section": "Section 3 Controller Reset Conditions",
+        "worksheet": null,
+        "cell": null,
+        "slide": null,
+        "element_id": null,
+        "verbatim_quote": "Controller reset is only permitted when pressure, as reported by the active pressure sensor (PS-04 on revisions\nprior to 3.2, PS-04A on revision 3.2 and later), reads below 50 bar.",
+        "trust_level": "OFFICIAL_MANUAL",
+        "relevant_revision": null,
+        "extraction_confidence": 1.0,
+        "location_detail": null
+      },
+      "notes": null
+    },
+    {
       "id": "FACT_MM_A17_CAUSES",
       "subject_id": "HPU",
       "predicate": "low_pressure_causes",
       "object_value": [
-        "Isolation valve IV-21 is closed or partially closed",
-        "Hydraulic fluid level is low",
-        "Pressure sensor (PS-04 / PS-04A) signal is invalid or out of calibration"
+        "Isolation valve IV-21 is closed or partially closed.",
+        "Hydraulic fluid level is low.",
+        "Pressure sensor (PS-04 / PS-04A) signal is invalid or out of calibration \u2014 see Alarm A19 in the Alarm",
+        "Reference.",
+        "7. Component Access",
+        "The Hydraulic Power Pack (HPU) maintenance access panel is secured by four quarter-turn fasteners. Remove",
+        "the panel only after the unit has been shut down per Section 4 and pressure has been bled per Section 8. Do",
+        "not operate the unit with the panel removed.",
+        "9. Related Documents",
+        "Engineering Change Notice ECN-1042 (pressure sensor replacement and setpoint change), ECN-1058 (alarm",
+        "threshold correction), and the Component Register (AEG-CR-700) should be consulted alongside this manual,",
+        "as component identifiers and setpoints have changed across software revisions."
       ],
       "unit": null,
       "version_scope": null,
@@ -1291,8 +1356,6 @@
       "subject_id": "HPU",
       "predicate": "normal_operating_pressure",
       "conflicting_fact_ids": [
-        "FACT_CFG_PS04A_THRESHOLD",
-        "FACT_CFG_LEGACY_PS04_THRESHOLD",
         "FACT_ECN1042_PRESSURE_SETPOINT",
         "FACT_OM_OPERATING_PRESSURE_CURRENT",
         "FACT_OM_OPERATING_PRESSURE_LEGACY",
@@ -1300,7 +1363,7 @@
         "FACT_SITE_GAUGE_OBSERVATION"
       ],
       "resolution_type": "TEMPORAL_SUPERSEDED_AND_TRUST_HIERARCHY",
-      "resolved_fact_id": "FACT_CFG_PS04A_THRESHOLD",
+      "resolved_fact_id": "FACT_ECN1042_PRESSURE_SETPOINT",
       "justification": "Authoritative Engineering Change Notice ECN-1042 and Operator Manual AEG-OM-700 Rev 4 establish that normal HPU discharge operating pressure was revised from 180 bar to 200 bar effective Software Revision 3.2 (released 2025-09-30) alongside sensor upgrade to PS-04A to improve cycle time. The 180 bar value remains applicable ONLY to legacy units running software versions prior to 3.2 with PS-04. The 175 bar reading in site_survey_notes.docx is an unverified, uncalibrated field gauge observation on an unknown revision, subordinated under the FIELD_RECORD_LOW_TRUST hierarchy; it cannot override controlled specifications."
     }
   ],

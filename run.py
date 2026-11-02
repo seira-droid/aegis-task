@@ -55,7 +55,7 @@ def main():
 
     # 2. Entity Resolution
     print("[*] Initializing canonical entity resolution & alias indexing...")
-    resolver = EntityResolver(parsed_files)
+    resolver = EntityResolver(parsed_files=parsed_files)
     print(f"    -> {len(resolver.entities)} canonical entities mapped with {len(resolver.alias_to_canonical)} aliases.")
 
     # 3. Fact Extraction
@@ -71,7 +71,12 @@ def main():
     print(f"    -> Identified and resolved {len(conflicts)} version/trust conflicts.")
 
     # 5. Query Engine
-    query_engine = QueryEngine(resolver, extractor, conflict_resolver, parsed_files=parsed_files)
+    query_engine = QueryEngine(
+        resolver=resolver,
+        fact_extractor=extractor,
+        conflict_resolver=conflict_resolver,
+        parsed_files=parsed_files
+    )
 
     # Export Intermediate Knowledge Representation
     ikr_export = KnowledgeStoreExport(
@@ -157,8 +162,13 @@ def main():
         print("\n" + "=" * 70)
         print(" Running Full Evaluation Benchmark (23 Questions + 10 Held-out Queries)")
         print("=" * 70)
-        harness = BenchmarkHarness(query_engine, facts_db={f.id: f for f in facts}, parsed_files=parsed_files, output_dir=eval_dir)
-        metrics = harness.run_full_benchmark()
+        harness = BenchmarkHarness(
+            query_engine=query_engine,
+            facts_db={f.id: f for f in facts},
+            parsed_files=parsed_files,
+            output_dir=eval_dir
+        )
+        metrics = harness.run_benchmark()
 
         print(f"Total Questions Evaluated:    {metrics['total_questions']}")
         print(f"Overall Answer Accuracy:      {metrics['overall_accuracy_pct']}%")

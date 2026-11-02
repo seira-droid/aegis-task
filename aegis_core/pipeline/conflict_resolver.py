@@ -27,22 +27,11 @@ class ConflictResolver:
         """
         self.conflicts.clear()
 
-        # 1. Group facts by semantic predicate and subject cluster
-        # Map sensor pressure facts to the primary HPU system subject for holistic resolution
+        # 1. Group facts by subject and predicate
         grouped_facts: Dict[Tuple[str, str], List[Fact]] = defaultdict(list)
 
         for f in facts:
-            subj = f.subject_id
-            pred = f.predicate
-
-            # Cluster discharge pressure facts under HPU for system-level resolution
-            if pred == "normal_operating_pressure" and subj in ("PS-04", "PS-04A", "HPU"):
-                key = ("HPU", "normal_operating_pressure")
-            elif pred in ("active_sensor_evaluation_logic", "alarm_definition") and subj == "A17":
-                key = ("A17", "sensor_evaluation_logic")
-            else:
-                key = (subj, pred)
-
+            key = (f.subject_id, f.predicate)
             grouped_facts[key].append(f)
 
         # 2. Iterate through fact clusters and detect discrepancies
@@ -133,13 +122,6 @@ class ConflictResolver:
                 "The 180 bar value remains applicable ONLY to legacy units running software versions prior to 3.2 with PS-04. "
                 "The 175 bar reading in site_survey_notes.docx is an unverified, uncalibrated field gauge observation "
                 "on an unknown revision, subordinated under the FIELD_RECORD_LOW_TRUST hierarchy; it cannot override controlled specifications."
-            )
-        elif subject == "A17":
-            return (
-                "Engineering Change Notice ECN-1058 issued an official documentation correction: Alarm A17's "
-                "low-pressure condition is evaluated against whichever pressure sensor is active for the installed "
-                "software revision (PS-04 prior to revision 3.2, PS-04A on revision 3.2 and later). "
-                "This resolves prior text in AEG-AL-700 Rev 4 that referenced superseded sensor PS-04 by name."
             )
         else:
             return (

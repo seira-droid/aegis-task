@@ -166,6 +166,8 @@ class IngestionCoordinator:
         self.dataset_root = dataset_root
         self.parsed_files: Dict[str, Any] = {}
         self.source_documents: Dict[str, SourceDocument] = {}
+        self.discovered_files: List[str] = []
+        self.failed_files: List[Dict[str, str]] = []
 
         # Initialize OCR cache in data directory
         data_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
@@ -177,10 +179,16 @@ class IngestionCoordinator:
         if not os.path.exists(self.dataset_root):
             raise FileNotFoundError(f"Dataset root not found: {self.dataset_root}")
 
+        self.discovered_files.clear()
+        self.failed_files.clear()
+        self.parsed_files.clear()
+        self.source_documents.clear()
+
         for root, _, files in os.walk(self.dataset_root):
             for file in sorted(files):
                 full_path = os.path.join(root, file)
                 rel_path = os.path.relpath(full_path, self.dataset_root).replace('\\', '/')
+                self.discovered_files.append(rel_path)
                 self._ingest_file(rel_path, full_path)
 
         return self.parsed_files
@@ -199,52 +207,63 @@ class IngestionCoordinator:
 
         # Parse file content
         parsed_data = None
-        if rel_path.endswith('.pdf'):
-            if 'scans' in rel_path:
-                parsed_data = ScanOCRParserModule.parse_calibration_record(full_path)
-            elif 'system_diagram_hydraulic' in rel_path:
-                parsed_data = PDFParser.parse_pdf(full_path)
-                parsed_data["vector_analysis"] = VisionParserModule.parse_hydraulic_schematic_vectors(full_path)
+        try:
+            if rel_path.endswith('.pdf'):
+                if 'scans' in rel_path:
+                    parsed_data = ScanOCRParserModule.parse_calibration_record(full_path)
+                elif 'system_diagram_hydraulic' in rel_path:
+                    parsed_data = PDFParser.parse_pdf(full_path)
+                    parsed_data["vector_analysis"] = VisionParserModule.parse_hydraulic_schematic_vectors(full_path)
+                else:
+                    parsed_data = PDFParser.parse_pdf(full_path)
+            elif rel_path.endswith('.xlsx'):
+                parsed_data = OfficeParser.parse_xlsx(full_path)
+            elif rel_path.endswith('.docx'):
+                parsed_data = OfficeParser.parse_docx(full_path)
+            elif rel_path.endswith('.pptx'):
+                parsed_data = OfficeParser.parse_pptx(full_path)
+            elif rel_path.endswith('.html'):
+                parsed_data = HTMLParserModule.parse_html(full_path)
+            elif rel_path.endswith('.json'):
+                parsed_data = JSONParserModule.parse_json(full_path)
+            elif rel_path.endswith('.png'):
+                if 'electrical' in rel_path:
+                    parsed_data = VisionParserModule.parse_electrical_schematic(full_path)
+                elif 'screen_01_home' in rel_path:
+                    parsed_data = VisionParserModule.parse_hmi_home(full_path)
+                elif 'screen_02_alarms' in rel_path:
+                    parsed_data = VisionParserModule.parse_hmi_alarms(full_path)
+                elif 'screen_03_diagnostics' in rel_path:
+                    parsed_data = VisionParserModule.parse_hmi_diagnostics(full_path)
+                else:
+                    parsed_data = None
             else:
-                parsed_data = PDFParser.parse_pdf(full_path)
-        elif rel_path.endswith('.xlsx'):
-            parsed_data = OfficeParser.parse_xlsx(full_path)
-        elif rel_path.endswith('.docx'):
-            parsed_data = OfficeParser.parse_docx(full_path)
-        elif rel_path.endswith('.pptx'):
-            parsed_data = OfficeParser.parse_pptx(full_path)
-        elif rel_path.endswith('.html'):
-            parsed_data = HTMLParserModule.parse_html(full_path)
-        elif rel_path.endswith('.json'):
-            parsed_data = JSONParserModule.parse_json(full_path)
-        elif rel_path.endswith('.png'):
-            if 'electrical' in rel_path:
-                parsed_data = VisionParserModule.parse_electrical_schematic(full_path)
-            elif 'screen_01_home' in rel_path:
-                parsed_data = VisionParserModule.parse_hmi_home(full_path)
-            elif 'screen_02_alarms' in rel_path:
-                parsed_data = VisionParserModule.parse_hmi_alarms(full_path)
-            elif 'screen_03_diagnostics' in rel_path:
-                parsed_data = VisionParserModule.parse_hmi_diagnostics(full_path)
+                parsed_data = None
 
-        # Store in parsed files
-        self.parsed_files[rel_path] = {
-            "rel_path": rel_path,
-            "full_path": full_path,
-            "document_id": meta["id"],
-            "title": meta["title"],
-            "trust_level": trust_level,
-            "content": parsed_data
-        }
+            if parsed_data is None:
+                self.failed_files.append({"file": rel_path, "error": "Unsupported file format or unparsed content"})
+                return
 
-        # Register in source documents catalog
-        self.source_documents[meta["id"]] = SourceDocument(
-            id=meta["id"],
-            filename=filename,
-            file_type=meta["file_type"],
-            trust_level=trust_level,
-            summary=meta.get("summary")
-        )
+            # Store in parsed files
+            self.parsed_files[rel_path] = {
+                "rel_path": rel_path,
+                "full_path": full_path,
+                "document_id": meta["id"],
+                "title": meta["title"],
+                "trust_level": trust_level,
+                "content": parsed_data
+            }
+
+            # Register in source documents catalog
+            self.source_documents[meta["id"]] = SourceDocument(
+                id=meta["id"],
+                filename=filename,
+                file_type=meta["file_type"],
+                trust_level=trust_level,
+                summary=meta.get("summary")
+            )
+        except Exception as e:
+            self.failed_files.append({"file": rel_path, "error": str(e)})
 
     def get_ingestion_summary(self) -> Dict[str, Any]:
         """Generates a reproducible ingestion report with format distribution and trust metrics."""
@@ -270,9 +289,9 @@ class IngestionCoordinator:
                     low_conf_count += 1
 
         return {
-            "total_files_discovered": len(self.parsed_files),
+            "total_files_discovered": len(self.discovered_files),
             "total_files_processed": len(self.parsed_files),
-            "failed_files": [],
+            "failed_files": self.failed_files,
             "file_type_distribution": dict(type_dist),
             "trust_tier_distribution": dict(trust_dist),
             "low_confidence_extractions": low_conf_count

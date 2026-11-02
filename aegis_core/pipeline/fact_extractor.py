@@ -248,7 +248,7 @@ class FactExtractor:
             for p in pages:
                 txt = p.get("text", "")
                 pnum = p.get("page_number", 1)
-                m_a17 = re.search(r'(Alarm A17\'s low-pressure condition is evaluated against whichever pressure sensor is active for the installed software revision[^.]+?\.)', txt)
+                m_a17 = re.search(r'(Alarm A17\'s low-pressure\s+condition is evaluated against whichever pressure sensor is active for the installed software revision[\s\S]+?\.)', txt)
                 if m_a17:
                     quote_a17 = m_a17.group(1).strip()
                     self.facts.append(Fact(
@@ -434,7 +434,7 @@ class FactExtractor:
                 ))
 
             # Reset threshold
-            m_thresh = re.search(r'(Controller reset is only permitted when pressure[^.]+?reads below 50 bar\.)', txt)
+            m_thresh = re.search(r'(Controller reset is only permitted when pressure.*?reads below 50 bar\.)', txt, re.DOTALL)
             if m_thresh:
                 quote_thresh = m_thresh.group(1).strip()
                 self.facts.append(Fact(
@@ -459,11 +459,13 @@ class FactExtractor:
             m_tb = re.search(r'If the HPU fails to reach normal operating pressure, check the following in order:\s*(.+?)(?=\n\n|\Z)', txt, re.DOTALL)
             if m_tb:
                 quote_tb = m_tb.group(0).strip()
+                raw_causes = m_tb.group(1).strip()
+                parsed_causes = [c.strip() for c in raw_causes.split('\n') if c.strip() and len(c.strip()) > 3]
                 self.facts.append(Fact(
                     id="FACT_MM_A17_CAUSES",
                     subject_id="HPU",
                     predicate="low_pressure_causes",
-                    object_value=[
+                    object_value=parsed_causes if parsed_causes else [
                         "Isolation valve IV-21 is closed or partially closed",
                         "Hydraulic fluid level is low",
                         "Pressure sensor (PS-04 / PS-04A) signal is invalid or out of calibration"

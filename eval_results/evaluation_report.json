@@ -33,12 +33,12 @@
         "keyword_coverage": "4/4",
         "assertions_met": "4/4",
         "cited_sources": [
-          "CFG-EXPORT-01",
-          "AEG-OM-700-R4"
+          "AEG-OM-700-R4",
+          "CFG-EXPORT-01"
         ],
         "expected_sources": [
-          "CFG-EXPORT-01",
-          "AEG-OM-700-R4"
+          "AEG-OM-700-R4",
+          "CFG-EXPORT-01"
         ],
         "provenance_recall_pct": 100.0,
         "citations_count": 2,
@@ -59,13 +59,13 @@
         "keyword_coverage": "3/3",
         "assertions_met": "3/3",
         "cited_sources": [
-          "ECN-1042",
+          "AEG-OM-700-R4",
           "CFG-EXPORT-01",
-          "AEG-OM-700-R4"
+          "ECN-1042"
         ],
         "expected_sources": [
-          "ECN-1042",
-          "AEG-OM-700-R4"
+          "AEG-OM-700-R4",
+          "ECN-1042"
         ],
         "provenance_recall_pct": 100.0,
         "citations_count": 4,
@@ -86,12 +86,12 @@
         "keyword_coverage": "4/4",
         "assertions_met": "4/4",
         "cited_sources": [
-          "AEG-MM-700-R3",
-          "AEG-AL-700-R5"
+          "AEG-AL-700-R5",
+          "AEG-MM-700-R3"
         ],
         "expected_sources": [
-          "AEG-MM-700-R3",
-          "AEG-AL-700-R5"
+          "AEG-AL-700-R5",
+          "AEG-MM-700-R3"
         ],
         "provenance_recall_pct": 100.0,
         "citations_count": 2,
@@ -210,13 +210,13 @@
         "keyword_coverage": "3/3",
         "assertions_met": "2/2",
         "cited_sources": [
-          "AEG-MM-700-R3",
           "AEG-OM-700-R4",
+          "AEG-MM-700-R3",
           "CFG-EXPORT-01"
         ],
         "expected_sources": [
-          "AEG-MM-700-R3",
-          "AEG-OM-700-R4"
+          "AEG-OM-700-R4",
+          "AEG-MM-700-R3"
         ],
         "provenance_recall_pct": 100.0,
         "citations_count": 3,
@@ -237,13 +237,13 @@
         "keyword_coverage": "2/2",
         "assertions_met": "2/2",
         "cited_sources": [
+          "AEG-OM-700-R4",
           "ECN-1042",
-          "AEG-OM-700-R1",
-          "AEG-OM-700-R4"
+          "AEG-OM-700-R1"
         ],
         "expected_sources": [
-          "ECN-1042",
-          "AEG-OM-700-R4"
+          "AEG-OM-700-R4",
+          "ECN-1042"
         ],
         "provenance_recall_pct": 100.0,
         "citations_count": 3,
@@ -410,12 +410,12 @@
         "keyword_coverage": "2/2",
         "assertions_met": "3/3",
         "cited_sources": [
-          "ECN-1042",
-          "AEG-OM-700-R4"
+          "AEG-OM-700-R4",
+          "ECN-1042"
         ],
         "expected_sources": [
-          "ECN-1042",
-          "AEG-OM-700-R4"
+          "AEG-OM-700-R4",
+          "ECN-1042"
         ],
         "provenance_recall_pct": 100.0,
         "citations_count": 3,
@@ -460,13 +460,13 @@
         "keyword_coverage": "1/1",
         "assertions_met": "1/1",
         "cited_sources": [
+          "AEG-OM-700-R4",
           "ECN-1042",
-          "AEG-OM-700-R1",
-          "AEG-OM-700-R4"
+          "AEG-OM-700-R1"
         ],
         "expected_sources": [
-          "AEG-OM-700-R1",
-          "AEG-OM-700-R4"
+          "AEG-OM-700-R4",
+          "AEG-OM-700-R1"
         ],
         "provenance_recall_pct": 100.0,
         "citations_count": 3,
@@ -567,8 +567,8 @@
         "keyword_coverage": "2/2",
         "assertions_met": "2/2",
         "cited_sources": [
-          "AEG-CR-700",
-          "AEG-DWG-E02"
+          "AEG-DWG-E02",
+          "AEG-CR-700"
         ],
         "expected_sources": [
           "AEG-CR-700"
@@ -1106,8 +1106,6 @@
           "subject_id": "HPU",
           "predicate": "normal_operating_pressure",
           "conflicting_fact_ids": [
-            "FACT_CFG_PS04A_THRESHOLD",
-            "FACT_CFG_LEGACY_PS04_THRESHOLD",
             "FACT_ECN1042_PRESSURE_SETPOINT",
             "FACT_OM_OPERATING_PRESSURE_CURRENT",
             "FACT_OM_OPERATING_PRESSURE_LEGACY",
@@ -1115,7 +1113,7 @@
             "FACT_SITE_GAUGE_OBSERVATION"
           ],
           "resolution_type": "TEMPORAL_SUPERSEDED_AND_TRUST_HIERARCHY",
-          "resolved_fact_id": "FACT_CFG_PS04A_THRESHOLD",
+          "resolved_fact_id": "FACT_ECN1042_PRESSURE_SETPOINT",
           "justification": "Authoritative Engineering Change Notice ECN-1042 and Operator Manual AEG-OM-700 Rev 4 establish that normal HPU discharge operating pressure was revised from 180 bar to 200 bar effective Software Revision 3.2 (released 2025-09-30) alongside sensor upgrade to PS-04A to improve cycle time. The 180 bar value remains applicable ONLY to legacy units running software versions prior to 3.2 with PS-04. The 175 bar reading in site_survey_notes.docx is an unverified, uncalibrated field gauge observation on an unknown revision, subordinated under the FIELD_RECORD_LOW_TRUST hierarchy; it cannot override controlled specifications."
         }
       ],

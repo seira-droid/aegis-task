@@ -19,29 +19,29 @@
 
 | # | Question Summary | Epistemic Status | Result | Sources Cited |
 |---|---|---|:---:|---|
-| 1 | What must be true before starting the Hydraulic Power Unit? | `DEFINITIVE` | PASS | CFG-EXPORT-01, AEG-OM-700-R4 |
-| 2 | What is the current normal operating pressure for the HPU, and... | `VERSION_SCOPED` | PASS | ECN-1042, CFG-EXPORT-01, AEG-OM-700-R4 |
-| 3 | What does alarm A17 indicate, and what are its possible causes? | `DEFINITIVE` | PASS | AEG-MM-700-R3, AEG-AL-700-R5 |
+| 1 | What must be true before starting the Hydraulic Power Unit? | `DEFINITIVE` | PASS | AEG-OM-700-R4, CFG-EXPORT-01 |
+| 2 | What is the current normal operating pressure for the HPU, and... | `VERSION_SCOPED` | PASS | AEG-OM-700-R4, CFG-EXPORT-01, ECN-1042 |
+| 3 | What does alarm A17 indicate, and what are its possible causes? | `DEFINITIVE` | PASS | AEG-AL-700-R5, AEG-MM-700-R3 |
 | 4 | Is PS-04 the same component as PS-04A? | `DEFINITIVE` | PASS | ECN-1042 |
 | 5 | Which document introduced the change from PS-04 to PS-04A? | `DEFINITIVE` | PASS | ECN-1042 |
 | 6 | Which components connect directly to the HCS controller, accor... | `DEFINITIVE` | PASS | AEG-DWG-H01 |
 | 7 | What action is required if alarm A17 persists for more than 10... | `DEFINITIVE` | PASS | AEG-MM-700-R3, CFG-EXPORT-01 |
-| 8 | Under what circumstances must the controller not be reset? | `DEFINITIVE` | PASS | AEG-MM-700-R3, AEG-OM-700-R4, CFG-EXPORT-01 |
-| 9 | What was the operating pressure threshold before software revi... | `DEFINITIVE` | PASS | ECN-1042, AEG-OM-700-R1, AEG-OM-700-R4 |
+| 8 | Under what circumstances must the controller not be reset? | `DEFINITIVE` | PASS | AEG-OM-700-R4, AEG-MM-700-R3, CFG-EXPORT-01 |
+| 9 | What was the operating pressure threshold before software revi... | `DEFINITIVE` | PASS | AEG-OM-700-R4, ECN-1042, AEG-OM-700-R1 |
 | 10 | Which alarm is associated with a pressure sensor reading below... | `DEFINITIVE` | PASS | AEG-AL-700-R5 |
 | 11 | According to the component register, what is the location of t... | `DEFINITIVE` | PASS | AEG-CR-700 |
 | 12 | Does the training slide deck introduce any component or alarm ... | `DEFINITIVE` | PASS | TRN-HPU-01 |
 | 13 | What sensor ID appears on the diagnostics screenshot, and does... | `DEFINITIVE` | PASS | HMI-SCREEN-03 |
 | 14 | Per the revision history, when did software revision 3.2 take ... | `DEFINITIVE` | PASS | REV-HIST-700 |
 | 15 | What does sensor_ps04a_threshold_bar in the configuration expo... | `DEFINITIVE` | PASS | AEG-OM-700-R4, CFG-EXPORT-01 |
-| 16 | Does the 200 bar threshold apply to all Aegis HCS units, or on... | `VERSION_SCOPED` | PASS | ECN-1042, AEG-OM-700-R4 |
+| 16 | Does the 200 bar threshold apply to all Aegis HCS units, or on... | `VERSION_SCOPED` | PASS | AEG-OM-700-R4, ECN-1042 |
 | 17 | Is PS-04 the same as PS-40? | `DEFINITIVE` | PASS | AEG-CR-700 |
-| 18 | What was the pressure limit before revision 3.2? | `DEFINITIVE` | PASS | ECN-1042, AEG-OM-700-R1, AEG-OM-700-R4 |
+| 18 | What was the pressure limit before revision 3.2? | `DEFINITIVE` | PASS | AEG-OM-700-R4, ECN-1042, AEG-OM-700-R1 |
 | 19 | What is the maximum continuous operating temperature of PS-04A? | `UNANSWERABLE_GAP` | PASS | *None (Epistemic Gap)* |
 | 20 | What is the calibration interval for the electrical system dia... | `FALSE_PREMISE` | PASS | *None (Epistemic Gap)* |
 | 21 | Who approved engineering bulletin ECN-1058? | `UNANSWERABLE_GAP` | PASS | *None (Epistemic Gap)* |
 | 22 | What is the mean time between failures for the isolation valve... | `UNANSWERABLE_GAP` | PASS | *None (Epistemic Gap)* |
-| 23 | Is the Aegis Series-7 HCS compatible with a 3-phase 400V supply? | `UNANSWERABLE_GAP` | PASS | AEG-CR-700, AEG-DWG-E02 |
+| 23 | Is the Aegis Series-7 HCS compatible with a 3-phase 400V supply? | `UNANSWERABLE_GAP` | PASS | AEG-DWG-E02, AEG-CR-700 |
 
 ## Detailed Question Breakdown
 

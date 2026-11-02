@@ -10,7 +10,12 @@ Verifies:
 """
 
 import os
+import sys
 import unittest
+
+# Ensure project root is in sys.path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from aegis_core.ingestion.coordinator import IngestionCoordinator, DOCUMENT_METADATA_REGISTRY
 from aegis_core.pipeline.entity_resolver import EntityResolver
 from aegis_core.pipeline.fact_extractor import FactExtractor
@@ -26,12 +31,17 @@ class TestKnowledgeIntegrity(unittest.TestCase):
         cls.dataset_root = os.path.join(base_dir, "task-data", "aegis-dataset", "aegis-dataset")
         cls.coordinator = IngestionCoordinator(cls.dataset_root)
         cls.parsed_files = cls.coordinator.ingest_all()
-        cls.resolver = EntityResolver(cls.parsed_files)
+        cls.resolver = EntityResolver(parsed_files=cls.parsed_files)
         cls.extractor = FactExtractor(cls.resolver)
         cls.facts = cls.extractor.extract_all(cls.parsed_files)
         cls.conflict_resolver = ConflictResolver()
         cls.conflicts = cls.conflict_resolver.resolve_conflicts(cls.facts)
-        cls.query_engine = QueryEngine(cls.resolver, cls.extractor, cls.conflict_resolver, parsed_files=cls.parsed_files)
+        cls.query_engine = QueryEngine(
+            resolver=cls.resolver,
+            fact_extractor=cls.extractor,
+            conflict_resolver=cls.conflict_resolver,
+            parsed_files=cls.parsed_files
+        )
 
     def test_20_source_files_ingested(self):
         """Verify all 20 heterogeneous files are ingested."""

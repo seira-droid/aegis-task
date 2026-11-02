@@ -92,7 +92,7 @@ class EvaluationMetrics:
             elif not res_is_fp and is_gt_fp:
                 fp_fn += 1
 
-            # 3. Semantic & Factual Verification
+            # 3. Factual & Ground-Truth Assertion Verification
             answer_lower = res.direct_answer.lower()
             req_assertions = gt.get("required_factual_assertions", [])
             req_keywords = gt.get("required_keywords", [])

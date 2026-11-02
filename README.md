@@ -237,5 +237,4 @@ Held-out Generalization Accuracy:     100.0% (10/10 passed)
    - Running ONNX models on CPU across 5 high-resolution raster images requires initial inference time (~90-110 seconds). A SHA-256 content-addressable perceptual cache (`data/.ocr_cache.json`) is maintained, reducing subsequent warm runs to ~1.4 seconds.
 4. **Intermediate Knowledge Representation Storage**:
    - The intermediate knowledge store is currently serialized as structured JSON (`data/knowledge_store.json`). While optimal for single-system inspection, auditability, and rapid serialization, an enterprise multi-skid deployment across >10,000 documents would benefit from an embedded graph database (such as DuckDB or Neo4j).
-- [x] Full Architecture Design Report (`ARCHITECTURE_DESIGN_REPORT.md`)
 
