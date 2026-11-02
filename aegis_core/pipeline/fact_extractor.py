@@ -582,6 +582,7 @@ class FactExtractor:
             loc = r.get("Location", "").strip()
             status = r.get("Status", "").strip()
             notes = r.get("Notes", "").strip()
+            row_quote = " ".join(str(v) for v in r.values() if v is not None)
 
             if cid == "IV-21":
                 self.facts.append(Fact(
@@ -598,7 +599,7 @@ class FactExtractor:
                         cell=f"A{idx}:F{idx}",
                         section="Components Register Sheet",
                         trust_level=TrustLevel.OFFICIAL_MANUAL,
-                        verbatim_quote=f"IV-21 {name} {loc} {status}"
+                        verbatim_quote=row_quote
                     )
                 ))
 
@@ -618,7 +619,7 @@ class FactExtractor:
                         cell=f"A{idx}:F{idx}",
                         section="Components Register Sheet",
                         trust_level=TrustLevel.OFFICIAL_MANUAL,
-                        verbatim_quote=f"PS-40 {name} {loc} {status}"
+                        verbatim_quote=row_quote
                     )
                 ))
 
@@ -638,7 +639,7 @@ class FactExtractor:
                         cell=f"A{idx}:F{idx}",
                         section="Components Register Sheet",
                         trust_level=TrustLevel.OFFICIAL_MANUAL,
-                        verbatim_quote=f"Q1 {name} {loc} Active 480V incoming disconnect."
+                        verbatim_quote=row_quote
                     )
                 ))
 
@@ -658,7 +659,7 @@ class FactExtractor:
                         cell=f"A{idx}:F{idx}",
                         section="Components Register Sheet",
                         trust_level=TrustLevel.OFFICIAL_MANUAL,
-                        verbatim_quote=f"T1 {name} {loc} Active 480:120V control power."
+                        verbatim_quote=row_quote
                     )
                 ))
 

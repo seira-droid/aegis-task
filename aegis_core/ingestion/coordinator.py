@@ -250,6 +250,7 @@ class IngestionCoordinator:
                 "full_path": full_path,
                 "document_id": meta["id"],
                 "title": meta["title"],
+                "file_type": meta["file_type"],
                 "trust_level": trust_level,
                 "content": parsed_data
             }

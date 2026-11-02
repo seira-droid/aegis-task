@@ -21,12 +21,42 @@ class VisionParserModule:
     Uses PIL image loading, RapidOCR recognition, and vector geometry derivation.
     """
 
+    @staticmethod
+    def find_segment_intersection(
+        p1: Tuple[float, float], p2: Tuple[float, float],
+        p3: Tuple[float, float], p4: Tuple[float, float],
+        tol: float = 1e-4
+    ) -> Optional[Tuple[float, float]]:
+        """
+        Computes the interior intersection point between segments (p1, p2) and (p3, p4).
+        Returns (x, y) if segments intersect at a point strictly interior to both segments
+        (not merely sharing an endpoint).
+        """
+        x1, y1 = p1
+        x2, y2 = p2
+        x3, y3 = p3
+        x4, y4 = p4
+
+        denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1)
+        if abs(denom) < 1e-9:
+            return None
+
+        ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denom
+        ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denom
+
+        if tol < ua < (1.0 - tol) and tol < ub < (1.0 - tol):
+            ix = x1 + ua * (x2 - x1)
+            iy = y1 + ua * (y2 - y1)
+            return (round(ix, 2), round(iy, 2))
+        return None
+
     @classmethod
     def parse_hydraulic_schematic_vectors(cls, pdf_path: str) -> Dict[str, Any]:
         """
         Dynamically extracts PDF vector line operators and stroke colors (RG) to determine
-        component connectivity and signal line topology from actual vector coordinates.
-        Does NOT rely on hardcoded component identities or predefined connection lists.
+        component connectivity, multi-segment line paths, and line crossings from actual vector coordinates.
+        Distinguishes between actual hydraulic connections, control signals, reservoir interconnects,
+        and geometric line crossings without a connection.
         """
         if not os.path.exists(pdf_path):
             raise FileNotFoundError(f"File not found: {pdf_path}")
@@ -40,7 +70,12 @@ class VisionParserModule:
         # 1. Parse text items and their coordinate positions
         text_items = []
         for m in re.finditer(r'1 0 0 1 ([\d\.]+) ([\d\.]+) Tm \((.*?)\) Tj', content_text):
-            x, y, txt = float(m.group(1)), float(m.group(2)), m.group(3).replace('\\(', '(').replace('\\)', '')
+            x, y, txt = float(m.group(1)), float(m.group(2)), (
+                m.group(3)
+                .replace('\\(', '(')
+                .replace('\\)', ')')
+                .replace('\\227', '—')
+            )
             text_items.append({'x': x, 'y': y, 'text': txt})
 
         # 2. Linear token parsing of vector closed paths and stroked lines
@@ -48,6 +83,7 @@ class VisionParserModule:
         current_pts = []
         current_rg = (0.0, 0.0, 0.0)
         lines = []
+        raw_stroked_paths = []
 
         i = 0
         while i < len(tokens):
@@ -70,12 +106,19 @@ class VisionParserModule:
                 except ValueError:
                     pass
             elif t in ('h', 'B*', 'b*', 's', 'S', 'f', 'F'):
-                if len(current_pts) == 2 and t in ('S', 's'):
-                    lines.append({
-                        'start': current_pts[0],
-                        'end': current_pts[1],
+                if len(current_pts) >= 2 and t in ('S', 's'):
+                    raw_stroked_paths.append({
+                        'pts': list(current_pts),
                         'color': current_rg
                     })
+                    for seg_idx in range(len(current_pts) - 1):
+                        lines.append({
+                            'start': current_pts[seg_idx],
+                            'end': current_pts[seg_idx + 1],
+                            'color': current_rg,
+                            'path_index': len(raw_stroked_paths) - 1,
+                            'seg_index': seg_idx
+                        })
                 elif len(current_pts) >= 4:
                     xs = [p[0] for p in current_pts]
                     ys = [p[1] for p in current_pts]
@@ -115,26 +158,33 @@ class VisionParserModule:
             dy = max(ymin - py, 0, py - ymax)
             return math.hypot(dx, dy)
 
+        def classify_color(color: Tuple[float, float, float]) -> str:
+            if abs(color[0] - 0.541) < 0.05 and abs(color[1] - 0.294) < 0.05:
+                return 'purple_control_signal'
+            elif abs(color[0] - 0.333) < 0.05 and abs(color[1] - 0.333) < 0.05:
+                return 'grey_hydraulic_fluid'
+            elif abs(color[0] - 0.690) < 0.05 and abs(color[1] - 0.541) < 0.05:
+                return 'tan_reservoir_interconnect'
+            return 'unknown'
+
         # Connect lines to components by spatial proximity of endpoints to boundaries
         connections = []
+        uncertain_connections = []
         purple_lines_count = 0
         grey_lines_count = 0
         tan_lines_count = 0
 
-        for l in lines:
+        for l_idx, l in enumerate(lines):
             p1 = l['start']
             p2 = l['end']
             color = l['color']
+            color_type = classify_color(color)
 
-            color_type = 'unknown'
-            if abs(color[0] - 0.541) < 0.05 and abs(color[1] - 0.294) < 0.05:
-                color_type = 'purple_control_signal'
+            if color_type == 'purple_control_signal':
                 purple_lines_count += 1
-            elif abs(color[0] - 0.333) < 0.05 and abs(color[1] - 0.333) < 0.05:
-                color_type = 'grey_hydraulic_fluid'
+            elif color_type == 'grey_hydraulic_fluid':
                 grey_lines_count += 1
-            elif abs(color[0] - 0.690) < 0.05 and abs(color[1] - 0.541) < 0.05:
-                color_type = 'tan_reservoir_interconnect'
+            elif color_type == 'tan_reservoir_interconnect':
                 tan_lines_count += 1
 
             if detected_components:
@@ -144,13 +194,87 @@ class VisionParserModule:
                 d2 = dist_to_box(p2[0], p2[1], c2['bbox'])
 
                 # Both endpoints must touch component boundaries within tolerance
-                if c1['id'] != c2['id'] and d1 < 6.0 and d2 < 6.0:
+                if c1['id'] != c2['id'] and d1 < 8.0 and d2 < 8.0:
                     connections.append({
+                        'line_index': l_idx,
                         'from': c1['id'],
                         'to': c2['id'],
                         'color_type': color_type,
-                        'line_endpoints': (p1, p2)
+                        'line_endpoints': (p1, p2),
+                        'stroke_color': color
                     })
+                elif d1 >= 8.0 or d2 >= 8.0:
+                    uncertain_connections.append({
+                        'line_index': l_idx,
+                        'line_endpoints': (p1, p2),
+                        'color_type': color_type,
+                        'min_distances': (d1, d2),
+                        'reason': 'Endpoints do not terminate within component boundary threshold'
+                    })
+
+        # 3. Detect geometric line crossings and intersections
+        line_crossings = []
+        for i_idx in range(len(lines)):
+            for j_idx in range(i_idx + 1, len(lines)):
+                l1 = lines[i_idx]
+                l2 = lines[j_idx]
+                pt = cls.find_segment_intersection(l1['start'], l1['end'], l2['start'], l2['end'])
+                if pt is not None:
+                    # Find associated components for l1 and l2 if connected
+                    conn1 = next((c for c in connections if c['line_index'] == i_idx), None)
+                    conn2 = next((c for c in connections if c['line_index'] == j_idx), None)
+
+                    c1_pair = (conn1['from'], conn1['to']) if conn1 else ('UNKNOWN', 'UNKNOWN')
+                    c2_pair = (conn2['from'], conn2['to']) if conn2 else ('UNKNOWN', 'UNKNOWN')
+
+                    type1 = classify_color(l1['color'])
+                    type2 = classify_color(l2['color'])
+
+                    line_crossings.append({
+                        'type': 'crossing_without_connection',
+                        'intersection_point': pt,
+                        'is_valid_connection': False,
+                        'line_1': {
+                            'endpoints': (l1['start'], l1['end']),
+                            'color_type': type1,
+                            'connects': c1_pair
+                        },
+                        'line_2': {
+                            'endpoints': (l2['start'], l2['end']),
+                            'color_type': type2,
+                            'connects': c2_pair
+                        },
+                        'description': (
+                            f"Geometric crossing at {pt} between {type1} ({c1_pair[0]} <-> {c1_pair[1]}) "
+                            f"and {type2} ({c2_pair[0]} <-> {c2_pair[1]}). "
+                            f"Crossing without connection: non-junction line pass-through."
+                        )
+                    })
+
+        # 4. Multi-segment path aggregation
+        multi_segment_paths = []
+        for p_idx, raw_p in enumerate(raw_stroked_paths):
+            pts = raw_p['pts']
+            color = raw_p['color']
+            color_type = classify_color(color)
+            total_len = 0.0
+            for k in range(len(pts) - 1):
+                total_len += math.hypot(pts[k+1][0] - pts[k][0], pts[k+1][1] - pts[k][1])
+
+            # Associate path start and end with components
+            start_comp = min(detected_components, key=lambda comp: dist_to_box(pts[0][0], pts[0][1], comp['bbox']))['id'] if detected_components else None
+            end_comp = min(detected_components, key=lambda comp: dist_to_box(pts[-1][0], pts[-1][1], comp['bbox']))['id'] if detected_components else None
+
+            multi_segment_paths.append({
+                'path_id': p_idx,
+                'point_count': len(pts),
+                'vertices': pts,
+                'color_type': color_type,
+                'total_length': round(total_len, 2),
+                'start_component': start_comp,
+                'end_component': end_comp,
+                'is_multi_segment': len(pts) > 2
+            })
 
         # Derive direct controller connections from verified vector graph
         direct_purple = [
@@ -174,6 +298,9 @@ class VisionParserModule:
             "grey_lines_count": grey_lines_count,
             "tan_lines_count": tan_lines_count,
             "derived_connections": connections,
+            "line_crossings": line_crossings,
+            "multi_segment_paths": multi_segment_paths,
+            "uncertain_connections": uncertain_connections,
             "legend": {
                 "purple": "control/signal connections to PLC-03",
                 "grey": "hydraulic fluid path",
@@ -181,6 +308,7 @@ class VisionParserModule:
             },
             "direct_purple_controller_connections": sorted(list(set(direct_purple))),
             "direct_grey_connections": sorted(list(set(direct_grey))),
+            "direct_controller_connections": sorted(list(set(direct_purple))),
             "hpu_connection_type": "hydraulic_fluid_path (grey line, not purple control line)"
         }
 

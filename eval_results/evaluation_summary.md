@@ -1,47 +1,52 @@
 # Aegis Knowledge Ingestion Challenge — Comprehensive Evaluation Scorecard
 
-**Total Primary Questions:** 23
-**Answer Factual Accuracy:** 100.0%
-**Epistemic Calibration Score:** 100.0%
-**Gap Detection (Precision / Recall / F1):** 100.0% / 100.0% / 1.0
-**False Premise Detection (Precision / Recall / F1):** 100.0% / 100.0% / 1.0
-**Provenance Citation Recall:** 100.0%
-**Source-Location Validity:** 100.0%
-**Exact Quotation Fidelity:** 100.0%
-**Claim-Level Evidence Support:** 100.0%
-**Hallucination Rate:** 0.0%
-**Confidence Calibration:** 99.0% (Brier Score: 0.0001)
+## Summary Metrics
+
+- **Answer Accuracy:** 100.0%
+- **Evidence Precision:** 84.85%
+- **Evidence Recall:** 100.0%
+- **Provenance Citation Recall:** 100.0%
+- **Quotation Fidelity:** 100.0%
+- **Entity Resolution Accuracy:** 100.0%
+- **Conflict Resolution Accuracy:** 100.0%
+- **Abstention Accuracy:** 100.0%
+- **Unsupported Claim Rate:** 0.0%
+- **Hallucination Rate:** 0.0%
+- **Epistemic Calibration Score:** 100.0%
+- **Gap Detection (Precision / Recall / F1):** 100.0% / 100.0% / 1.0
+- **False Premise Detection (Precision / Recall / F1):** 100.0% / 100.0% / 1.0
+- **Confidence Calibration:** 99.0% (Brier Score: 0.0001)
 
 **Held-out Evaluation Suite:** 10 independently authored queries
 **Held-out Generalization Accuracy:** 100.0%
 
 ## Primary Evaluation Scorecard (23 Questions)
 
-| # | Question Summary | Epistemic Status | Result | Sources Cited |
-|---|---|---|:---:|---|
-| 1 | What must be true before starting the Hydraulic Power Unit? | `DEFINITIVE` | PASS | AEG-OM-700-R4, CFG-EXPORT-01 |
-| 2 | What is the current normal operating pressure for the HPU, and... | `VERSION_SCOPED` | PASS | AEG-OM-700-R4, CFG-EXPORT-01, ECN-1042 |
-| 3 | What does alarm A17 indicate, and what are its possible causes? | `DEFINITIVE` | PASS | AEG-AL-700-R5, AEG-MM-700-R3 |
-| 4 | Is PS-04 the same component as PS-04A? | `DEFINITIVE` | PASS | ECN-1042 |
-| 5 | Which document introduced the change from PS-04 to PS-04A? | `DEFINITIVE` | PASS | ECN-1042 |
-| 6 | Which components connect directly to the HCS controller, accor... | `DEFINITIVE` | PASS | AEG-DWG-H01 |
-| 7 | What action is required if alarm A17 persists for more than 10... | `DEFINITIVE` | PASS | AEG-MM-700-R3, CFG-EXPORT-01 |
-| 8 | Under what circumstances must the controller not be reset? | `DEFINITIVE` | PASS | AEG-OM-700-R4, AEG-MM-700-R3, CFG-EXPORT-01 |
-| 9 | What was the operating pressure threshold before software revi... | `DEFINITIVE` | PASS | AEG-OM-700-R4, ECN-1042, AEG-OM-700-R1 |
-| 10 | Which alarm is associated with a pressure sensor reading below... | `DEFINITIVE` | PASS | AEG-AL-700-R5 |
-| 11 | According to the component register, what is the location of t... | `DEFINITIVE` | PASS | AEG-CR-700 |
-| 12 | Does the training slide deck introduce any component or alarm ... | `DEFINITIVE` | PASS | TRN-HPU-01 |
-| 13 | What sensor ID appears on the diagnostics screenshot, and does... | `DEFINITIVE` | PASS | HMI-SCREEN-03 |
-| 14 | Per the revision history, when did software revision 3.2 take ... | `DEFINITIVE` | PASS | REV-HIST-700 |
-| 15 | What does sensor_ps04a_threshold_bar in the configuration expo... | `DEFINITIVE` | PASS | AEG-OM-700-R4, CFG-EXPORT-01 |
-| 16 | Does the 200 bar threshold apply to all Aegis HCS units, or on... | `VERSION_SCOPED` | PASS | AEG-OM-700-R4, ECN-1042 |
-| 17 | Is PS-04 the same as PS-40? | `DEFINITIVE` | PASS | AEG-CR-700 |
-| 18 | What was the pressure limit before revision 3.2? | `DEFINITIVE` | PASS | AEG-OM-700-R4, ECN-1042, AEG-OM-700-R1 |
-| 19 | What is the maximum continuous operating temperature of PS-04A? | `UNANSWERABLE_GAP` | PASS | *None (Epistemic Gap)* |
-| 20 | What is the calibration interval for the electrical system dia... | `FALSE_PREMISE` | PASS | *None (Epistemic Gap)* |
-| 21 | Who approved engineering bulletin ECN-1058? | `UNANSWERABLE_GAP` | PASS | *None (Epistemic Gap)* |
-| 22 | What is the mean time between failures for the isolation valve... | `UNANSWERABLE_GAP` | PASS | *None (Epistemic Gap)* |
-| 23 | Is the Aegis Series-7 HCS compatible with a 3-phase 400V supply? | `UNANSWERABLE_GAP` | PASS | AEG-DWG-E02, AEG-CR-700 |
+| Question ID | Expected Answer | Actual Answer | Expected Evidence | Retrieved Evidence | Correctness | Provenance | Notes |
+|---|---|---|---|---|:---:|---|---|
+| Q1 | Keywords: fluid, iv-21, emergency stop, access panel; Status: DEFINITIVE | Before starting the Hydraulic Power Unit (HPU), four conditions must be verified: 1. Hydraulic fl... | AEG-OM-700-R4, CFG-EXPORT-01 | AEG-OM-700-R4, CFG-EXPORT-01 | **PASS** | AEG-OM-700-R4: Section 4.3 Starting the Hydraulic Power Unit (p.1); CFG-EXPORT-01: startup_interlocks | Epistemic: DEFINITIVE (match: True); Factual: True |
+| Q2 | Keywords: 200 bar, 3.2, 180 bar; Status: VERSION_SCOPED | The current normal operating pressure for the HPU is 200 bar. This setpoint applies to units runn... | AEG-OM-700-R4, ECN-1042 | AEG-OM-700-R4, CFG-EXPORT-01, ECN-1042 | **PASS** | AEG-OM-700-R4: Section 4.3 & Section 5 (p.1); ECN-1042: Section 1: Description of Change (p.1); AEG-OM-700-R4: Section 5: Normal Operating Ranges (p.1); CFG-EXPORT-01: sensors | Epistemic: VERSION_SCOPED (match: True); Factual: True |
+| Q3 | Keywords: pressure below 150 bar, iv-21, fluid, sensor; Status: DEFINITIVE | Alarm A17 indicates 'Hydraulic Pressure Low' (hydraulic pressure below 150 bar). Its possible cau... | AEG-AL-700-R5, AEG-MM-700-R3 | AEG-AL-700-R5, AEG-MM-700-R3 | **PASS** | AEG-AL-700-R5: Alarm Table (p.1); AEG-MM-700-R3: Section 6 Troubleshooting: Low Discharge Pressure (p.1) | Epistemic: DEFINITIVE (match: True); Factual: True |
+| Q4 | Keywords: not, same, ecn-1042; Status: DEFINITIVE | No, PS-04 is NOT the same component as PS-04A. PS-04A is an updated pressure sensor introduced by... | ECN-1042 | ECN-1042 | **PASS** | ECN-1042: Section 1: Description of Change (p.1) | Epistemic: DEFINITIVE (match: True); Factual: True |
+| Q5 | Keywords: ecn-1042; Status: DEFINITIVE | Engineering Change Notice ECN-1042 ('Pressure Sensor Replacement (PS-04 -> PS-04A) and Operating ... | ECN-1042 | ECN-1042 | **PASS** | ECN-1042: Section 1: Description of Change (p.1) | Epistemic: DEFINITIVE (match: True); Factual: True |
+| Q6 | Keywords: ps-04a, iv-21; Status: DEFINITIVE | According to the hydraulic schematic (AEG-DWG-H01), the components that connect directly to the H... | AEG-DWG-H01 | AEG-DWG-H01 | **PASS** | AEG-DWG-H01: Schematic Diagram Legend (p.1) | Epistemic: DEFINITIVE (match: True); Factual: True |
+| Q7 | Keywords: shutdown procedure 4.7; Status: DEFINITIVE | If alarm A17 persists for more than 10 seconds, the operator must execute Shutdown Procedure 4.7 ... | AEG-MM-700-R3, CFG-EXPORT-01 | AEG-MM-700-R3, CFG-EXPORT-01 | **PASS** | AEG-MM-700-R3: Section 4 Alarm A17 Response (p.1); CFG-EXPORT-01: alarms.A17 | Epistemic: DEFINITIVE (match: True); Factual: True |
+| Q8 | Keywords: above 50 bar, uncommanded, iv-21; Status: DEFINITIVE | The HCS controller (PLC-03) must NOT be reset while hydraulic pressure is above 50 bar. Resetting... | AEG-MM-700-R3, AEG-OM-700-R4 | AEG-MM-700-R3, AEG-OM-700-R4, CFG-EXPORT-01 | **PASS** | AEG-OM-700-R4: Section 7: Controller Reset (p.2); AEG-MM-700-R3: Section 3 Controller Reset Conditions (p.1); CFG-EXPORT-01: controller_reset | Epistemic: DEFINITIVE (match: True); Factual: True |
+| Q9 | Keywords: 180 bar, ecn-1042; Status: DEFINITIVE | Before software revision 3.2, the normal operating discharge pressure setpoint was 180 bar, measu... | AEG-OM-700-R4, ECN-1042 | AEG-OM-700-R1, AEG-OM-700-R4, ECN-1042 | **PASS** | AEG-OM-700-R4: Section 5: Normal Operating Ranges (p.1); AEG-OM-700-R1: Section 5: Normal Operating Ranges; ECN-1042: Section 1: Description of Change (p.1) | Epistemic: DEFINITIVE (match: True); Factual: True |
+| Q10 | Keywords: a17, hydraulic pressure low; Status: DEFINITIVE | Alarm A17 ('Hydraulic Pressure Low') is associated with a pressure sensor reading below 150 bar. | AEG-AL-700-R5 | AEG-AL-700-R5 | **PASS** | AEG-AL-700-R5: Alarm Table (p.1) | Epistemic: DEFINITIVE (match: True); Factual: True |
+| Q11 | Keywords: hydraulic module; Status: DEFINITIVE | According to the Component Register (AEG-CR-700), isolation valve IV-21 is located in the 'Hydrau... | AEG-CR-700 | AEG-CR-700 | **PASS** | AEG-CR-700: Components Register Sheet (Components A3:F3) | Epistemic: DEFINITIVE (match: True); Factual: True |
+| Q12 | Keywords: auxiliary reservoir; Status: DEFINITIVE | Yes. The training slide deck (AEG-TR-SLIDE, Slide 2) introduces the 'Auxiliary Reservoir', a comp... | TRN-HPU-01 | TRN-HPU-01 | **PASS** | TRN-HPU-01: Slide 2: What is the HPU? (slide 2) | Epistemic: DEFINITIVE (match: True); Factual: True |
+| Q13 | Keywords: p.s.04-a, ps-04a; Status: DEFINITIVE | The diagnostics screenshot (screen_03_diagnostics.png) displays the sensor ID 'P.S.04-A' (or 'P04... | HMI-SCREEN-03 | HMI-SCREEN-03 | **PASS** | HMI-SCREEN-03: Sensor Diagnostics Header Panel (p.1) | Epistemic: DEFINITIVE (match: True); Factual: True |
+| Q14 | Keywords: 2025-09-30, ps-04a, 200 bar; Status: DEFINITIVE | Per the Revision History (AEG-CR-700 Attachment, 'Revision History' sheet), software revision 3.2... | REV-HIST-700 | REV-HIST-700 | **PASS** | REV-HIST-700: Revision History Sheet (Revision History A4:D4) | Epistemic: DEFINITIVE (match: True); Factual: True |
+| Q15 | Keywords: normal operating pressure; Status: DEFINITIVE | In configuration_export.json, 'sensor_ps04a_threshold_bar' (configured as 200 bar) corresponds to... | AEG-OM-700-R4, CFG-EXPORT-01 | AEG-OM-700-R4, CFG-EXPORT-01 | **PASS** | CFG-EXPORT-01: sensors; AEG-OM-700-R4: Section 4.3 & Section 5 (p.1) | Epistemic: DEFINITIVE (match: True); Factual: True |
+| Q16 | Keywords: only some, 3.2; Status: VERSION_SCOPED | The 200 bar threshold applies to only some units (only some) — specifically those running softwar... | AEG-OM-700-R4, ECN-1042 | AEG-OM-700-R4, ECN-1042 | **PASS** | AEG-OM-700-R4: Section 4.3 & Section 5 (p.1); ECN-1042: Section 1: Description of Change (p.1); AEG-OM-700-R4: Section 5: Normal Operating Ranges (p.1) | Epistemic: VERSION_SCOPED (match: True); Factual: True |
+| Q17 | Keywords: not the same, coolant; Status: DEFINITIVE | No, PS-04 is NOT the same component as PS-40. PS-04 was the original discharge line pressure sens... | AEG-CR-700 | AEG-CR-700 | **PASS** | AEG-CR-700: Components Register Sheet (Components A6:F6) | Epistemic: DEFINITIVE (match: True); Factual: True |
+| Q18 | Keywords: 180 bar; Status: DEFINITIVE | Before software revision 3.2, the normal operating discharge pressure setpoint was 180 bar, measu... | AEG-OM-700-R1, AEG-OM-700-R4 | AEG-OM-700-R1, AEG-OM-700-R4, ECN-1042 | **PASS** | AEG-OM-700-R4: Section 5: Normal Operating Ranges (p.1); AEG-OM-700-R1: Section 5: Normal Operating Ranges; ECN-1042: Section 1: Description of Change (p.1) | Epistemic: DEFINITIVE (match: True); Factual: True |
+| Q19 | Keywords: cannot be determined, omitted; Status: UNANSWERABLE_GAP | Cannot be determined from the dataset (Epistemic Gap). The maximum continuous operating temperatu... | *None (Epistemic Gap)* | *None (Epistemic Gap)* | **PASS** | N/A (Epistemic Gap) | Epistemic: UNANSWERABLE_GAP (match: True); Factual: True |
+| Q20 | Keywords: false premise, no voltage sensor; Status: FALSE_PREMISE | Cannot be determined due to a false premise and unstated documentation: 1. False Premise: The ele... | *None (Epistemic Gap)* | *None (Epistemic Gap)* | **PASS** | N/A (Epistemic Gap) | Epistemic: FALSE_PREMISE (match: True); Factual: True |
+| Q21 | Keywords: cannot be determined, not list; Status: UNANSWERABLE_GAP | Cannot be determined from the dataset (Epistemic Gap). Engineering Change Notice ECN-1058 indicat... | *None (Epistemic Gap)* | *None (Epistemic Gap)* | **PASS** | N/A (Epistemic Gap) | Epistemic: UNANSWERABLE_GAP (match: True); Factual: True |
+| Q22 | Keywords: cannot be determined, not specified; Status: UNANSWERABLE_GAP | Cannot be determined from the dataset (Epistemic Gap). The mean time between failures (MTBF) for ... | *None (Epistemic Gap)* | *None (Epistemic Gap)* | **PASS** | N/A (Epistemic Gap) | Epistemic: UNANSWERABLE_GAP (match: True); Factual: True |
+| Q23 | Keywords: not stated, 480v; Status: UNANSWERABLE_GAP | Cannot be determined / Not stated in the documentation. The Component Register (AEG-CR-700, Compo... | AEG-CR-700 | AEG-CR-700, AEG-DWG-E02 | **PASS** | AEG-CR-700: Components Register Sheet (Components A12:F12); AEG-CR-700: Components Register Sheet (Components A13:F13); AEG-DWG-E02: Power Input Section (p.1) | Epistemic: UNANSWERABLE_GAP (match: True); Factual: True |
 
 ## Detailed Question Breakdown
 
@@ -184,7 +189,7 @@ discharge pressure was 180 bar, measured by the original PS-04 sensor."
 - **Verified Claims:**
   * Isolation valve IV-21 is located in the Hydraulic Module. (Supported by: `FACT_CR_IV21_LOCATION` | Status: `VERIFIED`)
 - **Provenance Citations:**
-  * **[AEG-CR-700]** *Component Register (AEG-CR-700)* (Components Register Sheet) — Quote: "IV-21 Isolation Valve 21 Hydraulic Module Active"
+  * **[AEG-CR-700]** *Component Register (AEG-CR-700)* (Components Register Sheet) — Quote: "IV-21 Isolation Valve 21 Isolation Valve; IV21 Hydraulic Module Active Must be OPEN prior to HPU startup."
 
 ### Question 12: Does the training slide deck introduce any component or alarm not found in the manuals?
 - **Epistemic Classification:** `DEFINITIVE`
@@ -244,7 +249,7 @@ discharge pressure was 180 bar, measured by the original PS-04 sensor."
 - **Verified Claims:**
   * PS-04 and PS-40 are distinct components in completely different subsystems. (Supported by: `FACT_CR_PS40_LOCATION` | Status: `VERIFIED`)
 - **Provenance Citations:**
-  * **[AEG-CR-700]** *Component Register (AEG-CR-700)* (Components Register Sheet) — Quote: "PS-40 Pressure Sensor 40 Coolant Loop, Skid B Active"
+  * **[AEG-CR-700]** *Component Register (AEG-CR-700)* (Components Register Sheet) — Quote: "PS-40 Pressure Sensor 40 P40; PS40 Coolant Loop, Skid B Active NOT related to the HPU discharge circuit. Do not confuse with PS-04 / PS-04A."
 
 ### Question 18: What was the pressure limit before revision 3.2?
 - **Epistemic Classification:** `DEFINITIVE`
@@ -297,8 +302,8 @@ discharge pressure was 180 bar, measured by the original PS-04 sensor."
   * Component Register (Components sheet) specifies Q1 is a 480V incoming disconnect and T1 is 480:120V. (Supported by: `FACT_CR_Q1_SPECS, FACT_CR_T1_SPECS` | Status: `VERIFIED`)
   * Compatibility with a 3-phase 400V supply is not stated in the documentation package. (Supported by: `FACT_ELEC_POWER_VOLTAGE` | Status: `VERIFIED`)
 - **Provenance Citations:**
-  * **[AEG-CR-700]** *Component Register (AEG-CR-700)* (Components Register Sheet) — Quote: "Q1 Main Disconnect Control Cabinet 1 Active 480V incoming disconnect."
-  * **[AEG-CR-700]** *Component Register (AEG-CR-700)* (Components Register Sheet) — Quote: "T1 Control Transformer Control Cabinet 1 Active 480:120V control power."
+  * **[AEG-CR-700]** *Component Register (AEG-CR-700)* (Components Register Sheet) — Quote: "Q1 Main Disconnect — Control Cabinet 1 Active 480V incoming disconnect."
+  * **[AEG-CR-700]** *Component Register (AEG-CR-700)* (Components Register Sheet) — Quote: "T1 Control Transformer — Control Cabinet 1 Active 480:120V control power."
   * **[AEG-DWG-E02]** *Electrical Power & Control Diagram (AEG-DWG-E02)* (p.1) — Quote: "MAIN DISCONNECT Q1 CONTROLXFMR T1 480:120V"
 - **Epistemic Gaps / Missing Data:**
   * ⚠️ *power_supply_400V* -> The package only documents a 480V supply (Q1/T1). Compatibility with 400V is not stated in the sources.

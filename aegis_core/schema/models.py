@@ -4,7 +4,7 @@ Aegis Knowledge Ingestion Challenge
 """
 
 from enum import Enum
-from typing import List, Optional, Dict, Any, Union
+from typing import List, Optional, Dict, Any, Union, Tuple
 from pydantic import BaseModel, Field
 
 
@@ -98,6 +98,34 @@ class Fact(BaseModel):
     status: FactStatus = FactStatus.ACTIVE
     provenance: Provenance
     notes: Optional[str] = None
+    uncertainty_notes: Optional[str] = None
+    is_uncertain: bool = False
+
+    def validate_provenance(self, valid_document_ids: Optional[List[str]] = None) -> Tuple[bool, List[str]]:
+        """
+        Validates that the fact has an auditable, non-empty provenance reference.
+        Checks for valid document_id, title, file_type, and confidence range [0.0, 1.0].
+        """
+        errors = []
+        if not self.provenance:
+            errors.append("Fact missing provenance object entirely")
+            return False, errors
+
+        if not self.provenance.document_id or not self.provenance.document_id.strip():
+            errors.append("Provenance missing required document_id")
+        elif valid_document_ids and self.provenance.document_id not in valid_document_ids:
+            errors.append(f"Provenance cites unknown document_id '{self.provenance.document_id}'")
+
+        if not self.provenance.document_title or not self.provenance.document_title.strip():
+            errors.append("Provenance missing document_title")
+
+        if not self.provenance.file_type or not self.provenance.file_type.strip():
+            errors.append("Provenance missing file_type")
+
+        if not (0.0 <= self.provenance.extraction_confidence <= 1.0):
+            errors.append(f"Provenance confidence {self.provenance.extraction_confidence} out of range [0.0, 1.0]")
+
+        return len(errors) == 0, errors
 
 
 class Conflict(BaseModel):

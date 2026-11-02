@@ -193,6 +193,16 @@ class EntityResolver:
             self.register_alias("PS-04A", "PRESSURE XDCR (field device)", "AEG-DWG-W03", 0.95)
             self.register_alias("IV-21", "IV-21 SOLENOID", "AEG-DWG-W03", 0.95)
 
+        # 4b. Electrical System Diagram (diagrams/system_diagram_electrical.png)
+        elec_rel = "diagrams/system_diagram_electrical.png"
+        if elec_rel in parsed_files:
+            self.register_alias("Q1", "MAIN DISCONNECT", "AEG-DWG-E02", 0.95)
+            self.register_alias("Q1", "Disconnect Q1", "AEG-DWG-E02", 0.95)
+            self.register_alias("T1", "CONTROLXFMR", "AEG-DWG-E02", 0.95)
+            self.register_alias("T1", "CONTROL XFMR", "AEG-DWG-E02", 0.95)
+            self.register_alias("T1", "CONTROL XFMR T1", "AEG-DWG-E02", 0.95)
+            self.register_alias("T1", "T1 480:120V", "AEG-DWG-E02", 0.95)
+
         # 5. HMI Diagnostics & Screenshots
         diag_rel = "screenshots/screen_03_diagnostics.png"
         if diag_rel in parsed_files:

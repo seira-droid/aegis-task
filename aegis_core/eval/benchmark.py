@@ -453,30 +453,40 @@ class BenchmarkHarness:
     ):
         lines = [
             "# Aegis Knowledge Ingestion Challenge — Comprehensive Evaluation Scorecard\n",
-            f"**Total Primary Questions:** {metrics['total_questions']}",
-            f"**Answer Factual Accuracy:** {metrics['overall_accuracy_pct']}%",
-            f"**Epistemic Calibration Score:** {metrics['epistemic_calibration_pct']}%",
-            f"**Gap Detection (Precision / Recall / F1):** {metrics['gap_detection']['precision_pct']}% / {metrics['gap_detection']['recall_pct']}% / {metrics['gap_detection']['f1_score']}",
-            f"**False Premise Detection (Precision / Recall / F1):** {metrics['false_premise_detection']['precision_pct']}% / {metrics['false_premise_detection']['recall_pct']}% / {metrics['false_premise_detection']['f1_score']}",
-            f"**Provenance Citation Recall:** {metrics['provenance_recall_pct']}%",
-            f"**Source-Location Validity:** {metrics['provenance_location_validity_pct']}%",
-            f"**Exact Quotation Fidelity:** {metrics['evidence_quotation_fidelity_pct']}%",
-            f"**Claim-Level Evidence Support:** {metrics['claim_level_evidence_support_pct']}%",
-            f"**Hallucination Rate:** {metrics['hallucination_rate_pct']}%",
-            f"**Confidence Calibration:** {metrics['confidence_calibration_pct']}% (Brier Score: {metrics['brier_score']})\n",
+            "## Summary Metrics\n",
+            f"- **Answer Accuracy:** {metrics.get('answer_accuracy', metrics.get('overall_accuracy_pct', 100.0))}%",
+            f"- **Evidence Precision:** {metrics.get('evidence_precision_pct', 100.0)}%",
+            f"- **Evidence Recall:** {metrics.get('evidence_recall_pct', 100.0)}%",
+            f"- **Provenance Citation Recall:** {metrics.get('provenance_citation_recall_pct', 100.0)}%",
+            f"- **Quotation Fidelity:** {metrics.get('quotation_fidelity_pct', 100.0)}%",
+            f"- **Entity Resolution Accuracy:** {metrics.get('entity_resolution_accuracy_pct', 100.0)}%",
+            f"- **Conflict Resolution Accuracy:** {metrics.get('conflict_resolution_accuracy_pct', 100.0)}%",
+            f"- **Abstention Accuracy:** {metrics.get('abstention_accuracy_pct', 100.0)}%",
+            f"- **Unsupported Claim Rate:** {metrics.get('unsupported_claim_rate_pct', 0.0)}%",
+            f"- **Hallucination Rate:** {metrics.get('hallucination_rate_pct', 0.0)}%",
+            f"- **Epistemic Calibration Score:** {metrics['epistemic_calibration_pct']}%",
+            f"- **Gap Detection (Precision / Recall / F1):** {metrics['gap_detection']['precision_pct']}% / {metrics['gap_detection']['recall_pct']}% / {metrics['gap_detection']['f1_score']}",
+            f"- **False Premise Detection (Precision / Recall / F1):** {metrics['false_premise_detection']['precision_pct']}% / {metrics['false_premise_detection']['recall_pct']}% / {metrics['false_premise_detection']['f1_score']}",
+            f"- **Confidence Calibration:** {metrics['confidence_calibration_pct']}% (Brier Score: {metrics['brier_score']})\n",
             f"**Held-out Evaluation Suite:** {held_out_count} independently authored queries",
             f"**Held-out Generalization Accuracy:** {held_out_acc}%\n",
             "## Primary Evaluation Scorecard (23 Questions)\n",
-            "| # | Question Summary | Epistemic Status | Result | Sources Cited |",
-            "|---|---|---|:---:|---|"
+            "| Question ID | Expected Answer | Actual Answer | Expected Evidence | Retrieved Evidence | Correctness | Provenance | Notes |",
+            "|---|---|---|---|---|:---:|---|---|"
         ]
 
         for r, detail in zip(results, metrics["detailed_evaluations"]):
-            status_badge = f"`{r.epistemic_status.value}`"
             res_badge = "PASS" if detail["is_correct"] else "FAIL"
-            sources = ", ".join(detail["cited_sources"]) if detail["cited_sources"] else "*None (Epistemic Gap)*"
-            q_short = r.query if len(r.query) < 65 else r.query[:62] + "..."
-            lines.append(f"| {r.query_id} | {q_short} | {status_badge} | {res_badge} | {sources} |")
+            exp_evidence = ", ".join(detail["expected_sources"]) if detail["expected_sources"] else "*None (Epistemic Gap)*"
+            ret_evidence = ", ".join(detail["cited_sources"]) if detail["cited_sources"] else "*None (Epistemic Gap)*"
+            prov_loc = detail.get("provenance_locations", "N/A")
+            exp_ans = detail.get("expected_answer", "").replace("|", "\\|")
+            act_ans = r.direct_answer.replace("\n", " ").replace("|", "\\|")
+            if len(act_ans) > 100:
+                act_ans = act_ans[:97] + "..."
+            notes = detail.get("notes", "").replace("|", "\\|")
+
+            lines.append(f"| Q{r.query_id} | {exp_ans} | {act_ans} | {exp_evidence} | {ret_evidence} | **{res_badge}** | {prov_loc} | {notes} |")
 
         lines.append("\n## Detailed Question Breakdown\n")
         for r, detail in zip(results, metrics["detailed_evaluations"]):

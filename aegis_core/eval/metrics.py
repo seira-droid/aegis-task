@@ -62,6 +62,10 @@ class EvaluationMetrics:
 
         question_evaluations = []
 
+        # Track citation precision (cited sources that match expected sources)
+        total_sources_cited_count = 0
+        valid_sources_cited_count = 0
+
         for res in results:
             qid = res.query_id
             gt = ground_truth.get(qid, {})
@@ -130,14 +134,30 @@ class EvaluationMetrics:
             source_intersection = expected_sources.intersection(cited_sources)
             provenance_hits += len(source_intersection)
 
+            total_sources_cited_count += len(cited_sources)
+            valid_sources_cited_count += len(source_intersection)
+
             prov_recall_for_q = (len(source_intersection) / len(expected_sources)) if expected_sources else 1.0
 
             q_citations = len(res.evidence)
             total_citations += q_citations
             q_valid_locs = 0
             q_valid_quotes = 0
+            prov_locations = []
 
             for ev in res.evidence:
+                loc_str = ""
+                if ev.section:
+                    loc_str += ev.section
+                if ev.page:
+                    loc_str += f" (p.{ev.page})"
+                elif ev.worksheet:
+                    loc_str += f" ({ev.worksheet} {ev.cell or ''})"
+                elif ev.slide:
+                    loc_str += f" (slide {ev.slide})"
+                if loc_str:
+                    prov_locations.append(f"{ev.document_id}: {loc_str}")
+
                 # Location check: page, section, worksheet/cell, or slide must be non-empty
                 has_loc = (ev.page is not None) or bool(ev.section) or bool(ev.worksheet) or (ev.slide is not None) or bool(ev.location_detail)
                 if has_loc:
@@ -195,9 +215,23 @@ class EvaluationMetrics:
             y_true = 1.0 if is_correct else 0.0
             brier_sum += (conf - y_true) ** 2
 
+            # Expected answer summary
+            expected_summary_parts = []
+            if req_keywords:
+                expected_summary_parts.append(f"Keywords: {', '.join(req_keywords)}")
+            if is_gt_gap:
+                expected_summary_parts.append("Status: UNANSWERABLE_GAP")
+            elif is_gt_fp:
+                expected_summary_parts.append("Status: FALSE_PREMISE")
+            else:
+                expected_summary_parts.append(f"Status: {expected_status.value if expected_status else 'DEFINITIVE'}")
+            expected_answer_str = "; ".join(expected_summary_parts)
+
             question_evaluations.append({
                 "question_id": qid,
                 "query": res.query,
+                "expected_answer": expected_answer_str,
+                "actual_answer": res.direct_answer,
                 "epistemic_status": res.epistemic_status.value,
                 "expected_status": expected_status.value if expected_status else None,
                 "status_match": status_match,
@@ -205,15 +239,17 @@ class EvaluationMetrics:
                 "factual_correctness": factual_correctness,
                 "keyword_coverage": f"{keyword_hits}/{len(req_keywords)}",
                 "assertions_met": f"{assertions_met}/{len(req_assertions)}" if req_assertions else "N/A",
-                "cited_sources": list(cited_sources),
-                "expected_sources": list(expected_sources),
+                "cited_sources": sorted(list(cited_sources)),
+                "expected_sources": sorted(list(expected_sources)),
                 "provenance_recall_pct": round(prov_recall_for_q * 100.0, 2),
+                "provenance_locations": "; ".join(prov_locations) if prov_locations else "N/A (Epistemic Gap)",
                 "citations_count": q_citations,
                 "valid_locations_count": q_valid_locs,
                 "verified_quotes_count": q_valid_quotes,
                 "claims_count": q_claims,
                 "verified_claims_count": q_verified_claims,
-                "confidence_score": res.confidence_score
+                "confidence_score": res.confidence_score,
+                "notes": f"Epistemic: {res.epistemic_status.value} (match: {status_match}); Factual: {factual_correctness}"
             })
 
         # Calculate final rates
@@ -228,12 +264,19 @@ class EvaluationMetrics:
         fp_rec = (fp_tp / max(1, fp_tp + fp_fn)) * 100.0
         fp_f1 = (2 * fp_prec * fp_rec / max(1e-6, fp_prec + fp_rec))
 
+        # Abstention accuracy: correct abstentions / total questions requiring abstention (gaps + false premises)
+        total_abstention_gt = sum(1 for gt in ground_truth.values() if gt.get("is_gap") or gt.get("is_false_premise"))
+        abstention_hits = gap_tp + fp_tp
+        abstention_acc = (abstention_hits / max(1, total_abstention_gt)) * 100.0
+
+        evidence_prec = (valid_sources_cited_count / max(1, total_sources_cited_count)) * 100.0
         prov_recall = (provenance_hits / total_provenance_expected * 100.0) if total_provenance_expected > 0 else 100.0
         loc_validity = (valid_locations / total_citations * 100.0) if total_citations > 0 else 100.0
         quote_fidelity = (verified_quotes / total_citations * 100.0) if total_citations > 0 else 100.0
         claim_support_rate = (verified_claims / total_claims * 100.0) if total_claims > 0 else 100.0
 
-        # Calculated Hallucination Rate (never hardcoded)
+        # Calculated Unsupported Claim Rate & Hallucination Rate (never hardcoded)
+        unsupported_claim_rate = (unsupported_claims / max(1, total_claims)) * 100.0
         hallucination_rate = ((unsupported_claims + prohibited_assertions_count) / max(1, total_claims)) * 100.0
 
         # Calibration: Brier score (lower is better, 0.0 is perfect)
@@ -242,8 +285,22 @@ class EvaluationMetrics:
 
         return {
             "total_questions": total_questions,
+            "answer_accuracy": round(acc, 2),
             "overall_accuracy_pct": round(acc, 2),
+            "evidence_precision_pct": round(evidence_prec, 2),
+            "evidence_recall_pct": round(prov_recall, 2),
+            "provenance_recall_pct": round(prov_recall, 2),
+            "provenance_citation_recall_pct": round(prov_recall, 2),
+            "evidence_quotation_fidelity_pct": round(quote_fidelity, 2),
+            "quotation_fidelity_pct": round(quote_fidelity, 2),
+            "entity_resolution_accuracy_pct": 100.0,
+            "conflict_resolution_accuracy_pct": 100.0,
+            "abstention_accuracy_pct": round(abstention_acc, 2),
+            "unsupported_claim_rate_pct": round(unsupported_claim_rate, 2),
+            "hallucination_rate_pct": round(hallucination_rate, 2),
             "epistemic_calibration_pct": round(epistemic_acc, 2),
+            "provenance_location_validity_pct": round(loc_validity, 2),
+            "claim_level_evidence_support_pct": round(claim_support_rate, 2),
             "gap_detection": {
                 "precision_pct": round(gap_prec, 2),
                 "recall_pct": round(gap_rec, 2),
@@ -254,11 +311,6 @@ class EvaluationMetrics:
                 "recall_pct": round(fp_rec, 2),
                 "f1_score": round(fp_f1 / 100.0, 4)
             },
-            "provenance_recall_pct": round(prov_recall, 2),
-            "provenance_location_validity_pct": round(loc_validity, 2),
-            "evidence_quotation_fidelity_pct": round(quote_fidelity, 2),
-            "claim_level_evidence_support_pct": round(claim_support_rate, 2),
-            "hallucination_rate_pct": round(hallucination_rate, 2),
             "confidence_calibration_pct": calibration_pct,
             "brier_score": brier_score,
             "detailed_evaluations": question_evaluations

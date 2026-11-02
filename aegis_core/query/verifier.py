@@ -7,6 +7,7 @@ and verifies that factual claims are strictly grounded in knowledge-store facts 
 """
 
 import re
+import difflib
 from typing import Dict, Any, List, Optional, Tuple
 from aegis_core.schema.models import Fact, Claim, Provenance
 
@@ -31,7 +32,7 @@ class EvidenceVerifier:
         t = re.sub(r'[\s\xa0\n\r\t]+', ' ', text)
         # Normalize typographic dashes and quotes
         t = t.replace('—', '-').replace('–', '-').replace('“', '"').replace('”', '"').replace("’", "'").replace("‘", "'")
-        # Strip quotes and colon/comma separators for fuzzy token sequence matching
+        # Strip quotes and colon/comma separators for clean token sequence matching
         t = re.sub(r'["\'`]', '', t)
         return t.strip().lower()
 
@@ -53,17 +54,17 @@ class EvidenceVerifier:
                     if isinstance(rows, list):
                         for r in rows:
                             if isinstance(r, dict):
-                                full_text_parts.append(" ".join(f"{k}: {v}" for k, v in r.items()))
-                                full_text_parts.append(" ".join(str(v) for v in r.values()))
+                                full_text_parts.append(" ".join(f"{k}: {v}" for k, v in r.items() if v is not None))
+                                full_text_parts.append(" ".join(str(v) for v in r.values() if v is not None))
                             elif isinstance(r, list):
-                                full_text_parts.append(" ".join(str(v) for v in r))
+                                full_text_parts.append(" ".join(str(v) for v in r if v is not None))
 
             # Office documents (DOCX)
             if isinstance(content, dict) and "paragraphs" in content:
                 full_text_parts.extend(content.get("paragraphs", []))
                 for t in content.get("tables", []):
                     for row in t:
-                        full_text_parts.append(" ".join(str(c) for c in row))
+                        full_text_parts.append(" ".join(str(c) for c in row if c is not None))
 
             # PowerPoint slides
             if isinstance(content, list):
@@ -98,31 +99,67 @@ class EvidenceVerifier:
     def verify_quotation(self, document_id: str, quote: str) -> Tuple[bool, float, str]:
         """
         Compares the cited verbatim quote against original parsed source content.
-        Returns: (is_verified, match_ratio, explanation)
+        Performs strict normalized full quotation matching without permissive 3-word fallbacks.
+        Returns: (is_verified, match_ratio, status_and_explanation)
+        Status categories:
+          - VERIFIED: Exact normalized or high-fidelity token match (ratio >= 0.90)
+          - PARTIAL_MATCH: Significant divergence or partial overlap (0.70 <= ratio < 0.90)
+          - UNVERIFIED: Missing, wrong document, or below threshold (ratio < 0.70)
         """
         if not quote or not quote.strip():
-            return False, 0.0, "Empty or whitespace-only quote"
+            return False, 0.0, "UNVERIFIED: Empty or whitespace-only quote"
 
         norm_quote = self.normalize_text(quote)
-        if len(norm_quote) < 5:
-            return False, 0.0, "Quote too short to verify uniquely"
+        quote_tokens = norm_quote.split()
+        if len(quote_tokens) < 2 or len(norm_quote) < 6:
+            return False, 0.0, "UNVERIFIED: Quote too short to verify uniquely (<2 words or <6 chars)"
 
         doc_text = self._doc_text_cache.get(document_id, "")
+        if not doc_text:
+            return False, 0.0, f"UNVERIFIED: Document '{document_id}' not found in parsed document cache"
+
         norm_doc = self.normalize_text(doc_text)
 
-        # 1. Exact normalized match in target document
+        # 1. Exact normalized substring match in target document
         if norm_quote in norm_doc:
-            return True, 1.0, f"Verified exact normalized match in document {document_id}"
+            return True, 1.0, f"VERIFIED: Exact complete normalized quotation found in document {document_id}"
 
-        # 2. Key phrase overlap (if quotation has at least 3 words)
-        quote_words = norm_quote.split()
-        if len(quote_words) >= 3:
-            for window in range(min(len(quote_words), 6), 2, -1):
-                subphrase = " ".join(quote_words[:window])
-                if subphrase in norm_doc:
-                    return True, 1.0, f"Verified key phrase '{subphrase}' match in document {document_id}"
+        # 2. Token-level sequence alignment across candidate windows in target document
+        doc_tokens = norm_doc.split()
+        if not doc_tokens:
+            return False, 0.0, f"UNVERIFIED: Target document '{document_id}' contains no text tokens"
 
-        return False, 0.0, f"Quote was not found in source text for document {document_id}"
+        q_len = len(quote_tokens)
+        candidates = []
+        anchor1 = quote_tokens[0]
+        anchor2 = quote_tokens[1] if q_len > 1 else anchor1
+
+        for idx, tok in enumerate(doc_tokens):
+            if tok == anchor1 or tok == anchor2:
+                start_i = max(0, idx - 2)
+                end_i = min(len(doc_tokens), idx + q_len + 3)
+                candidates.append(doc_tokens[start_i:end_i])
+
+        best_ratio = 0.0
+        matcher = difflib.SequenceMatcher(None, quote_tokens, [])
+
+        if not candidates and len(doc_tokens) <= 500:
+            candidates.append(doc_tokens)
+
+        for cand in candidates:
+            matcher.set_seq2(cand)
+            r = matcher.ratio()
+            if r > best_ratio:
+                best_ratio = r
+
+        best_ratio = round(best_ratio, 4)
+
+        if best_ratio >= 0.90:
+            return True, best_ratio, f"VERIFIED: High-fidelity token match ({round(best_ratio * 100, 1)}%) in document {document_id}"
+        elif best_ratio >= 0.70:
+            return False, best_ratio, f"PARTIAL_MATCH: Partial quote divergence ({round(best_ratio * 100, 1)}%) in document {document_id}"
+        else:
+            return False, best_ratio, f"UNVERIFIED: Quote not found in document {document_id} (best match: {round(best_ratio * 100, 1)}%)"
 
     def verify_claim(self, claim: Any, facts_db: Dict[str, Fact]) -> Tuple[bool, str]:
         """
@@ -148,8 +185,8 @@ class EvidenceVerifier:
             quote = fact.provenance.verbatim_quote
             doc_id = fact.provenance.document_id
             if quote:
-                verified, score, _ = self.verify_quotation(doc_id, quote)
-                if not verified and score < 0.70:
-                    return False, f"Fact {fid} evidence quotation failed verification against {doc_id}"
+                verified, score, reason = self.verify_quotation(doc_id, quote)
+                if not verified:
+                    return False, f"Fact {fid} evidence quotation failed verification against {doc_id}: {reason}"
 
         return True, "Claim verified against knowledge store and source document texts"
