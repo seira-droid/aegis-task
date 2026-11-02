@@ -524,7 +524,10 @@
       <div class="response-pane" id="resp-pane">
         <div class="resp-header">
           <div class="resp-title" id="resp-query">Select a question on the left to inspect evidence...</div>
-          <span class="status-badge" id="resp-status">STATUS</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="status-badge" id="resp-confidence" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">100% CONF</span>
+            <span class="status-badge" id="resp-status">STATUS</span>
+          </div>
         </div>
         <div class="direct-answer-box" id="resp-answer"></div>
 
@@ -533,8 +536,13 @@
           <div id="resp-claims"></div>
         </div>
 
+        <div id="conflicts-alert-container" style="display: none; margin-top: 16px;">
+          <div class="section-title" style="color: #fbbf24;">Multi-Source Conflict & Resolution Rationale</div>
+          <div id="resp-conflicts" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 8px; padding: 12px; font-size: 13px;"></div>
+        </div>
+
         <div id="evidence-container">
-          <div class="section-title" style="margin-top: 20px;">Source Provenance Citations</div>
+          <div class="section-title" style="margin-top: 20px;">Source Provenance Citations & Evidence Quotes</div>
           <div class="evidence-grid" id="resp-evidence"></div>
         </div>
 
@@ -763,6 +771,12 @@
       statusEl.className = `status-badge status-${data.epistemic_status}`;
       statusEl.innerText = data.epistemic_status;
 
+      const confEl = document.getElementById('resp-confidence');
+      if (confEl) {
+        const confPct = Math.round((data.confidence_score || 1.0) * 100);
+        confEl.innerText = `${confPct}% CONFIDENCE`;
+      }
+
       document.getElementById('resp-answer').innerText = data.direct_answer;
 
       // Render Claims
@@ -773,11 +787,35 @@
         data.claims.forEach(c => {
           const div = document.createElement('div');
           div.className = 'claim-item';
-          div.innerHTML = `<div>${c.statement}</div><div style="margin-top: 4px; font-size: 11px; color: var(--primary);">Fact Linkage: <code>${c.supporting_fact_ids.join(', ')}</code></div>`;
+          const statusBadge = c.verification_status === 'VERIFIED'
+            ? `<span style="background: rgba(34,197,94,0.15); color: #4ade80; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-left: 8px;">VERIFIED</span>`
+            : `<span style="background: rgba(248,113,113,0.15); color: #f87171; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-left: 8px;">UNVERIFIED</span>`;
+          div.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <span>${c.statement}</span>
+              ${statusBadge}
+            </div>
+            <div style="margin-top: 4px; font-size: 11px; color: var(--primary);">Fact Linkage: <code>${c.supporting_fact_ids.join(', ')}</code></div>
+          `;
           claimsEl.appendChild(div);
         });
       } else {
         document.getElementById('claims-container').style.display = 'none';
+      }
+
+      // Render Conflicts
+      const confContainer = document.getElementById('conflicts-alert-container');
+      const confElBox = document.getElementById('resp-conflicts');
+      if (confContainer && confElBox) {
+        if (data.conflicts_identified && data.conflicts_identified.length > 0) {
+          confContainer.style.display = 'block';
+          confElBox.innerHTML = data.conflicts_identified.map(c => `
+            <div><strong>Conflict: ${c.subject_id} &rarr; ${c.predicate}</strong> [<code>${c.resolution_type}</code>]</div>
+            <div style="margin-top: 6px; color: var(--text-muted);">${c.justification}</div>
+          `).join('<hr style="margin: 8px 0; border: none; border-top: 1px solid rgba(251,191,36,0.3);">');
+        } else {
+          confContainer.style.display = 'none';
+        }
       }
 
       // Render Evidence
@@ -788,12 +826,18 @@
         data.evidence.forEach(ev => {
           const div = document.createElement('div');
           div.className = 'evidence-card';
-          const loc = ev.page ? `Page ${ev.page}` : (ev.section || ev.element_id || 'Section Document');
+          const loc = ev.page ? `Page ${ev.page}` : (ev.section || ev.worksheet || ev.element_id || 'Document Scope');
+          const isLowTrust = (ev.trust_level === 'FIELD_RECORD_LOW_TRUST' || ev.trust_level === 'NOISE_EXTERNAL');
+          const trustBadge = isLowTrust
+            ? `<span style="background: rgba(248,113,113,0.15); color: #f87171; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600;">UNVERIFIED FIELD RECORD</span>`
+            : `<span style="background: rgba(34,197,94,0.15); color: #4ade80; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600;">AUTHORITATIVE (${ev.trust_level})</span>`;
+
           div.innerHTML = `
             <div class="evidence-meta">
-              <span>[${ev.document_id}] ${ev.document_title}</span>
+              <span><strong>[${ev.document_id}]</strong> ${ev.document_title}</span>
               <span>${loc}</span>
             </div>
+            <div style="margin: 6px 0;">${trustBadge}</div>
             <div class="evidence-quote">"${ev.verbatim_quote || ''}"</div>
           `;
           evEl.appendChild(div);

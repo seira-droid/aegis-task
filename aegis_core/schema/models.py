@@ -57,9 +57,14 @@ class Provenance(BaseModel):
     file_type: str
     page: Optional[int] = None
     section: Optional[str] = None
+    worksheet: Optional[str] = None
+    cell: Optional[str] = None
+    slide: Optional[int] = None
     element_id: Optional[str] = None
     verbatim_quote: Optional[str] = None
     trust_level: TrustLevel = TrustLevel.OFFICIAL_MANUAL
+    relevant_revision: Optional[str] = None
+    extraction_confidence: float = 1.0
     location_detail: Optional[str] = None
 
 
@@ -118,6 +123,7 @@ class Claim(BaseModel):
     supporting_fact_ids: List[str] = Field(default_factory=list)
     confidence: float = 1.0
     verification_status: str = "VERIFIED"
+    evidence: List[Provenance] = Field(default_factory=list)
 
 
 class QueryResult(BaseModel):

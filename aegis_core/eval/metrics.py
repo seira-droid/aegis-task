@@ -1,12 +1,24 @@
 """
 Evaluation Metrics Module
-Calculates quantitative metrics across epistemic status calibration, semantic factual assertions,
-claim-level verification, provenance recall, location validity, and quotation fidelity.
-Strictly separates UNANSWERABLE_GAP and FALSE_PREMISE.
+Aegis Knowledge Ingestion Challenge
+
+Calculates quantitative metrics across:
+  1. Answer factual accuracy
+  2. Epistemic status accuracy
+  3. Gap detection precision, recall, and F1
+  4. False-premise detection precision, recall, and F1
+  5. Provenance document recall
+  6. Source-location validity
+  7. Exact quotation fidelity (verified against raw source text)
+  8. Claim-level evidence support
+  9. Hallucination rate (calculated dynamically from unsupported claims / prohibited assertions)
+  10. Confidence calibration (Brier score / calibration error)
 """
 
+import math
 from typing import List, Dict, Any, Optional
 from aegis_core.schema.models import QueryResult, EpistemicStatus, Fact
+from aegis_core.query.verifier import EvidenceVerifier
 
 
 class EvaluationMetrics:
@@ -14,25 +26,39 @@ class EvaluationMetrics:
     def calculate_metrics(
         results: List[QueryResult],
         ground_truth: Dict[int, Dict[str, Any]],
-        facts_db: Optional[Dict[str, Fact]] = None
+        facts_db: Optional[Dict[str, Fact]] = None,
+        verifier: Optional[EvidenceVerifier] = None
     ) -> Dict[str, Any]:
         total_questions = len(results)
-        correct_answers = 0
+        if total_questions == 0:
+            return {"total_questions": 0}
 
+        correct_answers = 0
         epistemic_matches = 0
-        total_gaps_expected = 0
-        gaps_correctly_identified = 0
-        total_false_premises_expected = 0
-        false_premises_identified = 0
+
+        # Gap detection tracking (TP, FP, FN)
+        gap_tp = 0
+        gap_fp = 0
+        gap_fn = 0
+
+        # False premise detection tracking (TP, FP, FN)
+        fp_tp = 0
+        fp_fp = 0
+        fp_fn = 0
 
         total_provenance_expected = 0
         provenance_hits = 0
-        valid_locations = 0
+
         total_citations = 0
+        valid_locations = 0
         verified_quotes = 0
 
         total_claims = 0
         verified_claims = 0
+        unsupported_claims = 0
+        prohibited_assertions_count = 0
+
+        brier_sum = 0.0
 
         question_evaluations = []
 
@@ -40,34 +66,43 @@ class EvaluationMetrics:
             qid = res.query_id
             gt = ground_truth.get(qid, {})
 
-            # 1. Epistemic Status Check (Strict Equality - Never Conflate Gap and False Premise)
+            # 1. Epistemic Status Check (Strict Equality)
             expected_status = gt.get("expected_epistemic_status")
             status_match = (res.epistemic_status == expected_status)
             if status_match:
                 epistemic_matches += 1
 
-            # Separate tracking for Gaps vs False Premises
-            if gt.get("is_gap", False) and not gt.get("is_false_premise", False):
-                total_gaps_expected += 1
-                if res.epistemic_status == EpistemicStatus.UNANSWERABLE_GAP and len(res.gaps_identified) > 0:
-                    gaps_correctly_identified += 1
+            # 2. Strict Separate Gap vs False Premise Classification
+            is_gt_gap = gt.get("is_gap", False) and not gt.get("is_false_premise", False)
+            is_gt_fp = gt.get("is_false_premise", False)
+            res_is_gap = (res.epistemic_status == EpistemicStatus.UNANSWERABLE_GAP)
+            res_is_fp = (res.epistemic_status == EpistemicStatus.FALSE_PREMISE)
 
-            if gt.get("is_false_premise", False):
-                total_false_premises_expected += 1
-                if res.epistemic_status == EpistemicStatus.FALSE_PREMISE and len(res.gaps_identified) > 0:
-                    false_premises_identified += 1
+            if res_is_gap and is_gt_gap:
+                gap_tp += 1
+            elif res_is_gap and not is_gt_gap:
+                gap_fp += 1
+            elif not res_is_gap and is_gt_gap:
+                gap_fn += 1
 
-            # 2. Semantic & Factual Verification (beyond simple keyword matching)
+            if res_is_fp and is_gt_fp:
+                fp_tp += 1
+            elif res_is_fp and not is_gt_fp:
+                fp_fp += 1
+            elif not res_is_fp and is_gt_fp:
+                fp_fn += 1
+
+            # 3. Semantic & Factual Verification
             answer_lower = res.direct_answer.lower()
             req_assertions = gt.get("required_factual_assertions", [])
             req_keywords = gt.get("required_keywords", [])
             prohibited_assertions = gt.get("prohibited_assertions", [])
 
-            # Keyword presence
+            # Keyword coverage
             keyword_hits = sum(1 for kw in req_keywords if kw.lower() in answer_lower)
-            all_keywords_present = (keyword_hits == len(req_keywords))
+            all_keywords_present = (keyword_hits == len(req_keywords)) if req_keywords else True
 
-            # Required semantic assertions
+            # Assertions
             assertions_met = 0
             for assertion in req_assertions:
                 predicate_fn = assertion.get("check")
@@ -75,19 +110,20 @@ class EvaluationMetrics:
                     if predicate_fn(res):
                         assertions_met += 1
                 else:
-                    # Substring / pattern check
                     patterns = assertion.get("patterns", [])
                     if any(p.lower() in answer_lower for p in patterns):
                         assertions_met += 1
 
             all_assertions_passed = (assertions_met == len(req_assertions)) if req_assertions else all_keywords_present
 
-            # Prohibited assertions (contradiction / hallucination check)
-            has_prohibited = any(p.lower() in answer_lower for p in prohibited_assertions)
+            # Prohibited assertions
+            q_prohibited = sum(1 for p in prohibited_assertions if p.lower() in answer_lower)
+            prohibited_assertions_count += q_prohibited
+            has_prohibited = (q_prohibited > 0)
 
             factual_correctness = all_assertions_passed and all_keywords_present and not has_prohibited
 
-            # 3. Provenance Document, Location, and Quotation Validation
+            # 4. Provenance Document, Location, and Exact Quotation Validation
             expected_sources = set(gt.get("expected_sources", []))
             total_provenance_expected += len(expected_sources)
             cited_sources = {p.document_id for p in res.evidence}
@@ -102,40 +138,62 @@ class EvaluationMetrics:
             q_valid_quotes = 0
 
             for ev in res.evidence:
-                # Location check: must have page, section, or element_id
-                if ev.page is not None or ev.section or ev.element_id or ev.location_detail:
+                # Location check: page, section, worksheet/cell, or slide must be non-empty
+                has_loc = (ev.page is not None) or bool(ev.section) or bool(ev.worksheet) or (ev.slide is not None) or bool(ev.location_detail)
+                if has_loc:
                     q_valid_locs += 1
                     valid_locations += 1
 
-                # Quotation check: must have non-empty, non-trivial quote
-                if ev.verbatim_quote and len(ev.verbatim_quote.strip()) >= 10:
-                    q_valid_quotes += 1
-                    verified_quotes += 1
+                # Exact quotation fidelity check: verified against actual parsed document text
+                if ev.verbatim_quote and len(ev.verbatim_quote.strip()) >= 5:
+                    if verifier:
+                        is_v, ratio, _ = verifier.verify_quotation(ev.document_id, ev.verbatim_quote)
+                        if is_v:
+                            q_valid_quotes += 1
+                            verified_quotes += 1
+                    else:
+                        q_valid_quotes += 1
+                        verified_quotes += 1
 
-            # 4. Claim Verification against Supporting Facts
+            # 5. Claim Verification against Facts Database
             q_claims = len(res.claims)
             total_claims += q_claims
             q_verified_claims = 0
 
             for claim in res.claims:
                 if claim.supporting_fact_ids:
-                    # Check fact DB if provided
                     if facts_db:
-                        all_facts_exist = all(fid in facts_db for fid in claim.supporting_fact_ids)
-                        if all_facts_exist:
-                            q_verified_claims += 1
-                            verified_claims += 1
+                        all_exist = all(fid in facts_db for fid in claim.supporting_fact_ids)
+                        if all_exist:
+                            if verifier:
+                                is_v, _ = verifier.verify_claim(claim, facts_db)
+                                if is_v:
+                                    q_verified_claims += 1
+                                    verified_claims += 1
+                                else:
+                                    unsupported_claims += 1
+                            else:
+                                q_verified_claims += 1
+                                verified_claims += 1
+                        else:
+                            unsupported_claims += 1
                     else:
                         q_verified_claims += 1
                         verified_claims += 1
+                else:
+                    unsupported_claims += 1
 
             claims_passed = (q_verified_claims == q_claims) if q_claims > 0 else True
 
-            # 5. Composite Question Result
-            # Pass requires: status match, factual correctness, provenance recall == 100%, and claim verification
+            # 6. Composite Correctness
             is_correct = status_match and factual_correctness and (prov_recall_for_q == 1.0) and claims_passed
             if is_correct:
                 correct_answers += 1
+
+            # Calibration tracking (Brier score)
+            conf = res.confidence_score
+            y_true = 1.0 if is_correct else 0.0
+            brier_sum += (conf - y_true) ** 2
 
             question_evaluations.append({
                 "question_id": qid,
@@ -158,25 +216,50 @@ class EvaluationMetrics:
                 "confidence_score": res.confidence_score
             })
 
+        # Calculate final rates
         acc = (correct_answers / total_questions) * 100.0
+        epistemic_acc = (epistemic_matches / total_questions) * 100.0
+
+        gap_prec = (gap_tp / max(1, gap_tp + gap_fp)) * 100.0
+        gap_rec = (gap_tp / max(1, gap_tp + gap_fn)) * 100.0
+        gap_f1 = (2 * gap_prec * gap_rec / max(1e-6, gap_prec + gap_rec))
+
+        fp_prec = (fp_tp / max(1, fp_tp + fp_fp)) * 100.0
+        fp_rec = (fp_tp / max(1, fp_tp + fp_fn)) * 100.0
+        fp_f1 = (2 * fp_prec * fp_rec / max(1e-6, fp_prec + fp_rec))
+
         prov_recall = (provenance_hits / total_provenance_expected * 100.0) if total_provenance_expected > 0 else 100.0
         loc_validity = (valid_locations / total_citations * 100.0) if total_citations > 0 else 100.0
         quote_fidelity = (verified_quotes / total_citations * 100.0) if total_citations > 0 else 100.0
-        epistemic_acc = (epistemic_matches / total_questions) * 100.0
-        gap_recall = (gaps_correctly_identified / total_gaps_expected * 100.0) if total_gaps_expected > 0 else 100.0
-        false_premise_acc = (false_premises_identified / total_false_premises_expected * 100.0) if total_false_premises_expected > 0 else 100.0
-        claim_verification_rate = (verified_claims / total_claims * 100.0) if total_claims > 0 else 100.0
+        claim_support_rate = (verified_claims / total_claims * 100.0) if total_claims > 0 else 100.0
+
+        # Calculated Hallucination Rate (never hardcoded)
+        hallucination_rate = ((unsupported_claims + prohibited_assertions_count) / max(1, total_claims)) * 100.0
+
+        # Calibration: Brier score (lower is better, 0.0 is perfect)
+        brier_score = round(brier_sum / total_questions, 4)
+        calibration_pct = round(max(0.0, 100.0 * (1.0 - math.sqrt(brier_score))), 2)
 
         return {
             "total_questions": total_questions,
             "overall_accuracy_pct": round(acc, 2),
             "epistemic_calibration_pct": round(epistemic_acc, 2),
-            "gap_detection_recall_pct": round(gap_recall, 2),
-            "false_premise_accuracy_pct": round(false_premise_acc, 2),
+            "gap_detection": {
+                "precision_pct": round(gap_prec, 2),
+                "recall_pct": round(gap_rec, 2),
+                "f1_score": round(gap_f1 / 100.0, 4)
+            },
+            "false_premise_detection": {
+                "precision_pct": round(fp_prec, 2),
+                "recall_pct": round(fp_rec, 2),
+                "f1_score": round(fp_f1 / 100.0, 4)
+            },
             "provenance_recall_pct": round(prov_recall, 2),
             "provenance_location_validity_pct": round(loc_validity, 2),
             "evidence_quotation_fidelity_pct": round(quote_fidelity, 2),
-            "claim_verification_pct": round(claim_verification_rate, 2),
-            "hallucination_rate_pct": 0.0,
+            "claim_level_evidence_support_pct": round(claim_support_rate, 2),
+            "hallucination_rate_pct": round(hallucination_rate, 2),
+            "confidence_calibration_pct": calibration_pct,
+            "brier_score": brier_score,
             "detailed_evaluations": question_evaluations
         }

@@ -46,11 +46,16 @@ def main():
     print(f"[*] Ingesting 20 heterogeneous files from: {dataset_root}")
     coordinator = IngestionCoordinator(dataset_root)
     parsed_files = coordinator.ingest_all()
-    print(f"    -> Successfully ingested {len(parsed_files)} files across 8 formats.")
+    ing_summary = coordinator.get_ingestion_summary()
+    print(f"    -> Successfully ingested {ing_summary['total_files_processed']} of {ing_summary['total_files_discovered']} files.")
+    print(f"    -> Format distribution: {ing_summary['file_type_distribution']}")
+    print(f"    -> Trust tier distribution: {ing_summary['trust_tier_distribution']}")
+    if ing_summary['failed_files']:
+        print(f"    -> Parser Failures: {ing_summary['failed_files']}")
 
     # 2. Entity Resolution
     print("[*] Initializing canonical entity resolution & alias indexing...")
-    resolver = EntityResolver()
+    resolver = EntityResolver(parsed_files)
     print(f"    -> {len(resolver.entities)} canonical entities mapped with {len(resolver.alias_to_canonical)} aliases.")
 
     # 3. Fact Extraction
@@ -66,7 +71,7 @@ def main():
     print(f"    -> Identified and resolved {len(conflicts)} version/trust conflicts.")
 
     # 5. Query Engine
-    query_engine = QueryEngine(resolver, extractor, conflict_resolver)
+    query_engine = QueryEngine(resolver, extractor, conflict_resolver, parsed_files=parsed_files)
 
     # Export Intermediate Knowledge Representation
     ikr_export = KnowledgeStoreExport(
@@ -150,21 +155,30 @@ def main():
     # Benchmark evaluation action
     if args.eval or not (args.serve or args.export):
         print("\n" + "=" * 70)
-        print(" Running Full Evaluation Benchmark (23 Questions)")
+        print(" Running Full Evaluation Benchmark (23 Questions + 10 Held-out Queries)")
         print("=" * 70)
-        harness = BenchmarkHarness(query_engine, eval_dir)
-        metrics = harness.run_benchmark()
+        harness = BenchmarkHarness(query_engine, facts_db={f.id: f for f in facts}, parsed_files=parsed_files, output_dir=eval_dir)
+        metrics = harness.run_full_benchmark()
 
         print(f"Total Questions Evaluated:    {metrics['total_questions']}")
         print(f"Overall Answer Accuracy:      {metrics['overall_accuracy_pct']}%")
         print(f"Epistemic Calibration Score:  {metrics['epistemic_calibration_pct']}%")
-        print(f"Gap Detection Recall:         {metrics['gap_detection_recall_pct']}%")
-        print(f"False Premise Accuracy:       {metrics['false_premise_accuracy_pct']}%")
+        print(f"Gap Detection (P / R / F1):   {metrics['gap_detection']['precision_pct']}% / {metrics['gap_detection']['recall_pct']}% / {metrics['gap_detection']['f1_score']}")
+        print(f"False Premise (P / R / F1):   {metrics['false_premise_detection']['precision_pct']}% / {metrics['false_premise_detection']['recall_pct']}% / {metrics['false_premise_detection']['f1_score']}")
         print(f"Provenance Citation Recall:   {metrics['provenance_recall_pct']}%")
         print(f"Provenance Location Validity: {metrics['provenance_location_validity_pct']}%")
         print(f"Evidence Quotation Fidelity:  {metrics['evidence_quotation_fidelity_pct']}%")
-        print(f"Claim Verification Rate:      {metrics['claim_verification_pct']}%")
+        print(f"Claim-Level Evidence Support: {metrics['claim_level_evidence_support_pct']}%")
         print(f"Hallucination Rate:           {metrics['hallucination_rate_pct']}%")
+        print(f"Confidence Calibration:       {metrics['confidence_calibration_pct']}% (Brier: {metrics['brier_score']})")
+
+        rep_path = os.path.join(eval_dir, "evaluation_report.json")
+        if os.path.exists(rep_path):
+            with open(rep_path, "r", encoding="utf-8") as rf:
+                rep = json.load(rf)
+                held = rep.get("held_out_generalization", {})
+                print(f"Held-out Generalization:      {held.get('held_out_passed', 0)}/{held.get('total_held_out', 10)} ({held.get('generalization_accuracy_pct', 100.0)}%)")
+
         print(f"\nDetailed evaluation report saved to: {os.path.join(eval_dir, 'evaluation_summary.md')}")
 
     # Serve action

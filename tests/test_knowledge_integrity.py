@@ -26,12 +26,12 @@ class TestKnowledgeIntegrity(unittest.TestCase):
         cls.dataset_root = os.path.join(base_dir, "task-data", "aegis-dataset", "aegis-dataset")
         cls.coordinator = IngestionCoordinator(cls.dataset_root)
         cls.parsed_files = cls.coordinator.ingest_all()
-        cls.resolver = EntityResolver()
+        cls.resolver = EntityResolver(cls.parsed_files)
         cls.extractor = FactExtractor(cls.resolver)
         cls.facts = cls.extractor.extract_all(cls.parsed_files)
         cls.conflict_resolver = ConflictResolver()
         cls.conflicts = cls.conflict_resolver.resolve_conflicts(cls.facts)
-        cls.query_engine = QueryEngine(cls.resolver, cls.extractor, cls.conflict_resolver)
+        cls.query_engine = QueryEngine(cls.resolver, cls.extractor, cls.conflict_resolver, parsed_files=cls.parsed_files)
 
     def test_20_source_files_ingested(self):
         """Verify all 20 heterogeneous files are ingested."""
@@ -167,6 +167,58 @@ class TestKnowledgeIntegrity(unittest.TestCase):
         self.assertNotIn("HPU", purple_conns)
         self.assertIn("HPU", grey_conns)
 
+    def test_evidence_verifier_quotation_fidelity(self):
+        """Verify that every cited verbatim quote exists in raw parsed source texts."""
+        from aegis_core.query.verifier import EvidenceVerifier
+        verifier = EvidenceVerifier(self.parsed_files)
+        verified_count = 0
+        for fact in self.facts:
+            quote = fact.provenance.verbatim_quote
+            doc_id = fact.provenance.document_id
+            if quote:
+                is_v, score, msg = verifier.verify_quotation(doc_id, quote)
+                self.assertTrue(is_v or score >= 0.70, f"Quote verification failed for fact {fact.id} in {doc_id}: {msg}")
+                verified_count += 1
+        self.assertGreater(verified_count, 20)
+
+    def test_unfamiliar_alias_resolution(self):
+        """Verify that identifier variants across formats resolve to canonical entities."""
+        # Wiring diagram alias
+        ent_xdcr = self.resolver.resolve("PRESSURE XDCR")
+        self.assertIsNotNone(ent_xdcr)
+        self.assertEqual(ent_xdcr.id, "PS-04A")
+
+        # HMI OCR tag
+        ent_tag = self.resolver.resolve("P.S.04-A")
+        self.assertIsNotNone(ent_tag)
+        self.assertEqual(ent_tag.id, "PS-04A")
+
+        # Config export keys
+        ent_cfg = self.resolver.resolve("sensor_ps04a")
+        self.assertIsNotNone(ent_cfg)
+        self.assertEqual(ent_cfg.id, "PS-04A")
+
+        ent_iv = self.resolver.resolve("valve_iv21")
+        self.assertIsNotNone(ent_iv)
+        self.assertEqual(ent_iv.id, "IV-21")
+
+        # Training slide informal aliases
+        ent_hpu = self.resolver.resolve("hydraulic pack")
+        self.assertIsNotNone(ent_hpu)
+        self.assertEqual(ent_hpu.id, "HPU")
+
+    def test_subordination_of_low_trust_field_observations(self):
+        """Verify that 175 bar field gauge reading is subordinated to 200 bar controlled manual."""
+        res = self.query_engine.answer_query("Does the 175 bar gauge reading on Line 4 override the manual?")
+        self.assertEqual(res.epistemic_status, EpistemicStatus.VERSION_SCOPED)
+        self.assertIn("not override", res.direct_answer.lower())
+        self.assertIn("200 bar", res.direct_answer)
+        self.assertIn("175 bar", res.direct_answer)
+        # Check that conflict is recorded
+        self.assertTrue(len(res.conflicts_identified) > 0)
+        self.assertEqual(res.conflicts_identified[0].predicate, "normal_operating_pressure")
+
 
 if __name__ == "__main__":
     unittest.main()
+

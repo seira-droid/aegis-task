@@ -35,15 +35,15 @@ EVAL_OUT_DIR = os.path.join(os.path.dirname(BASE_DIR), "eval_results")
 coordinator = IngestionCoordinator(DATASET_ROOT)
 parsed_files = coordinator.ingest_all()
 
-entity_resolver = EntityResolver()
+entity_resolver = EntityResolver(parsed_files)
 fact_extractor = FactExtractor(entity_resolver)
 facts = fact_extractor.extract_all(parsed_files)
 
 conflict_resolver = ConflictResolver()
 conflicts = conflict_resolver.resolve_conflicts(facts)
 
-query_engine = QueryEngine(entity_resolver, fact_extractor, conflict_resolver)
-benchmark_harness = BenchmarkHarness(query_engine, EVAL_OUT_DIR)
+query_engine = QueryEngine(entity_resolver, fact_extractor, conflict_resolver, parsed_files=parsed_files)
+benchmark_harness = BenchmarkHarness(query_engine, facts_db={f.id: f for f in facts}, parsed_files=parsed_files, output_dir=EVAL_OUT_DIR)
 
 
 class QueryRequest(BaseModel):
@@ -184,7 +184,7 @@ def _parse_text_questions(text: str) -> List[str]:
 
 @app.get("/api/benchmark")
 def run_benchmark():
-    metrics = benchmark_harness.run_benchmark()
+    metrics = benchmark_harness.run_full_benchmark()
     return metrics
 
 

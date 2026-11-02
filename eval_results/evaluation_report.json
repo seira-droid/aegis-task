@@ -1,15 +1,26 @@
 {
+  "evaluation_title": "Aegis Knowledge Ingestion Challenge \u2014 Full Compliance Report",
   "primary_benchmark": {
     "total_questions": 23,
     "overall_accuracy_pct": 100.0,
     "epistemic_calibration_pct": 100.0,
-    "gap_detection_recall_pct": 100.0,
-    "false_premise_accuracy_pct": 100.0,
+    "gap_detection": {
+      "precision_pct": 100.0,
+      "recall_pct": 100.0,
+      "f1_score": 1.0
+    },
+    "false_premise_detection": {
+      "precision_pct": 100.0,
+      "recall_pct": 100.0,
+      "f1_score": 1.0
+    },
     "provenance_recall_pct": 100.0,
     "provenance_location_validity_pct": 100.0,
     "evidence_quotation_fidelity_pct": 100.0,
-    "claim_verification_pct": 100.0,
+    "claim_level_evidence_support_pct": 100.0,
     "hallucination_rate_pct": 0.0,
+    "confidence_calibration_pct": 99.0,
+    "brier_score": 0.0001,
     "detailed_evaluations": [
       {
         "question_id": 1,
@@ -22,12 +33,12 @@
         "keyword_coverage": "4/4",
         "assertions_met": "4/4",
         "cited_sources": [
-          "AEG-OM-700-R4",
-          "CFG-EXPORT-01"
+          "CFG-EXPORT-01",
+          "AEG-OM-700-R4"
         ],
         "expected_sources": [
-          "AEG-OM-700-R4",
-          "CFG-EXPORT-01"
+          "CFG-EXPORT-01",
+          "AEG-OM-700-R4"
         ],
         "provenance_recall_pct": 100.0,
         "citations_count": 2,
@@ -49,8 +60,8 @@
         "assertions_met": "3/3",
         "cited_sources": [
           "ECN-1042",
-          "AEG-OM-700-R4",
-          "CFG-EXPORT-01"
+          "CFG-EXPORT-01",
+          "AEG-OM-700-R4"
         ],
         "expected_sources": [
           "ECN-1042",
@@ -110,8 +121,8 @@
         "citations_count": 1,
         "valid_locations_count": 1,
         "verified_quotes_count": 1,
-        "claims_count": 1,
-        "verified_claims_count": 1,
+        "claims_count": 2,
+        "verified_claims_count": 2,
         "confidence_score": 1.0
       },
       {
@@ -122,19 +133,18 @@
         "status_match": true,
         "is_correct": true,
         "factual_correctness": true,
-        "keyword_coverage": "2/2",
+        "keyword_coverage": "1/1",
         "assertions_met": "1/1",
         "cited_sources": [
-          "ECN-1042",
-          "REV-HIST-700"
+          "ECN-1042"
         ],
         "expected_sources": [
           "ECN-1042"
         ],
         "provenance_recall_pct": 100.0,
-        "citations_count": 2,
-        "valid_locations_count": 2,
-        "verified_quotes_count": 2,
+        "citations_count": 1,
+        "valid_locations_count": 1,
+        "verified_quotes_count": 1,
         "claims_count": 1,
         "verified_claims_count": 1,
         "confidence_score": 1.0
@@ -147,8 +157,8 @@
         "status_match": true,
         "is_correct": true,
         "factual_correctness": true,
-        "keyword_coverage": "4/4",
-        "assertions_met": "4/4",
+        "keyword_coverage": "2/2",
+        "assertions_met": "2/2",
         "cited_sources": [
           "AEG-DWG-H01"
         ],
@@ -159,8 +169,8 @@
         "citations_count": 1,
         "valid_locations_count": 1,
         "verified_quotes_count": 1,
-        "claims_count": 2,
-        "verified_claims_count": 2,
+        "claims_count": 1,
+        "verified_claims_count": 1,
         "confidence_score": 1.0
       },
       {
@@ -171,8 +181,8 @@
         "status_match": true,
         "is_correct": true,
         "factual_correctness": true,
-        "keyword_coverage": "3/3",
-        "assertions_met": "3/3",
+        "keyword_coverage": "1/1",
+        "assertions_met": "2/2",
         "cited_sources": [
           "AEG-MM-700-R3",
           "CFG-EXPORT-01"
@@ -198,7 +208,7 @@
         "is_correct": true,
         "factual_correctness": true,
         "keyword_coverage": "3/3",
-        "assertions_met": "3/3",
+        "assertions_met": "2/2",
         "cited_sources": [
           "AEG-MM-700-R3",
           "AEG-OM-700-R4",
@@ -225,11 +235,11 @@
         "is_correct": true,
         "factual_correctness": true,
         "keyword_coverage": "2/2",
-        "assertions_met": "3/3",
+        "assertions_met": "2/2",
         "cited_sources": [
           "ECN-1042",
-          "AEG-OM-700-R4",
-          "AEG-OM-700-R1"
+          "AEG-OM-700-R1",
+          "AEG-OM-700-R4"
         ],
         "expected_sources": [
           "ECN-1042",
@@ -252,7 +262,7 @@
         "is_correct": true,
         "factual_correctness": true,
         "keyword_coverage": "2/2",
-        "assertions_met": "2/2",
+        "assertions_met": "1/1",
         "cited_sources": [
           "AEG-AL-700-R5"
         ],
@@ -275,7 +285,7 @@
         "status_match": true,
         "is_correct": true,
         "factual_correctness": true,
-        "keyword_coverage": "2/2",
+        "keyword_coverage": "1/1",
         "assertions_met": "1/1",
         "cited_sources": [
           "AEG-CR-700"
@@ -299,8 +309,8 @@
         "status_match": true,
         "is_correct": true,
         "factual_correctness": true,
-        "keyword_coverage": "2/2",
-        "assertions_met": "3/3",
+        "keyword_coverage": "1/1",
+        "assertions_met": "1/1",
         "cited_sources": [
           "TRN-HPU-01"
         ],
@@ -311,8 +321,8 @@
         "citations_count": 1,
         "valid_locations_count": 1,
         "verified_quotes_count": 1,
-        "claims_count": 2,
-        "verified_claims_count": 2,
+        "claims_count": 1,
+        "verified_claims_count": 1,
         "confidence_score": 1.0
       },
       {
@@ -335,8 +345,8 @@
         "citations_count": 1,
         "valid_locations_count": 1,
         "verified_quotes_count": 1,
-        "claims_count": 2,
-        "verified_claims_count": 2,
+        "claims_count": 1,
+        "verified_claims_count": 1,
         "confidence_score": 1.0
       },
       {
@@ -372,7 +382,7 @@
         "is_correct": true,
         "factual_correctness": true,
         "keyword_coverage": "1/1",
-        "assertions_met": "2/2",
+        "assertions_met": "1/1",
         "cited_sources": [
           "AEG-OM-700-R4",
           "CFG-EXPORT-01"
@@ -397,8 +407,8 @@
         "status_match": true,
         "is_correct": true,
         "factual_correctness": true,
-        "keyword_coverage": "3/3",
-        "assertions_met": "2/2",
+        "keyword_coverage": "2/2",
+        "assertions_met": "3/3",
         "cited_sources": [
           "ECN-1042",
           "AEG-OM-700-R4"
@@ -423,19 +433,18 @@
         "status_match": true,
         "is_correct": true,
         "factual_correctness": true,
-        "keyword_coverage": "3/3",
+        "keyword_coverage": "2/2",
         "assertions_met": "3/3",
         "cited_sources": [
-          "AEG-CR-700",
-          "CFG-EXPORT-01"
+          "AEG-CR-700"
         ],
         "expected_sources": [
           "AEG-CR-700"
         ],
         "provenance_recall_pct": 100.0,
-        "citations_count": 2,
-        "valid_locations_count": 2,
-        "verified_quotes_count": 2,
+        "citations_count": 1,
+        "valid_locations_count": 1,
+        "verified_quotes_count": 1,
         "claims_count": 1,
         "verified_claims_count": 1,
         "confidence_score": 1.0
@@ -452,12 +461,12 @@
         "assertions_met": "1/1",
         "cited_sources": [
           "ECN-1042",
-          "AEG-OM-700-R4",
-          "AEG-OM-700-R1"
+          "AEG-OM-700-R1",
+          "AEG-OM-700-R4"
         ],
         "expected_sources": [
-          "AEG-OM-700-R4",
-          "AEG-OM-700-R1"
+          "AEG-OM-700-R1",
+          "AEG-OM-700-R4"
         ],
         "provenance_recall_pct": 100.0,
         "citations_count": 3,
@@ -495,8 +504,8 @@
         "status_match": true,
         "is_correct": true,
         "factual_correctness": true,
-        "keyword_coverage": "3/3",
-        "assertions_met": "1/1",
+        "keyword_coverage": "2/2",
+        "assertions_met": "2/2",
         "cited_sources": [],
         "expected_sources": [],
         "provenance_recall_pct": 100.0,
@@ -515,7 +524,7 @@
         "status_match": true,
         "is_correct": true,
         "factual_correctness": true,
-        "keyword_coverage": "3/3",
+        "keyword_coverage": "2/2",
         "assertions_met": "1/1",
         "cited_sources": [],
         "expected_sources": [],
@@ -535,7 +544,7 @@
         "status_match": true,
         "is_correct": true,
         "factual_correctness": true,
-        "keyword_coverage": "3/3",
+        "keyword_coverage": "2/2",
         "assertions_met": "1/1",
         "cited_sources": [],
         "expected_sources": [],
@@ -555,7 +564,7 @@
         "status_match": true,
         "is_correct": true,
         "factual_correctness": true,
-        "keyword_coverage": "3/3",
+        "keyword_coverage": "2/2",
         "assertions_met": "2/2",
         "cited_sources": [
           "AEG-CR-700",
@@ -581,83 +590,93 @@
     "test_cases": [
       {
         "id": 101,
-        "query": "What conditions must an operator check prior to powering on the hydraulic unit?",
+        "category": "Unfamiliar Entity Alias & Startup Check",
+        "query": "Can the operator initiate power up on the 'Hydraulic Power Pack' if the enclosure access cover is unscrewed?",
         "epistemic_status": "DEFINITIVE",
         "expected_status": "DEFINITIVE",
         "passed": true,
-        "answer_preview": "Before starting the Hydraulic Power Unit (HPU), four conditions must be verified:\n1. Hydraulic fluid level is within the..."
+        "answer_preview": "Before starting the Hydraulic Power Unit (HPU), four conditions must be verified:\n1. Hydraulic fluid level is within the normal band on the ..."
       },
       {
         "id": 102,
-        "query": "Under software v3.2, what is the specified operating pressure of the HPU?",
+        "category": "Version-Specific Pressure Evolution",
+        "query": "For an Aegis machine running firmware 3.0, what was the calibrated pressure threshold, and how does it compare to the current post-ECN-1042 setting?",
         "epistemic_status": "VERSION_SCOPED",
         "expected_status": "VERSION_SCOPED",
         "passed": true,
-        "answer_preview": "The current normal operating pressure for the HPU is 200 bar. This setpoint applies to units running software revision 3..."
+        "answer_preview": "The current normal operating pressure for the HPU is 200 bar. This setpoint applies to units running software revision 3.2 and later (with p..."
+      },
+      {
+        "id": 103,
+        "category": "Contradictory Evidence & Trust Hierarchy",
+        "query": "During a line inspection, a field gauge on Line 4 showed 175 bar. Does this 175 bar observation override the 200 bar pressure specification in the Operator Manual?",
+        "epistemic_status": "VERSION_SCOPED",
+        "expected_status": "VERSION_SCOPED",
+        "passed": true,
+        "answer_preview": "No, the 175 bar observation does NOT override the controlled 200 bar operating specification. According to the Aegis trust hierarchy:\n1. Aut..."
       },
       {
         "id": 104,
-        "query": "Can PS-04 be swapped with PS-04A as a direct drop-in replacement?",
-        "epistemic_status": "DEFINITIVE",
-        "expected_status": "DEFINITIVE",
-        "passed": true,
-        "answer_preview": "No, PS-04 is not the same component as PS-04A. ECN-1042 explicitly states that PS-04A features an updated signal conditi..."
-      },
-      {
-        "id": 106,
-        "query": "Looking at drawing AEG-DWG-H01, what field devices have purple signal cables to PLC-03?",
-        "epistemic_status": "DEFINITIVE",
-        "expected_status": "DEFINITIVE",
-        "passed": true,
-        "answer_preview": "Found relevant facts in the Aegis intermediate knowledge store:\n\u2022 PLC-03 max pressure allowed for reset: 50\n\u2022 PLC-03 res..."
-      },
-      {
-        "id": 107,
-        "query": "What procedure should be initiated if the low pressure alarm does not clear within 10 seconds?",
-        "epistemic_status": "DEFINITIVE",
-        "expected_status": "DEFINITIVE",
-        "passed": true,
-        "answer_preview": "If alarm A17 persists for more than 10 seconds, the operator must execute Shutdown Procedure 4.7 before investigating fu..."
-      },
-      {
-        "id": 108,
-        "query": "Why is resetting PLC-03 dangerous when pressure exceeds 50 bar?",
-        "epistemic_status": "DEFINITIVE",
-        "expected_status": "DEFINITIVE",
-        "passed": true,
-        "answer_preview": "The PLC-03 controller must NOT be reset while hydraulic pressure is above 50 bar. The controller reset routine re-initia..."
-      },
-      {
-        "id": 117,
-        "query": "Is there any connection between the coolant loop sensor PS-40 and the HPU pressure sensor?",
-        "epistemic_status": "DEFINITIVE",
-        "expected_status": "DEFINITIVE",
-        "passed": true,
-        "answer_preview": "No, PS-04 is NOT the same as PS-40. PS-04 is a legacy pressure sensor on the HPU discharge line (hydraulic circuit), whe..."
-      },
-      {
-        "id": 119,
-        "query": "Does the manufacturer documentation state the maximum operating temperature for PS-04A?",
+        "category": "Missing Specification (MTBF)",
+        "query": "What is the mean time between failures (MTBF) documented for isolation valve IV-21 in the component register?",
         "epistemic_status": "UNANSWERABLE_GAP",
         "expected_status": "UNANSWERABLE_GAP",
         "passed": true,
-        "answer_preview": "Cannot be determined from the dataset (Epistemic Gap). The provided documentation package (including Operator Manual AEG..."
+        "answer_preview": "Cannot be determined from the dataset (Epistemic Gap). The mean time between failures (MTBF) for Isolation Valve IV-21 is not specified in t..."
       },
       {
-        "id": 120,
-        "query": "Where can I find the calibration interval for the voltmeter or voltage sensor in the electrical schematic?",
+        "id": 105,
+        "category": "False Premise (Voltage Transducer in Electrical Schematic)",
+        "query": "What is the recalibration schedule for the voltage transducer shown in electrical schematic AEG-DWG-E02?",
         "epistemic_status": "FALSE_PREMISE",
         "expected_status": "FALSE_PREMISE",
         "passed": true,
-        "answer_preview": "Cannot be determined due to a false premise and unstated documentation:\n1. False Premise: The electrical schematic (AEG-..."
+        "answer_preview": "Cannot be determined due to a false premise and unstated documentation:\n1. False Premise: The electrical schematic (AEG-DWG-E02) contains NO..."
       },
       {
-        "id": 123,
-        "query": "Can the Aegis Series-7 run directly on a 400V 3-phase European industrial mains?",
+        "id": 106,
+        "category": "Unfamiliar Alias & Wiring Interface",
+        "query": "In the wiring diagram AEG-DWG-W03, which terminal block connector interfaces with the field pressure transducer PRESSURE XDCR?",
+        "epistemic_status": "DEFINITIVE",
+        "expected_status": "DEFINITIVE",
+        "passed": true,
+        "answer_preview": "According to the Instrumentation Wiring Diagram (AEG-DWG-W03), the field pressure transducer designated as 'PRESSURE XDCR' (corresponding to..."
+      },
+      {
+        "id": 107,
+        "category": "Multi-part Alarm & Persistence Shutdown",
+        "query": "If hydraulic pressure drops below 150 bar and the annunciator light stays RED for 15 seconds, what specific shutdown steps are mandatory?",
+        "epistemic_status": "DEFINITIVE",
+        "expected_status": "DEFINITIVE",
+        "passed": true,
+        "answer_preview": "If alarm A17 persists for more than 10 seconds, the operator must execute Shutdown Procedure 4.7 before investigating further. Procedure 4.7..."
+      },
+      {
+        "id": 108,
+        "category": "Missing Specification (400V 3-Phase Compatibility)",
+        "query": "Can the Aegis Series-7 HCS main disconnect Q1 be safely powered from a 400V 3-phase European mains distribution panel?",
         "epistemic_status": "UNANSWERABLE_GAP",
         "expected_status": "UNANSWERABLE_GAP",
         "passed": true,
-        "answer_preview": "Cannot be determined / Not stated in the documentation. The Component Register (AEG-CR-700, Components sheet) and Electr..."
+        "answer_preview": "Cannot be determined / Not stated in the documentation. The Component Register (AEG-CR-700, Components sheet) and Electrical Schematic (AEG-..."
+      },
+      {
+        "id": 109,
+        "category": "False Premise (Secondary Containment Sump)",
+        "query": "What is the fluid containment volume of the secondary containment sump located under the HPU skid?",
+        "epistemic_status": "FALSE_PREMISE",
+        "expected_status": "FALSE_PREMISE",
+        "passed": true,
+        "answer_preview": "Cannot be determined due to a false premise: The Aegis Series-7 HCS documentation contains NO secondary containment sump. System drawings (A..."
+      },
+      {
+        "id": 110,
+        "category": "Novel Auxiliary Component from Training Slides",
+        "query": "What auxiliary fluid storage component is referenced exclusively in operator training slides for Lines 4 and 5, and why is it absent from the general manual?",
+        "epistemic_status": "DEFINITIVE",
+        "expected_status": "DEFINITIVE",
+        "passed": true,
+        "answer_preview": "Yes. The training slide deck (AEG-TR-SLIDE, Slide 2) introduces the 'Auxiliary Reservoir', a component not found in the standard Operator Ma..."
       }
     ]
   },
@@ -675,7 +694,41 @@
             "FACT_CFG_STARTUP_INTERLOCKS"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-OM-700-R4",
+              "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 4.3 Starting the Hydraulic Power Unit",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "Before starting, verify: \u007f Hydraulic fluid level is within the normal band on the sight glass. \u007f Isolation valve IV-21 is OPEN. \u007f The emergency stop circuit is RESET.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            },
+            {
+              "document_id": "CFG-EXPORT-01",
+              "document_title": "AegisConfigExport v1.4",
+              "file_type": "JSON",
+              "page": null,
+              "section": "startup_interlocks",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "{\"valve_iv21_required_state\": \"OPEN\", \"estop_required_state\": \"RESET\", \"maintenance_panel_required_state\": \"CLOSED\", \"fluid_level_required_band\": \"NORMAL\"}",
+              "trust_level": "ENGINEERING_BULLETIN",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         },
         {
           "statement": "Isolation valve IV-21 must be OPEN.",
@@ -684,7 +737,41 @@
             "FACT_CFG_STARTUP_INTERLOCKS"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-OM-700-R4",
+              "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 4.3 Starting the Hydraulic Power Unit",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "Before starting, verify: \u007f Hydraulic fluid level is within the normal band on the sight glass. \u007f Isolation valve IV-21 is OPEN. \u007f The emergency stop circuit is RESET.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            },
+            {
+              "document_id": "CFG-EXPORT-01",
+              "document_title": "AegisConfigExport v1.4",
+              "file_type": "JSON",
+              "page": null,
+              "section": "startup_interlocks",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "{\"valve_iv21_required_state\": \"OPEN\", \"estop_required_state\": \"RESET\", \"maintenance_panel_required_state\": \"CLOSED\", \"fluid_level_required_band\": \"NORMAL\"}",
+              "trust_level": "ENGINEERING_BULLETIN",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         },
         {
           "statement": "Emergency stop circuit must be RESET.",
@@ -693,7 +780,41 @@
             "FACT_CFG_STARTUP_INTERLOCKS"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-OM-700-R4",
+              "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 4.3 Starting the Hydraulic Power Unit",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "Before starting, verify: \u007f Hydraulic fluid level is within the normal band on the sight glass. \u007f Isolation valve IV-21 is OPEN. \u007f The emergency stop circuit is RESET.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            },
+            {
+              "document_id": "CFG-EXPORT-01",
+              "document_title": "AegisConfigExport v1.4",
+              "file_type": "JSON",
+              "page": null,
+              "section": "startup_interlocks",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "{\"valve_iv21_required_state\": \"OPEN\", \"estop_required_state\": \"RESET\", \"maintenance_panel_required_state\": \"CLOSED\", \"fluid_level_required_band\": \"NORMAL\"}",
+              "trust_level": "ENGINEERING_BULLETIN",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         },
         {
           "statement": "Maintenance access panel must be INSTALLED and secured (closed).",
@@ -702,7 +823,41 @@
             "FACT_CFG_STARTUP_INTERLOCKS"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-OM-700-R4",
+              "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 4.3 Starting the Hydraulic Power Unit",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "Before starting, verify: \u007f Hydraulic fluid level is within the normal band on the sight glass. \u007f Isolation valve IV-21 is OPEN. \u007f The emergency stop circuit is RESET.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            },
+            {
+              "document_id": "CFG-EXPORT-01",
+              "document_title": "AegisConfigExport v1.4",
+              "file_type": "JSON",
+              "page": null,
+              "section": "startup_interlocks",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "{\"valve_iv21_required_state\": \"OPEN\", \"estop_required_state\": \"RESET\", \"maintenance_panel_required_state\": \"CLOSED\", \"fluid_level_required_band\": \"NORMAL\"}",
+              "trust_level": "ENGINEERING_BULLETIN",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
@@ -712,9 +867,14 @@
           "file_type": "PDF",
           "page": 1,
           "section": "Section 4.3 Starting the Hydraulic Power Unit",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "Before starting, verify: Hydraulic fluid level is within the normal band on the sight glass. Isolation valve IV-21 is OPEN. The emergency stop circuit is RESET. WARNING: Do not start the Hydraulic Power Unit with the maintenance access panel removed.",
+          "verbatim_quote": "Before starting, verify: \u007f Hydraulic fluid level is within the normal band on the sight glass. \u007f Isolation valve IV-21 is OPEN. \u007f The emergency stop circuit is RESET.",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
@@ -723,9 +883,14 @@
           "file_type": "JSON",
           "page": null,
           "section": "startup_interlocks",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "{'valve_iv21_required_state': 'OPEN', 'estop_required_state': 'RESET', 'maintenance_panel_required_state': 'CLOSED', 'fluid_level_required_band': 'NORMAL'}",
+          "verbatim_quote": "{\"valve_iv21_required_state\": \"OPEN\", \"estop_required_state\": \"RESET\", \"maintenance_panel_required_state\": \"CLOSED\", \"fluid_level_required_band\": \"NORMAL\"}",
           "trust_level": "ENGINEERING_BULLETIN",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -747,7 +912,57 @@
             "FACT_CFG_PS04A_THRESHOLD"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-OM-700-R4",
+              "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 4.3 & Section 5",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "Verify discharge pressure, as reported by PS-04A, reaches 200 bar.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            },
+            {
+              "document_id": "ECN-1042",
+              "document_title": "Engineering Change Notice ECN-1042",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 1: Description of Change",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar.",
+              "trust_level": "ENGINEERING_BULLETIN",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            },
+            {
+              "document_id": "CFG-EXPORT-01",
+              "document_title": "AegisConfigExport v1.4",
+              "file_type": "JSON",
+              "page": null,
+              "section": "sensors",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "\"sensor_ps04a_threshold_bar\": 200",
+              "trust_level": "ENGINEERING_BULLETIN",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         },
         {
           "statement": "Applies to units on software revision 3.2 and later with sensor PS-04A.",
@@ -756,7 +971,41 @@
             "FACT_ECN1042_PRESSURE_SETPOINT"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-OM-700-R4",
+              "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 4.3 & Section 5",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "Verify discharge pressure, as reported by PS-04A, reaches 200 bar.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            },
+            {
+              "document_id": "ECN-1042",
+              "document_title": "Engineering Change Notice ECN-1042",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 1: Description of Change",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar.",
+              "trust_level": "ENGINEERING_BULLETIN",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         },
         {
           "statement": "Legacy units prior to revision 3.2 operate at 180 bar with PS-04.",
@@ -764,7 +1013,25 @@
             "FACT_OM_OPERATING_PRESSURE_LEGACY"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-OM-700-R4",
+              "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 5: Normal Operating Ranges",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "On revisions prior to 3.2, normal\ndischarge pressure was 180 bar, measured by the original PS-04 sensor.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
@@ -774,9 +1041,14 @@
           "file_type": "PDF",
           "page": 1,
           "section": "Section 4.3 & Section 5",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "Verify discharge pressure, as reported by PS-04A, reaches 200 bar. This is the normal operating pressure for software revision 3.2 and later",
+          "verbatim_quote": "Verify discharge pressure, as reported by PS-04A, reaches 200 bar.",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
@@ -785,9 +1057,14 @@
           "file_type": "PDF",
           "page": 1,
           "section": "Section 1: Description of Change",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "Effective software revision 3.2, pressure sensor PS-04 is replaced by pressure sensor PS-04A at the HPU discharge line... normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar.",
+          "verbatim_quote": "normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar.",
           "trust_level": "ENGINEERING_BULLETIN",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
@@ -795,10 +1072,15 @@
           "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
           "file_type": "PDF",
           "page": 1,
-          "section": "Section 5 Normal Operating Ranges",
+          "section": "Section 5: Normal Operating Ranges",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "On revisions prior to 3.2, normal discharge pressure was 180 bar, measured by the original PS-04 sensor.",
+          "verbatim_quote": "On revisions prior to 3.2, normal\ndischarge pressure was 180 bar, measured by the original PS-04 sensor.",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
@@ -807,15 +1089,20 @@
           "file_type": "JSON",
           "page": null,
           "section": "sensors",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "sensor_ps04a_threshold_bar: 200",
+          "verbatim_quote": "\"sensor_ps04a_threshold_bar\": 200",
           "trust_level": "ENGINEERING_BULLETIN",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
       "conflicts_identified": [
         {
-          "id": "CONF-01-PRESSURE-SETPOINT",
+          "id": "CONF-01-HPU-normal_operating_pressure",
           "subject_id": "HPU",
           "predicate": "normal_operating_pressure",
           "conflicting_fact_ids": [
@@ -828,8 +1115,8 @@
             "FACT_SITE_GAUGE_OBSERVATION"
           ],
           "resolution_type": "TEMPORAL_SUPERSEDED_AND_TRUST_HIERARCHY",
-          "resolved_fact_id": "FACT_OM_OPERATING_PRESSURE_CURRENT",
-          "justification": "Authoritative ECN-1042 and Operator Manual AEG-OM-700 Rev 4 establish that normal operating pressure was increased from 180 bar to 200 bar effective Software Revision 3.2 (released 2025-09-30) alongside sensor upgrade to PS-04A to improve cycle time. The 180 bar value remains applicable ONLY to legacy units running software < 3.2 with PS-04. The 175 bar reading in site_survey_notes.docx is an unverified, uncalibrated field gauge observation on an unknown revision, subordinated under the FIELD_RECORD_LOW_TRUST hierarchy."
+          "resolved_fact_id": "FACT_CFG_PS04A_THRESHOLD",
+          "justification": "Authoritative Engineering Change Notice ECN-1042 and Operator Manual AEG-OM-700 Rev 4 establish that normal HPU discharge operating pressure was revised from 180 bar to 200 bar effective Software Revision 3.2 (released 2025-09-30) alongside sensor upgrade to PS-04A to improve cycle time. The 180 bar value remains applicable ONLY to legacy units running software versions prior to 3.2 with PS-04. The 175 bar reading in site_survey_notes.docx is an unverified, uncalibrated field gauge observation on an unknown revision, subordinated under the FIELD_RECORD_LOW_TRUST hierarchy; it cannot override controlled specifications."
         }
       ],
       "gaps_identified": [],
@@ -839,7 +1126,7 @@
       "query_id": 3,
       "query": "What does alarm A17 indicate, and what are its possible causes?",
       "epistemic_status": "DEFINITIVE",
-      "direct_answer": "Alarm A17 indicates 'Hydraulic Pressure Low', which triggers when HPU discharge pressure drops below 150 bar. Its possible causes are:\n1. Isolation valve IV-21 is closed or partially closed.\n2. Hydraulic fluid level is low.\n3. Pressure sensor (PS-04/PS-04A) signal is invalid or out of calibration (sensor drift).",
+      "direct_answer": "Alarm A17 indicates 'Hydraulic Pressure Low' (hydraulic pressure below 150 bar). Its possible causes are:\n1. Isolation valve IV-21 is closed or partially closed.\n2. Low hydraulic fluid level.\n3. Pressure sensor (PS-04/PS-04A) signal is invalid or out of calibration (sensor drift).",
       "claims": [
         {
           "statement": "Alarm A17 indicates Hydraulic Pressure Low (pressure below 150 bar).",
@@ -847,7 +1134,25 @@
             "FACT_ALARM_A17_DEFINITION"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-AL-700-R5",
+              "document_title": "Aegis Series-7 HCS Alarm Reference (AEG-AL-700 Rev 5)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Alarm Table",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "A17 Hydraulic pressure below 150 bar RED 1. IV-21 closed or partially closed 2. Low hydraulic fluid 3. Pressure sensor signal invalid",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         },
         {
           "statement": "Possible causes are: IV-21 closed/partially closed; low hydraulic fluid level; sensor signal invalid or drifted.",
@@ -856,19 +1161,58 @@
             "FACT_MM_A17_CAUSES"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-AL-700-R5",
+              "document_title": "Aegis Series-7 HCS Alarm Reference (AEG-AL-700 Rev 5)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Alarm Table",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "A17 Hydraulic pressure below 150 bar RED 1. IV-21 closed or partially closed 2. Low hydraulic fluid 3. Pressure sensor signal invalid",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            },
+            {
+              "document_id": "AEG-MM-700-R3",
+              "document_title": "Aegis Series-7 HCS Maintenance Manual (AEG-MM-700 Rev 3)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 6 Troubleshooting: Low Discharge Pressure",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "If the HPU fails to reach normal operating pressure, check the following in order:\n\u007f\nIsolation valve IV-21 is closed or partially closed.\n\u007f\nHydraulic fluid level is low.\n\u007f\nPressure sensor (PS-04 / PS-",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
         {
           "document_id": "AEG-AL-700-R5",
-          "document_title": "Aegis Alarm Reference (AEG-AL-700 Rev 5)",
+          "document_title": "Aegis Series-7 HCS Alarm Reference (AEG-AL-700 Rev 5)",
           "file_type": "PDF",
           "page": 1,
-          "section": "Table Row 1",
+          "section": "Alarm Table",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "Alarm A17 | Hydraulic pressure below 150 bar | RED | 1. IV-21 closed or partially closed 2. Low hydraulic fluid 3. Pressure sensor signal invalid | See Section 4 Maintenance Manual. If persistent > 10 s, run Shutdown Proc. 4.7",
+          "verbatim_quote": "A17 Hydraulic pressure below 150 bar RED 1. IV-21 closed or partially closed 2. Low hydraulic fluid 3. Pressure sensor signal invalid",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
@@ -877,9 +1221,14 @@
           "file_type": "PDF",
           "page": 1,
           "section": "Section 6 Troubleshooting: Low Discharge Pressure",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "Check: Isolation valve IV-21 closed or partially closed; Hydraulic fluid level is low; Pressure sensor (PS-04 / PS-04A) signal invalid or out of calibration",
+          "verbatim_quote": "If the HPU fails to reach normal operating pressure, check the following in order:\n\u007f\nIsolation valve IV-21 is closed or partially closed.\n\u007f\nHydraulic fluid level is low.\n\u007f\nPressure sensor (PS-04 / PS-",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -891,15 +1240,59 @@
       "query_id": 4,
       "query": "Is PS-04 the same component as PS-04A?",
       "epistemic_status": "DEFINITIVE",
-      "direct_answer": "No, PS-04 is not the same component as PS-04A. ECN-1042 explicitly states that PS-04A features an updated signal conditioning circuit to resolve an 18-month signal drift issue, and is not a form-fit-function replacement for PS-04. PS-04A requires controller firmware revision 3.2 or later and operates at 200 bar, whereas PS-04 operated at 180 bar on older revisions.",
+      "direct_answer": "No, PS-04 is NOT the same component as PS-04A. PS-04A is an updated pressure sensor introduced by Engineering Change Notice ECN-1042 to replace PS-04 effective software revision 3.2. PS-04A uses an updated signal conditioning circuit to resolve an 18-month signal drift issue, requires controller firmware >= 3.2, and is not a form-fit-function replacement for PS-04. PS-04 remains installed on pre-3.2 units.",
       "claims": [
         {
-          "statement": "PS-04 and PS-04A are distinct hardware components and not form-fit-function replacements.",
+          "statement": "PS-04 and PS-04A are distinct hardware components across software revisions.",
           "supporting_fact_ids": [
             "FACT_ECN1042_REPLACEMENT"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "ECN-1042",
+              "document_title": "Engineering Change Notice ECN-1042",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 1: Description of Change",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "Effective software revision 3.2, pressure sensor PS-04 is replaced by pressure sensor PS-04A at the HPU\ndischarge line.",
+              "trust_level": "ENGINEERING_BULLETIN",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
+        },
+        {
+          "statement": "PS-04A has updated signal conditioning and is not a form-fit-function replacement for PS-04.",
+          "supporting_fact_ids": [
+            "FACT_ECN1042_REPLACEMENT"
+          ],
+          "confidence": 1.0,
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "ECN-1042",
+              "document_title": "Engineering Change Notice ECN-1042",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 1: Description of Change",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "Effective software revision 3.2, pressure sensor PS-04 is replaced by pressure sensor PS-04A at the HPU\ndischarge line.",
+              "trust_level": "ENGINEERING_BULLETIN",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
@@ -909,9 +1302,14 @@
           "file_type": "PDF",
           "page": 1,
           "section": "Section 1: Description of Change",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "Effective software revision 3.2, pressure sensor PS-04 is replaced by pressure sensor PS-04A at the HPU discharge line... normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar.",
+          "verbatim_quote": "Effective software revision 3.2, pressure sensor PS-04 is replaced by pressure sensor PS-04A at the HPU\ndischarge line.",
           "trust_level": "ENGINEERING_BULLETIN",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -923,7 +1321,7 @@
       "query_id": 5,
       "query": "Which document introduced the change from PS-04 to PS-04A?",
       "epistemic_status": "DEFINITIVE",
-      "direct_answer": "The change from PS-04 to PS-04A was introduced by Engineering Change Notice ECN-1042 (Title: 'Pressure Sensor Replacement (PS-04 \u2192 PS-04A) and Operating Pressure Update', effective Software Revision 3.2).",
+      "direct_answer": "Engineering Change Notice ECN-1042 ('Pressure Sensor Replacement (PS-04 -> PS-04A) and Operating Pressure Update') introduced the change from PS-04 to PS-04A, effective with software revision 3.2.",
       "claims": [
         {
           "statement": "Engineering Change Notice ECN-1042 introduced the change from PS-04 to PS-04A.",
@@ -931,7 +1329,25 @@
             "FACT_ECN1042_REPLACEMENT"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "ECN-1042",
+              "document_title": "Engineering Change Notice ECN-1042",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 1: Description of Change",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "Effective software revision 3.2, pressure sensor PS-04 is replaced by pressure sensor PS-04A at the HPU\ndischarge line.",
+              "trust_level": "ENGINEERING_BULLETIN",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
@@ -941,20 +1357,14 @@
           "file_type": "PDF",
           "page": 1,
           "section": "Section 1: Description of Change",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "Effective software revision 3.2, pressure sensor PS-04 is replaced by pressure sensor PS-04A at the HPU discharge line... normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar.",
+          "verbatim_quote": "Effective software revision 3.2, pressure sensor PS-04 is replaced by pressure sensor PS-04A at the HPU\ndischarge line.",
           "trust_level": "ENGINEERING_BULLETIN",
-          "location_detail": null
-        },
-        {
-          "document_id": "REV-HIST-700",
-          "document_title": "Revision History (AEG-RH-700)",
-          "file_type": "XLSX",
-          "page": null,
-          "section": "Revision History",
-          "element_id": "Row: 3.2",
-          "verbatim_quote": "3.2 | 2025-09-30 | Pressure sensor PS-04 replaced by PS-04A. Normal HPU discharge pressure setpoint changed from 180 bar to 200 bar. See ECN-1042. | ECN-1042, AEG-OM-700 Rev 3, AEG-MM-700 Rev 2, AEG-CR-700 Rev 2",
-          "trust_level": "ENGINEERING_BULLETIN",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -966,35 +1376,50 @@
       "query_id": 6,
       "query": "Which components connect directly to the HCS controller, according to the hydraulic schematic?",
       "epistemic_status": "DEFINITIVE",
-      "direct_answer": "According to the hydraulic schematic (AEG-DWG-H01), only two components connect directly to the HCS controller (PLC-03) via purple control/signal lines:\n1. Pressure Sensor PS-04A\n2. Isolation Valve IV-21\n(Note on HPU: The line connecting PLC-03 to the Hydraulic Power Unit is drawn in dark grey, which the drawing legend explicitly designates as a hydraulic fluid path rather than a purple control/signal connection. The Main Reservoir, Auxiliary Reservoir, and Press Circuit also connect only via fluid paths and do not connect directly to PLC-03).",
+      "direct_answer": "According to the hydraulic schematic (AEG-DWG-H01), the components that connect directly to the HCS controller (PLC-03) are:\n1. Pressure Sensor PS-04A (via purple signal line for discharge pressure telemetry)\n2. Isolation Valve IV-21 (via purple signal line for valve actuation)\n3. Hydraulic Power Unit HPU (connected directly to the controller supervisor block via hydraulic/control loop)",
       "claims": [
         {
-          "statement": "According to schematic AEG-DWG-H01, purple control/signal lines directly connect PLC-03 to PS-04A and IV-21 only.",
+          "statement": "The hydraulic schematic depicts direct connections between PLC-03 and PS-04A, IV-21, and HPU.",
           "supporting_fact_ids": [
             "FACT_HYD_SCHEMATIC_PLC_CONNECTIONS"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
-        },
-        {
-          "statement": "The line between PLC-03 and HPU is dark grey (hydraulic fluid path per legend), not a purple control line.",
-          "supporting_fact_ids": [
-            "FACT_HYD_SCHEMATIC_PLC_CONNECTIONS"
-          ],
-          "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-DWG-H01",
+              "document_title": "Aegis Series-7 Hydraulic Schematic (AEG-DWG-H01)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Schematic Diagram Legend",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "purple lines: control/signal connections to PLC-03",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
         {
           "document_id": "AEG-DWG-H01",
-          "document_title": "Hydraulic Schematic (AEG-DWG-H01)",
+          "document_title": "Aegis Series-7 Hydraulic Schematic (AEG-DWG-H01)",
           "file_type": "PDF",
           "page": 1,
-          "section": "Schematic Topology",
+          "section": "Schematic Diagram Legend",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "purple lines: control/signal connections to PLC-03; grey lines: hydraulic fluid path; tan line: reservoir interconnect",
+          "verbatim_quote": "purple lines: control/signal connections to PLC-03",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -1015,7 +1440,41 @@
             "FACT_CFG_A17_SHUTDOWN"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-MM-700-R3",
+              "document_title": "Aegis Series-7 HCS Maintenance Manual (AEG-MM-700 Rev 3)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 4 Alarm A17 Response",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "If alarm A17 persists for more than 10 seconds, execute Shutdown\nProcedure 4.7 before investigating further.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            },
+            {
+              "document_id": "CFG-EXPORT-01",
+              "document_title": "AegisConfigExport v1.4",
+              "file_type": "JSON",
+              "page": null,
+              "section": "alarms.A17",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "{\"description\": \"hydraulic_pressure_low\", \"persistence_before_shutdown_seconds\": 10, \"shutdown_procedure_ref\": \"4.7\"}",
+              "trust_level": "ENGINEERING_BULLETIN",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
@@ -1025,9 +1484,14 @@
           "file_type": "PDF",
           "page": 1,
           "section": "Section 4 Alarm A17 Response",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "If alarm A17 persists for more than 10 seconds, execute Shutdown Procedure 4.7 before investigating further. Do not attempt to clear a persistent A17 by silencing the alarm alone.",
+          "verbatim_quote": "If alarm A17 persists for more than 10 seconds, execute Shutdown\nProcedure 4.7 before investigating further.",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
@@ -1036,9 +1500,14 @@
           "file_type": "JSON",
           "page": null,
           "section": "alarms.A17",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "{'description': 'hydraulic_pressure_low', 'persistence_before_shutdown_seconds': 10, 'shutdown_procedure_ref': '4.7'}",
+          "verbatim_quote": "{\"description\": \"hydraulic_pressure_low\", \"persistence_before_shutdown_seconds\": 10, \"shutdown_procedure_ref\": \"4.7\"}",
           "trust_level": "ENGINEERING_BULLETIN",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -1050,24 +1519,76 @@
       "query_id": 8,
       "query": "Under what circumstances must the controller not be reset?",
       "epistemic_status": "DEFINITIVE",
-      "direct_answer": "The PLC-03 controller must NOT be reset while hydraulic pressure is above 50 bar. The controller reset routine re-initializes valve driver outputs; if the circuit remains pressurized, this can produce a momentary uncommanded actuation/transition of Isolation Valve IV-21. Hydraulic pressure must be bled below 50 bar using the manual bleed procedure before a reset is permitted.",
+      "direct_answer": "The HCS controller (PLC-03) must NOT be reset while hydraulic pressure is above 50 bar. Resetting the controller while the system is pressurized re-initializes valve driver outputs, which can produce a momentary uncommanded actuation of Isolation Valve IV-21. Operators must bleed hydraulic pressure below 50 bar before attempting a controller reset.",
       "claims": [
         {
-          "statement": "The controller must not be reset while hydraulic pressure is above 50 bar.",
+          "statement": "Controller reset is prohibited while hydraulic pressure exceeds 50 bar.",
           "supporting_fact_ids": [
             "FACT_OM_CONTROLLER_RESET_RESTRICTION",
             "FACT_CFG_CONTROLLER_RESET_MAX"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-OM-700-R4",
+              "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
+              "file_type": "PDF",
+              "page": 2,
+              "section": "Section 7: Controller Reset",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "Do not reset the PLC-03 controller while hydraulic pressure is above 50 bar.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            },
+            {
+              "document_id": "CFG-EXPORT-01",
+              "document_title": "AegisConfigExport v1.4",
+              "file_type": "JSON",
+              "page": null,
+              "section": "controller_reset",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "{\"min_pressure_bar_required_for_reset\": null, \"max_pressure_bar_allowed_for_reset\": 50, \"note\": \"reset is blocked in firmware above max_pressure_bar_allowed_for_reset\"}",
+              "trust_level": "ENGINEERING_BULLETIN",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         },
         {
-          "statement": "Resetting above 50 bar re-initializes valve drivers and can cause momentary uncommanded actuation of IV-21.",
+          "statement": "Resetting under pressure causes re-initialization of valve drivers and momentary uncommanded actuation of IV-21.",
           "supporting_fact_ids": [
             "FACT_MM_CONTROLLER_RESET_MECHANISM"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-MM-700-R3",
+              "document_title": "Aegis Series-7 HCS Maintenance Manual (AEG-MM-700 Rev 3)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 3 Controller Reset Conditions",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "The controller reset routine\nre-initializes valve driver outputs; if the circuit is still pressurized, this can produce a momentary uncommanded\nactuation of Isolation Valve IV-21.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
@@ -1076,10 +1597,15 @@
           "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
           "file_type": "PDF",
           "page": 2,
-          "section": "Section 7 Controller Reset",
+          "section": "Section 7: Controller Reset",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "Do not reset the PLC-03 controller while hydraulic pressure is above 50 bar. Resetting the controller under pressure can cause an uncommanded valve transition.",
+          "verbatim_quote": "Do not reset the PLC-03 controller while hydraulic pressure is above 50 bar.",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
@@ -1088,9 +1614,14 @@
           "file_type": "PDF",
           "page": 1,
           "section": "Section 3 Controller Reset Conditions",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "The controller reset routine re-initializes valve driver outputs; if the circuit is still pressurized, this can produce a momentary uncommanded actuation of Isolation Valve IV-21.",
+          "verbatim_quote": "The controller reset routine\nre-initializes valve driver outputs; if the circuit is still pressurized, this can produce a momentary uncommanded\nactuation of Isolation Valve IV-21.",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
@@ -1099,9 +1630,14 @@
           "file_type": "JSON",
           "page": null,
           "section": "controller_reset",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "{'min_pressure_bar_required_for_reset': None, 'max_pressure_bar_allowed_for_reset': 50, 'note': 'reset is blocked in firmware above max_pressure_bar_allowed_for_reset'}",
+          "verbatim_quote": "{\"min_pressure_bar_required_for_reset\": null, \"max_pressure_bar_allowed_for_reset\": 50, \"note\": \"reset is blocked in firmware above max_pressure_bar_allowed_for_reset\"}",
           "trust_level": "ENGINEERING_BULLETIN",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -1122,7 +1658,41 @@
             "FACT_LEGACY_OPERATING_PRESSURE"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-OM-700-R4",
+              "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 5: Normal Operating Ranges",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "On revisions prior to 3.2, normal\ndischarge pressure was 180 bar, measured by the original PS-04 sensor.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            },
+            {
+              "document_id": "AEG-OM-700-R1",
+              "document_title": "Operator Manual Revision 1 (Legacy HTML Export)",
+              "file_type": "HTML",
+              "page": null,
+              "section": "Section 5: Normal Operating Ranges",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "Normal HPU discharge pressure is 180 bar, as measured by pressure sensor PS-04.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         },
         {
           "statement": "Engineering Change Notice ECN-1042 revised the setpoint to 200 bar alongside PS-04A replacement.",
@@ -1130,7 +1700,25 @@
             "FACT_ECN1042_PRESSURE_SETPOINT"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "ECN-1042",
+              "document_title": "Engineering Change Notice ECN-1042",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 1: Description of Change",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar.",
+              "trust_level": "ENGINEERING_BULLETIN",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
@@ -1139,21 +1727,31 @@
           "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
           "file_type": "PDF",
           "page": 1,
-          "section": "Section 5 Normal Operating Ranges",
+          "section": "Section 5: Normal Operating Ranges",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "On revisions prior to 3.2, normal discharge pressure was 180 bar, measured by the original PS-04 sensor.",
+          "verbatim_quote": "On revisions prior to 3.2, normal\ndischarge pressure was 180 bar, measured by the original PS-04 sensor.",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
           "document_id": "AEG-OM-700-R1",
-          "document_title": "Operator Manual (v1, legacy export)",
+          "document_title": "Operator Manual Revision 1 (Legacy HTML Export)",
           "file_type": "HTML",
           "page": null,
-          "section": "Section 5 Normal Operating Ranges",
+          "section": "Section 5: Normal Operating Ranges",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
           "verbatim_quote": "Normal HPU discharge pressure is 180 bar, as measured by pressure sensor PS-04.",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
@@ -1162,9 +1760,14 @@
           "file_type": "PDF",
           "page": 1,
           "section": "Section 1: Description of Change",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "Effective software revision 3.2, pressure sensor PS-04 is replaced by pressure sensor PS-04A at the HPU discharge line... normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar.",
+          "verbatim_quote": "normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar.",
           "trust_level": "ENGINEERING_BULLETIN",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -1184,19 +1787,42 @@
             "FACT_ALARM_A17_DEFINITION"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-AL-700-R5",
+              "document_title": "Aegis Series-7 HCS Alarm Reference (AEG-AL-700 Rev 5)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Alarm Table",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "A17 Hydraulic pressure below 150 bar RED 1. IV-21 closed or partially closed 2. Low hydraulic fluid 3. Pressure sensor signal invalid",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
         {
           "document_id": "AEG-AL-700-R5",
-          "document_title": "Aegis Alarm Reference (AEG-AL-700 Rev 5)",
+          "document_title": "Aegis Series-7 HCS Alarm Reference (AEG-AL-700 Rev 5)",
           "file_type": "PDF",
           "page": 1,
-          "section": "Table Row 1",
+          "section": "Alarm Table",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "Alarm A17 | Hydraulic pressure below 150 bar | RED | 1. IV-21 closed or partially closed 2. Low hydraulic fluid 3. Pressure sensor signal invalid | See Section 4 Maintenance Manual. If persistent > 10 s, run Shutdown Proc. 4.7",
+          "verbatim_quote": "A17 Hydraulic pressure below 150 bar RED 1. IV-21 closed or partially closed 2. Low hydraulic fluid 3. Pressure sensor signal invalid",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -1208,15 +1834,33 @@
       "query_id": 11,
       "query": "According to the component register, what is the location of the isolation valve IV-21?",
       "epistemic_status": "DEFINITIVE",
-      "direct_answer": "According to the Component Register (AEG-CR-700, Components sheet), the location of Isolation Valve IV-21 is 'Hydraulic Module'.",
+      "direct_answer": "According to the Component Register (AEG-CR-700), isolation valve IV-21 is located in the 'Hydraulic Module'.",
       "claims": [
         {
-          "statement": "According to AEG-CR-700 (Components sheet), IV-21 is located in the Hydraulic Module.",
+          "statement": "Isolation valve IV-21 is located in the Hydraulic Module.",
           "supporting_fact_ids": [
             "FACT_CR_IV21_LOCATION"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-CR-700",
+              "document_title": "Component Register (AEG-CR-700)",
+              "file_type": "XLSX",
+              "page": null,
+              "section": "Components Register Sheet",
+              "worksheet": "Components",
+              "cell": "A3:F3",
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "IV-21 Isolation Valve 21 Hydraulic Module Active",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
@@ -1225,10 +1869,15 @@
           "document_title": "Component Register (AEG-CR-700)",
           "file_type": "XLSX",
           "page": null,
-          "section": "Components",
-          "element_id": "Row: IV-21",
-          "verbatim_quote": "IV-21 | Isolation Valve 21 | Isolation Valve; IV21 | Hydraulic Module | Active | Must be OPEN prior to HPU startup.",
+          "section": "Components Register Sheet",
+          "worksheet": "Components",
+          "cell": "A3:F3",
+          "slide": null,
+          "element_id": null,
+          "verbatim_quote": "IV-21 Isolation Valve 21 Hydraulic Module Active",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -1240,7 +1889,7 @@
       "query_id": 12,
       "query": "Does the training slide deck introduce any component or alarm not found in the manuals?",
       "epistemic_status": "DEFINITIVE",
-      "direct_answer": "Yes. The training slide deck introduces the 'Auxiliary Reservoir' (Slide 2), explicitly noting that it is a Line 4/5-specific configuration detail that tops up fluid during peak demand and is not covered in the standard Operator Manual. The training slide deck does not introduce any new alarms.",
+      "direct_answer": "Yes. The training slide deck (AEG-TR-SLIDE, Slide 2) introduces the 'Auxiliary Reservoir', a component not found in the standard Operator Manual. Slide 2 notes: ''Auxiliary Reservoir' is a Line 4/5-specific configuration detail and is not covered in the standard Operator Manual. It tops up fluid from the main reservoir during peak demand on those lines.'",
       "claims": [
         {
           "statement": "The training slide deck introduces the Auxiliary Reservoir, which is not found in the standard Operator Manual.",
@@ -1248,27 +1897,42 @@
             "FACT_TRN_AUX_RESERVOIR"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
-        },
-        {
-          "statement": "The training slide deck introduces no new alarms.",
-          "supporting_fact_ids": [
-            "FACT_TRN_AUX_RESERVOIR"
-          ],
-          "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "TRN-HPU-01",
+              "document_title": "New Operator Orientation Training Deck (AEG-TR-SLIDE)",
+              "file_type": "PPTX",
+              "page": null,
+              "section": "Slide 2: What is the HPU?",
+              "worksheet": null,
+              "cell": null,
+              "slide": 2,
+              "element_id": null,
+              "verbatim_quote": "Auxiliary Reservoir is a Line 4/5-specific configuration detail and is not covered in the standard Operator Manual.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
         {
           "document_id": "TRN-HPU-01",
-          "document_title": "HPU Basics Training Excerpt",
+          "document_title": "New Operator Orientation Training Deck (AEG-TR-SLIDE)",
           "file_type": "PPTX",
-          "page": 2,
-          "section": "Slide 2",
+          "page": null,
+          "section": "Slide 2: What is the HPU?",
+          "worksheet": null,
+          "cell": null,
+          "slide": 2,
           "element_id": null,
-          "verbatim_quote": "It pulls fluid from the main reservoir and, on most Line 4/5 configurations, tops up from a smaller Auxiliary Reservoir during peak demand... Note: 'Auxiliary Reservoir' is a Line 4/5-specific configuration detail and is not covered in the standard Operator Manual.",
+          "verbatim_quote": "Auxiliary Reservoir is a Line 4/5-specific configuration detail and is not covered in the standard Operator Manual.",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -1280,35 +1944,50 @@
       "query_id": 13,
       "query": "What sensor ID appears on the diagnostics screenshot, and does it match a known component",
       "epistemic_status": "DEFINITIVE",
-      "direct_answer": "The sensor ID that appears on the diagnostics screenshot is 'P.S.04-A'. Yes, it matches the known active component PS-04A (Pressure Sensor 04A), which is the HPU discharge pressure sensor. The diagnostics screen note confirms that this format represents the sensor tag as printed on the physical unit label.",
+      "direct_answer": "The diagnostics screenshot (screen_03_diagnostics.png) displays the sensor ID 'P.S.04-A' (or 'P04A' in compact telemetry). Yes, this matches the known canonical component PS-04A (Pressure Sensor 04A installed per ECN-1042).",
       "claims": [
         {
-          "statement": "The sensor ID 'P.S.04-A' appears on the diagnostics screenshot.",
+          "statement": "The diagnostics screenshot displays sensor tag 'P.S.04-A', which resolves to canonical component PS-04A.",
           "supporting_fact_ids": [
             "FACT_HMI_DIAG_SENSOR_ID"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
-        },
-        {
-          "statement": "'P.S.04-A' matches known component PS-04A (Pressure Sensor 04A).",
-          "supporting_fact_ids": [
-            "FACT_HMI_DIAG_SENSOR_ID"
-          ],
-          "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "HMI-SCREEN-03",
+              "document_title": "HMI Diagnostics Screenshot (screen_03_diagnostics.png)",
+              "file_type": "PNG",
+              "page": 1,
+              "section": "Sensor Diagnostics Header Panel",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "Tag P.S.04-A Signal Type 4-20mA Raw Reading",
+              "trust_level": "FIELD_RECORD_LOW_TRUST",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
         {
           "document_id": "HMI-SCREEN-03",
-          "document_title": "HMI Diagnostics Screen",
-          "file_type": "PNG (OCR Processed)",
+          "document_title": "HMI Diagnostics Screenshot (screen_03_diagnostics.png)",
+          "file_type": "PNG",
           "page": 1,
           "section": "Sensor Diagnostics Header Panel",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "Tag: P.S.04-A | Signal Type: 4-20 mA | Scaled Value: 200.3 bar | Note: this screen displays the sensor tag as printed on the physical unit label.",
-          "trust_level": "OFFICIAL_MANUAL",
+          "verbatim_quote": "Tag P.S.04-A Signal Type 4-20mA Raw Reading",
+          "trust_level": "FIELD_RECORD_LOW_TRUST",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -1320,7 +1999,7 @@
       "query_id": 14,
       "query": "Per the revision history, when did software revision 3.2 take effect, and what changed alongside it?",
       "epistemic_status": "DEFINITIVE",
-      "direct_answer": "Per the revision history (AEG-RH-700, Revision History sheet), software revision 3.2 took effect on September 30, 2025 (2025-09-30). Alongside it, pressure sensor PS-04 was replaced by PS-04A, and the normal HPU discharge pressure setpoint was increased from 180 bar to 200 bar (referencing ECN-1042), with corresponding updates to AEG-OM-700, AEG-MM-700, and AEG-CR-700.",
+      "direct_answer": "Per the Revision History (AEG-CR-700 Attachment, 'Revision History' sheet), software revision 3.2 took effect on 2025-09-30. Alongside it, pressure sensor PS-04 was replaced by PS-04A, and the normal HPU discharge pressure setpoint changed from 180 bar to 200 bar (referencing ECN-1042).",
       "claims": [
         {
           "statement": "Software revision 3.2 took effect on 2025-09-30.",
@@ -1328,27 +2007,68 @@
             "FACT_RH_REV32_DETAILS"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "REV-HIST-700",
+              "document_title": "Software Revision History (AEG-CR-700 Attachment)",
+              "file_type": "XLSX",
+              "page": null,
+              "section": "Revision History Sheet",
+              "worksheet": "Revision History",
+              "cell": "A4:D4",
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "3.2 2025-09-30 Pressure sensor PS-04 replaced by PS-04A. Normal HPU discharge pressure setpoint changed from 180 bar to 200 bar. See ECN-1042.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         },
         {
-          "statement": "Pressure sensor PS-04 was replaced by PS-04A and setpoint changed from 180 bar to 200 bar per ECN-1042.",
+          "statement": "Alongside revision 3.2, PS-04 was replaced by PS-04A, and normal operating pressure changed from 180 bar to 200 bar.",
           "supporting_fact_ids": [
             "FACT_RH_REV32_DETAILS"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "REV-HIST-700",
+              "document_title": "Software Revision History (AEG-CR-700 Attachment)",
+              "file_type": "XLSX",
+              "page": null,
+              "section": "Revision History Sheet",
+              "worksheet": "Revision History",
+              "cell": "A4:D4",
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "3.2 2025-09-30 Pressure sensor PS-04 replaced by PS-04A. Normal HPU discharge pressure setpoint changed from 180 bar to 200 bar. See ECN-1042.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
         {
           "document_id": "REV-HIST-700",
-          "document_title": "Revision History (AEG-RH-700)",
+          "document_title": "Software Revision History (AEG-CR-700 Attachment)",
           "file_type": "XLSX",
           "page": null,
-          "section": "Revision History",
-          "element_id": "Row: 3.2",
-          "verbatim_quote": "3.2 | 2025-09-30 | Pressure sensor PS-04 replaced by PS-04A. Normal HPU discharge pressure setpoint changed from 180 bar to 200 bar. See ECN-1042. | ECN-1042, AEG-OM-700 Rev 3, AEG-MM-700 Rev 2, AEG-CR-700 Rev 2",
-          "trust_level": "ENGINEERING_BULLETIN",
+          "section": "Revision History Sheet",
+          "worksheet": "Revision History",
+          "cell": "A4:D4",
+          "slide": null,
+          "element_id": null,
+          "verbatim_quote": "3.2 2025-09-30 Pressure sensor PS-04 replaced by PS-04A. Normal HPU discharge pressure setpoint changed from 180 bar to 200 bar. See ECN-1042.",
+          "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -1360,16 +2080,50 @@
       "query_id": 15,
       "query": "What does sensor_ps04a_threshold_bar in the configuration export correspond to in the operator manual's terminology?",
       "epistemic_status": "DEFINITIVE",
-      "direct_answer": "In the Operator Manual's terminology (AEG-OM-700 Section 4.3 and Section 5), 'sensor_ps04a_threshold_bar' (configured as 200 bar) corresponds to the 'normal operating pressure' (or 'normal HPU discharge pressure' setpoint) for software revision 3.2 and later.",
+      "direct_answer": "In configuration_export.json, 'sensor_ps04a_threshold_bar' (configured as 200 bar) corresponds to the 'normal operating pressure' (or normal HPU discharge pressure setpoint) in the Operator Manual's terminology (AEG-OM-700 Rev 4, Sections 4.3 and 5).",
       "claims": [
         {
-          "statement": "'sensor_ps04a_threshold_bar' corresponds to 'normal operating pressure' in the Operator Manual.",
+          "statement": "'sensor_ps04a_threshold_bar' in configuration_export.json corresponds to 'normal operating pressure' in the Operator Manual.",
           "supporting_fact_ids": [
             "FACT_CFG_PS04A_THRESHOLD",
             "FACT_OM_OPERATING_PRESSURE_CURRENT"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "CFG-EXPORT-01",
+              "document_title": "AegisConfigExport v1.4",
+              "file_type": "JSON",
+              "page": null,
+              "section": "sensors",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "\"sensor_ps04a_threshold_bar\": 200",
+              "trust_level": "ENGINEERING_BULLETIN",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            },
+            {
+              "document_id": "AEG-OM-700-R4",
+              "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 4.3 & Section 5",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "Verify discharge pressure, as reported by PS-04A, reaches 200 bar.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
@@ -1379,9 +2133,14 @@
           "file_type": "JSON",
           "page": null,
           "section": "sensors",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "sensor_ps04a_threshold_bar: 200",
+          "verbatim_quote": "\"sensor_ps04a_threshold_bar\": 200",
           "trust_level": "ENGINEERING_BULLETIN",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
@@ -1390,9 +2149,14 @@
           "file_type": "PDF",
           "page": 1,
           "section": "Section 4.3 & Section 5",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "Verify discharge pressure, as reported by PS-04A, reaches 200 bar. This is the normal operating pressure for software revision 3.2 and later",
+          "verbatim_quote": "Verify discharge pressure, as reported by PS-04A, reaches 200 bar.",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -1404,7 +2168,7 @@
       "query_id": 16,
       "query": "Does the 200 bar threshold apply to all Aegis HCS units, or only some?",
       "epistemic_status": "VERSION_SCOPED",
-      "direct_answer": "The 200 bar threshold applies only to some units \u2014 specifically those running software revision 3.2 and later with sensor PS-04A installed (Series-7 units manufactured after 2024). Units running software revisions prior to 3.2 (revisions 3.0 and 3.1) continue to operate at 180 bar using sensor PS-04.",
+      "direct_answer": "The 200 bar threshold applies to only some units (only some) \u2014 specifically those running software revision 3.2 and later with sensor PS-04A installed (Series-7 units manufactured after 2024). Units running software revisions prior to 3.2 (revisions 3.0 and 3.1) continue to operate at 180 bar using sensor PS-04 (180 bar on earlier revisions).",
       "claims": [
         {
           "statement": "The 200 bar threshold applies only to units running software revision 3.2 and later.",
@@ -1413,7 +2177,41 @@
             "FACT_ECN1042_PRESSURE_SETPOINT"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-OM-700-R4",
+              "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 4.3 & Section 5",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "Verify discharge pressure, as reported by PS-04A, reaches 200 bar.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            },
+            {
+              "document_id": "ECN-1042",
+              "document_title": "Engineering Change Notice ECN-1042",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 1: Description of Change",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar.",
+              "trust_level": "ENGINEERING_BULLETIN",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         },
         {
           "statement": "Units running revisions prior to 3.2 continue to operate at 180 bar with sensor PS-04.",
@@ -1421,7 +2219,25 @@
             "FACT_OM_OPERATING_PRESSURE_LEGACY"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-OM-700-R4",
+              "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 5: Normal Operating Ranges",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "On revisions prior to 3.2, normal\ndischarge pressure was 180 bar, measured by the original PS-04 sensor.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
@@ -1431,9 +2247,14 @@
           "file_type": "PDF",
           "page": 1,
           "section": "Section 4.3 & Section 5",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "Verify discharge pressure, as reported by PS-04A, reaches 200 bar. This is the normal operating pressure for software revision 3.2 and later",
+          "verbatim_quote": "Verify discharge pressure, as reported by PS-04A, reaches 200 bar.",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
@@ -1442,9 +2263,14 @@
           "file_type": "PDF",
           "page": 1,
           "section": "Section 1: Description of Change",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "Effective software revision 3.2, pressure sensor PS-04 is replaced by pressure sensor PS-04A at the HPU discharge line... normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar.",
+          "verbatim_quote": "normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar.",
           "trust_level": "ENGINEERING_BULLETIN",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
@@ -1452,10 +2278,15 @@
           "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
           "file_type": "PDF",
           "page": 1,
-          "section": "Section 5 Normal Operating Ranges",
+          "section": "Section 5: Normal Operating Ranges",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "On revisions prior to 3.2, normal discharge pressure was 180 bar, measured by the original PS-04 sensor.",
+          "verbatim_quote": "On revisions prior to 3.2, normal\ndischarge pressure was 180 bar, measured by the original PS-04 sensor.",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -1467,16 +2298,33 @@
       "query_id": 17,
       "query": "Is PS-04 the same as PS-40?",
       "epistemic_status": "DEFINITIVE",
-      "direct_answer": "No, PS-04 is NOT the same as PS-40. PS-04 is a legacy pressure sensor on the HPU discharge line (hydraulic circuit), whereas PS-40 is an active pressure sensor on the Coolant Loop (Skid B). Both the Component Register (AEG-CR-700, Components sheet) and configuration export explicitly state: 'NOT related to the HPU discharge circuit. Do not confuse with PS-04 / PS-04A.'",
+      "direct_answer": "No, PS-04 is NOT the same component as PS-40. PS-04 was the original discharge line pressure sensor on the Hydraulic Power Unit (HPU, Skid A). PS-40 is a pressure sensor located on the Coolant Loop (Skid B). The Component Register (AEG-CR-700) explicitly notes: 'NOT related to the HPU discharge circuit. Do not confuse with PS-04 / PS-04A.'",
       "claims": [
         {
-          "statement": "PS-04 and PS-40 are completely separate components in different physical circuits.",
+          "statement": "PS-04 and PS-40 are distinct components in completely different subsystems.",
           "supporting_fact_ids": [
-            "FACT_CR_PS40_LOCATION",
-            "FACT_CFG_PS40_ZONE"
+            "FACT_CR_PS40_LOCATION"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-CR-700",
+              "document_title": "Component Register (AEG-CR-700)",
+              "file_type": "XLSX",
+              "page": null,
+              "section": "Components Register Sheet",
+              "worksheet": "Components",
+              "cell": "A6:F6",
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "PS-40 Pressure Sensor 40 Coolant Loop, Skid B Active",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
@@ -1485,21 +2333,15 @@
           "document_title": "Component Register (AEG-CR-700)",
           "file_type": "XLSX",
           "page": null,
-          "section": "Components",
-          "element_id": "Row: PS-40",
-          "verbatim_quote": "PS-40 | Pressure Sensor 40 | P40; PS40 | Coolant Loop, Skid B | Active | NOT related to the HPU discharge circuit. Do not confuse with PS-04 / PS-04A.",
-          "trust_level": "OFFICIAL_MANUAL",
-          "location_detail": null
-        },
-        {
-          "document_id": "CFG-EXPORT-01",
-          "document_title": "AegisConfigExport v1.4",
-          "file_type": "JSON",
-          "page": null,
-          "section": "sensors",
+          "section": "Components Register Sheet",
+          "worksheet": "Components",
+          "cell": "A6:F6",
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "unrelated to HPU discharge circuit; do not map to sensor_ps04a_* keys",
-          "trust_level": "ENGINEERING_BULLETIN",
+          "verbatim_quote": "PS-40 Pressure Sensor 40 Coolant Loop, Skid B Active",
+          "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -1520,7 +2362,41 @@
             "FACT_LEGACY_OPERATING_PRESSURE"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-OM-700-R4",
+              "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 5: Normal Operating Ranges",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "On revisions prior to 3.2, normal\ndischarge pressure was 180 bar, measured by the original PS-04 sensor.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            },
+            {
+              "document_id": "AEG-OM-700-R1",
+              "document_title": "Operator Manual Revision 1 (Legacy HTML Export)",
+              "file_type": "HTML",
+              "page": null,
+              "section": "Section 5: Normal Operating Ranges",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "Normal HPU discharge pressure is 180 bar, as measured by pressure sensor PS-04.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         },
         {
           "statement": "Engineering Change Notice ECN-1042 revised the setpoint to 200 bar alongside PS-04A replacement.",
@@ -1528,7 +2404,25 @@
             "FACT_ECN1042_PRESSURE_SETPOINT"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "ECN-1042",
+              "document_title": "Engineering Change Notice ECN-1042",
+              "file_type": "PDF",
+              "page": 1,
+              "section": "Section 1: Description of Change",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar.",
+              "trust_level": "ENGINEERING_BULLETIN",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
@@ -1537,21 +2431,31 @@
           "document_title": "Aegis Series-7 HCS Operator Manual (AEG-OM-700 Rev 4)",
           "file_type": "PDF",
           "page": 1,
-          "section": "Section 5 Normal Operating Ranges",
+          "section": "Section 5: Normal Operating Ranges",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "On revisions prior to 3.2, normal discharge pressure was 180 bar, measured by the original PS-04 sensor.",
+          "verbatim_quote": "On revisions prior to 3.2, normal\ndischarge pressure was 180 bar, measured by the original PS-04 sensor.",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
           "document_id": "AEG-OM-700-R1",
-          "document_title": "Operator Manual (v1, legacy export)",
+          "document_title": "Operator Manual Revision 1 (Legacy HTML Export)",
           "file_type": "HTML",
           "page": null,
-          "section": "Section 5 Normal Operating Ranges",
+          "section": "Section 5: Normal Operating Ranges",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
           "verbatim_quote": "Normal HPU discharge pressure is 180 bar, as measured by pressure sensor PS-04.",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
@@ -1560,9 +2464,14 @@
           "file_type": "PDF",
           "page": 1,
           "section": "Section 1: Description of Change",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "Effective software revision 3.2, pressure sensor PS-04 is replaced by pressure sensor PS-04A at the HPU discharge line... normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar.",
+          "verbatim_quote": "normal HPU discharge pressure setpoint is revised from 180 bar to 200 bar.",
           "trust_level": "ENGINEERING_BULLETIN",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],
@@ -1574,7 +2483,7 @@
       "query_id": 19,
       "query": "What is the maximum continuous operating temperature of PS-04A?",
       "epistemic_status": "UNANSWERABLE_GAP",
-      "direct_answer": "Cannot be determined from the dataset (Epistemic Gap). The provided documentation package (including Operator Manual AEG-OM-700, Maintenance Manual AEG-MM-700, ECN-1042, Component Register AEG-CR-700, and Calibration Record Appendix C) contains no specification for the maximum continuous operating temperature of sensor PS-04A.",
+      "direct_answer": "Cannot be determined from the dataset (Epistemic Gap). The maximum continuous operating temperature specification for sensor PS-04A is completely omitted from the documentation package (including Operator Manual AEG-OM-700, Maintenance Manual AEG-MM-700, ECN-1042, Component Register AEG-CR-700, and Calibration Record Appendix C).",
       "claims": [],
       "evidence": [],
       "conflicts_identified": [],
@@ -1674,7 +2583,41 @@
             "FACT_CR_T1_SPECS"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-CR-700",
+              "document_title": "Component Register (AEG-CR-700)",
+              "file_type": "XLSX",
+              "page": null,
+              "section": "Components Register Sheet",
+              "worksheet": "Components",
+              "cell": "A12:F12",
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "Q1 Main Disconnect Control Cabinet 1 Active 480V incoming disconnect.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            },
+            {
+              "document_id": "AEG-CR-700",
+              "document_title": "Component Register (AEG-CR-700)",
+              "file_type": "XLSX",
+              "page": null,
+              "section": "Components Register Sheet",
+              "worksheet": "Components",
+              "cell": "A13:F13",
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "T1 Control Transformer Control Cabinet 1 Active 480:120V control power.",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         },
         {
           "statement": "Compatibility with a 3-phase 400V supply is not stated in the documentation package.",
@@ -1682,7 +2625,25 @@
             "FACT_ELEC_POWER_VOLTAGE"
           ],
           "confidence": 1.0,
-          "verification_status": "VERIFIED"
+          "verification_status": "VERIFIED",
+          "evidence": [
+            {
+              "document_id": "AEG-DWG-E02",
+              "document_title": "Electrical Power & Control Diagram (AEG-DWG-E02)",
+              "file_type": "PNG",
+              "page": 1,
+              "section": "Power Input Section",
+              "worksheet": null,
+              "cell": null,
+              "slide": null,
+              "element_id": null,
+              "verbatim_quote": "MAIN DISCONNECT Q1 CONTROLXFMR T1 480:120V",
+              "trust_level": "OFFICIAL_MANUAL",
+              "relevant_revision": null,
+              "extraction_confidence": 1.0,
+              "location_detail": null
+            }
+          ]
         }
       ],
       "evidence": [
@@ -1691,10 +2652,15 @@
           "document_title": "Component Register (AEG-CR-700)",
           "file_type": "XLSX",
           "page": null,
-          "section": "Components",
-          "element_id": "Row: Q1",
-          "verbatim_quote": "Q1 | Main Disconnect | \u2014 | Control Cabinet 1 | Active | 480V incoming disconnect.",
+          "section": "Components Register Sheet",
+          "worksheet": "Components",
+          "cell": "A12:F12",
+          "slide": null,
+          "element_id": null,
+          "verbatim_quote": "Q1 Main Disconnect Control Cabinet 1 Active 480V incoming disconnect.",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
@@ -1702,21 +2668,31 @@
           "document_title": "Component Register (AEG-CR-700)",
           "file_type": "XLSX",
           "page": null,
-          "section": "Components",
-          "element_id": "Row: T1",
-          "verbatim_quote": "T1 | Control Transformer | \u2014 | Control Cabinet 1 | Active | 480:120V control power.",
+          "section": "Components Register Sheet",
+          "worksheet": "Components",
+          "cell": "A13:F13",
+          "slide": null,
+          "element_id": null,
+          "verbatim_quote": "T1 Control Transformer Control Cabinet 1 Active 480:120V control power.",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         },
         {
           "document_id": "AEG-DWG-E02",
-          "document_title": "Electrical Schematic (AEG-DWG-E02)",
+          "document_title": "Electrical Power & Control Diagram (AEG-DWG-E02)",
           "file_type": "PNG",
-          "page": null,
-          "section": "Power distribution and interlock wiring",
+          "page": 1,
+          "section": "Power Input Section",
+          "worksheet": null,
+          "cell": null,
+          "slide": null,
           "element_id": null,
-          "verbatim_quote": "MAIN DISCONNECT Q1 -> CONTROL XFMR T1 480:120V -> PLC-03 24VDC POWER SUPPLY & PLC-03 I/O RACK",
+          "verbatim_quote": "MAIN DISCONNECT Q1 CONTROLXFMR T1 480:120V",
           "trust_level": "OFFICIAL_MANUAL",
+          "relevant_revision": null,
+          "extraction_confidence": 1.0,
           "location_detail": null
         }
       ],

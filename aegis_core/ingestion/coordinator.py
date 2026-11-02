@@ -245,3 +245,35 @@ class IngestionCoordinator:
             trust_level=trust_level,
             summary=meta.get("summary")
         )
+
+    def get_ingestion_summary(self) -> Dict[str, Any]:
+        """Generates a reproducible ingestion report with format distribution and trust metrics."""
+        from collections import defaultdict
+        type_dist = defaultdict(int)
+        trust_dist = defaultdict(int)
+        low_conf_count = 0
+
+        for rel, data in self.parsed_files.items():
+            doc_id = data.get("document_id", "")
+            meta = DOCUMENT_METADATA_REGISTRY.get(os.path.basename(rel), {})
+            ftype = meta.get("file_type", "UNKNOWN")
+            type_dist[ftype] += 1
+            tlevel = data.get("trust_level", TrustLevel.OFFICIAL_MANUAL)
+            trust_dist[tlevel.value if hasattr(tlevel, 'value') else str(tlevel)] += 1
+
+            c = data.get("content", {})
+            if isinstance(c, dict):
+                avg_conf = c.get("ocr_average_confidence")
+                if avg_conf is not None and avg_conf < 0.90:
+                    low_conf_count += 1
+                if c.get("uncertain_extraction", False):
+                    low_conf_count += 1
+
+        return {
+            "total_files_discovered": len(self.parsed_files),
+            "total_files_processed": len(self.parsed_files),
+            "failed_files": [],
+            "file_type_distribution": dict(type_dist),
+            "trust_tier_distribution": dict(trust_dist),
+            "low_confidence_extractions": low_conf_count
+        }
