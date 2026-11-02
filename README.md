@@ -16,7 +16,8 @@
 ## Quick Start (For Experienced Users)
 
 ```powershell
-# 1. Clone and navigate to repository
+# 1. Navigate to your user folder (avoids System32 permission errors) and clone
+cd ~
 git clone https://github.com/seira-droid/aegis-task.git
 cd aegis-task
 
@@ -32,6 +33,10 @@ python run.py --serve
 
 # 5. Open in browser: http://127.0.0.1:8000
 ```
+
+> [!TIP]
+> **Already have the project open in VS Code / Antigravity IDE?**
+> You don't need to clone again! Simply press `Ctrl + ~` (or go to **Terminal** -> **New Terminal**). The integrated terminal will open directly inside your project folder where you can immediately run steps 2–4.
 
 ---
 
@@ -325,6 +330,8 @@ python run.py --export
 
 | Symptom | Root Cause | Solution |
 |---|---|---|
+| `fatal: could not create work tree dir 'aegis-task': Permission denied` | Terminal was opened in Windows `C:\WINDOWS\System32` where git lacks write permissions. | Navigate to your user home folder first: `cd ~`, then re-run `git clone https://github.com/seira-droid/aegis-task.git`. |
+| `ERROR: Could not open requirements file: 'requirements.txt'` or `can't open file 'run.py'` | Terminal working directory is not inside `aegis-task`. | Navigate into the repository root: `cd aegis-task` (or `cd "C:\Users\SEIRA ELSA BIJU\.gemini\antigravity\scratch\aegis-task"`). |
 | `'python' is not recognized as an internal or external command` | Python is not added to system environment variable `PATH`. | Re-run Python Windows installer, select **"Add Python to PATH"**, or use the Windows Python launcher: `py run.py --serve`. |
 | `File Activate.ps1 cannot be loaded because running scripts is disabled` | PowerShell script execution policy restricts local activation scripts. | Run: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`, then re-run `.\.venv\Scripts\Activate.ps1`. |
 | `ModuleNotFoundError: No module named 'fastapi'` (or `'pydantic'`, `'pypdf'`) | Virtual environment is not activated or packages were not installed. | Activate `.venv` (see Section 3, Step 2) and run: `pip install -r requirements.txt`. |
